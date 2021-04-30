@@ -1,80 +1,159 @@
-const env = require("dotenv").config();
-const nodemailer = require("nodemailer");
-// Email credentials
-const { username, password, SMTPserver, SMTPport, host } = env.parsed;
-// Server setup
-const port = 4040;
-const express = require("express");
-let app = express();
-const fs = require("fs");
-const csvjson = require("csvjson");
-
-// Basic middleware -> intercept the request
-app.use("/1x1-0000ff7f.png", function (req, res, next) {
-  const id = req.query && req.query.id ? req.query.id : null;
-  console.log(id);
-  next(); // Continue on to the next middleware/route handler
-});
-
-// Load the pixel image
-app.use(express.static(__dirname + "/images"));
-
-// create reusable transporter object using the default SMTP transport
-let credentials = {
-  host: SMTPserver,
-  port: Number(SMTPport),
-  secure: true, // I'm using the 465 port
-  auth: {
-    user: username, // generated ethereal user
-    pass: password, // generated ethereal password
-  },
-};
-const transporter = nodemailer.createTransport(credentials);
-
-async function sendEmail(emailObject) {
-  // send mail with defined transport object
-  transporter.sendMail(
-    {
-      from: '"Paolo De Giglio" <paolo@satiurn.com>', // sender address
-      to: "luca@yopmail.com", // list of receivers
-      subject: "Hello ✔", // Subject line
-      text: "Hello world?", // plain text body
-      html:
-        "<img src='" +
-        host +
-        ":" +
-        port +
-        "/1x1-0000ff7f.png?id=erede'><b>Hello world?</b>", // html body
+//
+// ───────────────────────────────────────────────────────────── DEPENDENCIES ─────
+//
+"use strict";
+const fastify = require("fastify")({
+  logger: {
+    level: "info",
+    file: "/logs/prod",
+    serializers: {
+      req(request) {
+        return {
+          method: request.method,
+          url: request.url,
+          headers: request.headers,
+          hostname: request.hostname,
+          remoteAddress: request.ip,
+          remotePort: request.connection.remotePort,
+        };
+      },
     },
-    (err, info) => {
-      // check for errors here
-      console.error(err);
-      console.log(info);
-    }
-  );
+  },
+});
+const fastifyPlugin = require("fastify-plugin");
 
-  // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+// Check for test or production env
+var argvs = process.argv.slice(2);
+var envfile = ".env";
+if (argvs[0] == "test") {
+  envfile = envfile + "test";
 }
-
-app.set("view engine", "pug");
-app.set("views", __dirname + "/views");
-
-app.get("/data", function (req, res) {
-  let filename = "./data.csv";
-  var data = fs.readFileSync(filename);
-  var file_data = fs.readFileSync("./data.csv", { encoding: "utf8" });
-  var options = {
-    delimiter: ";", // optional
-  };
-  var result = csvjson.toObject(file_data, options);
-  console.log(result);
-  res.render("data.pug", { data: result });
+const env = require("dotenv").config({
+  path: envfile,
 });
 
-// Server started
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
-  /* sendEmail({}).catch((error) => {
-   *   console.error(error);
-   * }); */
+// Schema compiler
+const Ajv = require("ajv");
+const ajv = new Ajv({
+  // the fastify defaults (if needed)
+  removeAdditional: true,
+  useDefaults: false,
+  coerceTypes: true,
+  allErrors: true,
+  nullable: true,
+});
+fastify.setSchemaCompiler(function (schema) {
+  return ajv.compile(schema);
+});
+
+// SET CORS
+fastify.register(require("fastify-cors"), {
+  origin: (origin, cb) => {
+    //  Request from localhost will pass
+    cb(null, true);
+    return;
+  },
+});
+
+// SWAGGER
+fastify.register(require("fastify-swagger"), {
+  swagger: {
+    info: {
+      title: "Test swagger",
+      description: "testing the fastify swagger api",
+      version: "0.1.0",
+    },
+    host: "localhost",
+    schemes: ["http"],
+    consumes: ["application/json"],
+    produces: ["applicatin/json"],
+  },
+  exposeRoute: true,
+});
+
+// ERROR HANDLING
+fastify.register(require("fastify-sensible"));
+
+//
+// ───────────────────────────────────────────────────── SERVER CONFIGURATION ─────
+//
+
+// DB
+fastify.register(require("./db"));
+
+// AUTH
+fastify.register(require("./auth"));
+
+// ERROR HANDLER
+fastify.setErrorHandler(function (error, request, reply) {
+  const statusCode = error.statusCode;
+  let response;
+
+  const { validation, validationContext } = error;
+
+  // check if we have a validation error
+  if (validation) {
+    response = {
+      message: `A validation error occured when validating the ${validationContext}...`, // validationContext will be 'body' or 'params' or 'headers' or 'query'
+      errors: validation, // this is the result of your validation library...
+    };
+  } else {
+    response = {
+      message: "ServerError",
+    };
+  }
+
+  reply.status(statusCode).send(response);
+});
+
+//
+// ──────────────────────────────────────────────────────────── SERVER ROUTES ─────
+//
+
+let __dirname = "../../client/dist";
+
+fastify.get("/admin/", (req, reply) => {
+  console.log("serving /admin/");
+  const stream = fs.createReadStream(path.join("", "dist", "index.html"));
+  reply.type("text/html").send(stream);
+});
+
+fastify.get("/admin/*", (req, reply) => {
+  console.log("serving /admin/*");
+  const stream = fs.createReadStream(
+    path.join(__dirname, "dist", "index.html")
+  );
+  reply.code(200).type("text/html").send(stream);
+});
+
+fastify.get("/admin/:filename(.[A-Za-z]{1,4})", function (req, reply) {
+  console.log("Serving /admin/:filename");
+  let filename = req.params.filename;
+  let fileext = filename.split(".").last();
+  let type = "text/plain";
+  if (fileext == "css") {
+    type = "text/css";
+  }
+  if (fileext == "js") {
+    type = "text/javascript";
+  }
+  if (fileext == "html") {
+    type = "text/html";
+  }
+  const stream = fs.createReadStream(path.join(__dirname, "dist", filename));
+  reply.code(200).type(type).send(stream);
+});
+
+// ROUTES USERS
+fastify.register(require("./controller/user"));
+
+//
+// ─── LOAD THE SERVER ────────────────────────────────────────────────────────────
+//
+fastify.listen(3000, "0.0.0.0", async (err) => {
+  if (err) {
+    console.log(err);
+    throw err;
+  }
+  console.log("listening");
 });
