@@ -1,0 +1,6 @@
+DB_URL=mongodb://sevid:qKtJZHq31*4%2B%2Bf4.@vps3.segavideo.xyz:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false
+PRODUCTION=false
+DATABASE=sevidTest
+COLLECTION=videos
+COLLECTIONUS=users
+SECRET_JWT=NWDnwXZRuNaSzUw9MSHR8eWMtyK8aLgFKfASNoDSfcFQT2iPL43mwsNAg9L2wJ
