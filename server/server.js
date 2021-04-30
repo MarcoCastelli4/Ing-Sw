@@ -5,7 +5,7 @@
 const fastify = require("fastify")({
   logger: {
     level: "info",
-    file: "/logs/prod",
+    file: "./logs",
     serializers: {
       req(request) {
         return {
@@ -110,8 +110,6 @@ fastify.setErrorHandler(function (error, request, reply) {
 // ──────────────────────────────────────────────────────────── SERVER ROUTES ─────
 //
 
-let __dirname = "../../client/dist";
-
 fastify.get("/admin/", (req, reply) => {
   console.log("serving /admin/");
   const stream = fs.createReadStream(path.join("", "dist", "index.html"));
@@ -121,7 +119,7 @@ fastify.get("/admin/", (req, reply) => {
 fastify.get("/admin/*", (req, reply) => {
   console.log("serving /admin/*");
   const stream = fs.createReadStream(
-    path.join(__dirname, "dist", "index.html")
+    path.join("../client", "dist", "index.html")
   );
   reply.code(200).type("text/html").send(stream);
 });
@@ -140,7 +138,7 @@ fastify.get("/admin/:filename(.[A-Za-z]{1,4})", function (req, reply) {
   if (fileext == "html") {
     type = "text/html";
   }
-  const stream = fs.createReadStream(path.join(__dirname, "dist", filename));
+  const stream = fs.createReadStream(path.join("../client", "dist", filename));
   reply.code(200).type(type).send(stream);
 });
 

@@ -13,31 +13,18 @@
     "fastify-redis": "^4.0.3",
     "fastify-sensible": "^2.1.1",
     "fastify-swagger": "^2.5.1",
-    "ffmpeg": "0.0.4",
-    "ffprobe": "^1.1.0",
-    "ffprobe-static": "^3.0.0",
-    "fluent-ffmpeg": "^2.1.2",
-    "get-video-duration": "^1.0.3",
-    "https": "^1.0.0",
     "jsonwebtoken": "^8.5.1",
     "md5": "^2.2.1",
     "mongodb": "^3.5.7",
-    "mysql": "^2.18.1",
-    "mysql2": "^2.1.0",
     "node-cache": "^5.1.0",
     "node-html-parser": "^1.2.16",
     "nodemon": "^2.0.3",
-    "puppeteer": "^3.0.1",
-    "redis": "^3.0.2",
     "request": "^2.88.2",
     "request-promise": "^4.2.6",
-    "tdl": "^6.1.0",
-    "tdl-tdlib-ffi": "^1.4.0",
     "uuid": "^8.0.0",
     "yargs": "^15.3.1"
   },
   "scripts": {
-    "test": "nodemon --exec node api/server.js test",
-    "start": "nodemon --exec node api/server.js"
+    "start": "nodemon --exec node server.js"
   }
 }

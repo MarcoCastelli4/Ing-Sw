@@ -61,7 +61,6 @@ const respF = (reply, body) => {
 };
 
 module.exports = {
-  check304,
   respF,
   getAccessToken,
   getRefreshToken,
