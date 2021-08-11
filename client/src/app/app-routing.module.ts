@@ -16,11 +16,6 @@ export const routes: Routes = [
       .then(m => m.PagesModule),
   },
   {
-    path: 'reservations',
-    loadChildren: () => import('./reservations/reservation.module')
-      .then(m => m.ReservationModule),
-  },
-  {
     path: 'auth',
     component: NbAuthComponent,
     children: [
