@@ -5,7 +5,7 @@
  */
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { Injector, NgModule } from '@angular/core';
+import { Injector, LOCALE_ID, NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { CoreModule } from './@core/core.module';
 import { ThemeModule } from './@theme/theme.module';
@@ -23,6 +23,7 @@ import {
 } from '@nebular/theme';
 import { AuthService } from './services/auth.service';
 import { ApiService } from './services/api.service';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 @NgModule({
   declarations: [AppComponent],
@@ -46,7 +47,7 @@ import { ApiService } from './services/api.service';
   bootstrap: [AppComponent],
   providers: [
     AuthService,
-    ApiService
+    ApiService,
   ]
 })
 export class AppModule {

@@ -15,3 +15,8 @@ if (environment.production) {
 
 platformBrowserDynamic().bootstrapModule(AppModule)
   .catch(err => console.error(err));
+
+//TODO
+//platformBrowserDynamic().bootstrapModule(AppModule, {
+//  providers: [{ provide: LOCALE_ID, useValue: 'it-IT' }]
+//});

@@ -119,38 +119,54 @@ async function routes(fastify, options, next) {
     },
     preValidation: [],
     handler: async (request, reply) => {
-      const inputData = request.body;
+      try {
+        const inputData = request.body;
+        let user = await dbCitizens.findOne({fcCode: inputData.fcCode})
+        if (!(user.fcCode == inputData.fcCode)) {
+          throw fastify.httpErrors.badRequest("fcCode is not recorded in the DB");
+        }
+        let email = await dbCitizens.findOne({email: inputData.email})
+        if (!email) {
+          // Set payload for jwt
+          let payload = {
+            _id: uuid.v1(),
+          };
 
-      if (
-        (await checkField(dbUsers, "email", inputData.email))
-      ) {
-        // Set payload for jwt
-        let payload = {
-          _id: uuid.v1(),
-          role: 1,
-        };
+          const accessToken = getAccessToken(payload);
+          const refreshToken = await getRefreshToken(dbCitizens, payload, true);
 
-        const accessToken = getAccessToken(payload);
-        const refreshToken = await getRefreshToken(dbUsers, payload, true);
+          // Add user
+          let user = {
+            _id: payload._id,
+            email: inputData.email,
+            password: md5(inputData.password),
+            refreshTokens: [refreshToken],
+          };
+          
+          await dbCitizens.updateOne(
+            { fcCode: inputData.fcCode },
+            {
+              $set: {
+                email: inputData.email,
+                password: md5(inputData.password),
+                refreshTokens: [refreshToken],
+                birthplace: inputData.birthplace,
+                birthday: Date.parse(inputData.birthday)
+              }
+            }
+          );
 
-        // Add user
-        let user = {
-          _id: payload._id,
-          email: inputData.email,
-          password: md5(inputData.password),
-          refreshTokens: [refreshToken],
-          role: 1,
-        };
-
-        await dbUsers.insertOne(user);
-
-        let response = {
-          accessToken: accessToken,
-          refreshToken: refreshToken,
-        };
-        respF(reply, response);
-      } else {
-        throw fastify.httpErrors.badRequest("userExists");
+          let response = {
+            accessToken: accessToken,
+            refreshToken: refreshToken,
+          };
+          respF(reply, response);
+        } else {
+          throw fastify.httpErrors.badRequest("Email already in use");
+        }
+      } catch (err) {
+        console.log(err);
+        throw fastify.httpErrors.internalServerError('Something went wrong');
       }
     },
   });

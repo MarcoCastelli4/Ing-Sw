@@ -60,6 +60,29 @@ const respF = (reply, body) => {
     .send(JSON.stringify(body));
 };
 
+/**
+* Check if the user exist and if is only one return the values
+*
+* @params {object: db} dbUsers: db of the users
+* @params {string} field: username or email
+* @params {string} value: value of the field searched
+*/
+//const checkField = async (db, field, value) => {
+//  if (!value) {
+//    return false;
+//  }
+//  try {
+//    users = await db.find({ [field]: value }).toArray();
+//  } catch (error) {
+//    return false;
+//  }
+//  if (users && users.length >= 1) {
+//    return false;
+//  } else {
+//    return true;
+//  }
+//};
+
 module.exports = {
   respF,
   getAccessToken,
