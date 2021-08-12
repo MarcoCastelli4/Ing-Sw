@@ -9,15 +9,26 @@ const {
 const md5 = require("md5");
 
 async function routes(fastify, options, next) {
-  // DB
-  const db = fastify.mongo
-    .db(process.env.DATABASE)
-    .collection(process.env.COLLECTION);
 
-  // DB USERS
-  const dbUsers = fastify.mongo
+  // DB CAMPAIGN
+  const dbCampagins = fastify.mongo
     .db(process.env.DATABASE)
-    .collection(process.env.COLLECTIONUS);
+    .collection("Campaigns");
+  // DB HUBS
+  const dbHubs = fastify.mongo
+    .db(process.env.DATABASE)
+    .collection("Hubs");
+
+  // DB CITIZENS
+  const dbCitizens = fastify.mongo
+    .db(process.env.DATABASE)
+    .collection("Citizens");
+
+  // DB OPERATORS
+  const dbOperators = fastify.mongo
+    .db(process.env.DATABASE)
+    .collection("Operators");
+
 
   //
   // ─────────────────────────────────────────────────────────── LOGIN ─────
@@ -31,7 +42,6 @@ async function routes(fastify, options, next) {
         required: ["password"],
         properties: {
           email: { type: "string" },
-          username: { type: "string" },
           password: { type: "string" },
         },
       },
@@ -51,9 +61,7 @@ async function routes(fastify, options, next) {
 
       // Check if the user exist
       let user = null;
-      if (inputData.username) {
-        user = await dbUsers.findOne({ username: inputData.username });
-      } else if (!user && inputData.email) {
+      if (inputData.email) {
         user = await dbUsers.findOne({ email: inputData.email });
       }
 
@@ -65,7 +73,6 @@ async function routes(fastify, options, next) {
         // Set payload for jwt
         let payload = {
           _id: user._id,
-          username: user.username,
           role: 1,
         };
 
@@ -75,7 +82,6 @@ async function routes(fastify, options, next) {
         let response = {
           accessToken: accessToken,
           refreshToken: refreshToken,
-          username: user.username,
           id: user._id,
           email: user.email,
         };
@@ -95,10 +101,9 @@ async function routes(fastify, options, next) {
     schema: {
       body: {
         type: "object",
-        required: ["email", "password", "username"],
+        required: ["email", "password"],
         properties: {
           email: { type: "string" },
-          username: { type: "string" },
           password: { type: "string" },
         },
       },
@@ -117,13 +122,11 @@ async function routes(fastify, options, next) {
       const inputData = request.body;
 
       if (
-        (await checkField(dbUsers, "username", inputData.username)) &&
         (await checkField(dbUsers, "email", inputData.email))
       ) {
         // Set payload for jwt
         let payload = {
           _id: uuid.v1(),
-          username: inputData.username,
           role: 1,
         };
 
@@ -133,7 +136,6 @@ async function routes(fastify, options, next) {
         // Add user
         let user = {
           _id: payload._id,
-          username: inputData.username,
           email: inputData.email,
           password: md5(inputData.password),
           refreshTokens: [refreshToken],
@@ -194,7 +196,6 @@ async function routes(fastify, options, next) {
             // The token is valid return the accessToken
             let payload = {
               _id: user._id,
-              username: user.username,
               role: user.role,
             };
 
@@ -237,7 +238,6 @@ async function routes(fastify, options, next) {
             email: { type: "string" },
             refreshToken: { type: "string" },
             role: { type: "number" },
-            username: { type: "string" },
           },
         },
       },
@@ -249,7 +249,6 @@ async function routes(fastify, options, next) {
 
       let response = {
         id: userId,
-        username: user.username,
         email: user.email,
         role: user.role,
         refreshToken: user.refreshTokens[user.refreshTokens.length - 1],

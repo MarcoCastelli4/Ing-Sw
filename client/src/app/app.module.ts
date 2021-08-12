@@ -5,7 +5,7 @@
  */
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgModule } from '@angular/core';
+import { Injector, NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { CoreModule } from './@core/core.module';
 import { ThemeModule } from './@theme/theme.module';
@@ -14,12 +14,15 @@ import { AppRoutingModule } from './app-routing.module';
 import {
   NbChatModule,
   NbDatepickerModule,
+  NbDateService,
   NbDialogModule,
   NbMenuModule,
   NbSidebarModule,
   NbToastrModule,
   NbWindowModule,
 } from '@nebular/theme';
+import { AuthService } from './services/auth.service';
+import { ApiService } from './services/api.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -41,6 +44,14 @@ import {
     ThemeModule.forRoot(),
   ],
   bootstrap: [AppComponent],
+  providers: [
+    AuthService,
+    ApiService
+  ]
 })
 export class AppModule {
+  constructor(private injector: Injector){
+    ApiService.injector = this.injector;
+    AuthService.injector = this.injector;
+  }
 }

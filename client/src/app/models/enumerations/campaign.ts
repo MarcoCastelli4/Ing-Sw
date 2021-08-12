@@ -1,4 +1,4 @@
-export enum Campaign {
+export enum CampaignEnum {
     "Over 80",
     "79-70",
     "69-60",

@@ -1,14 +1,14 @@
 import { CampaignEnum } from "../enumerations/campaign";
 import { Hub } from "./hub";
 
-export class Campaign{
+export class Campaign {
     private name: string;
     private totQty: number;
     private type: CampaignEnum[];
     private hubs: Hub[];
     private priority: CampaignEnum;
 
-    constructor(campaign: Campaign){
+    constructor(campaign: Campaign) {
         this.name = campaign.name;
         this.totQty = campaign.totQty;
         this.type = campaign.type;
@@ -16,35 +16,35 @@ export class Campaign{
         this.priority = campaign.priority;
     }
 
-    public getName(){
+    public getName(): string {
         return this.name;
     }
-    public getTotQty(){
+    public getTotQty(): number {
         return this.totQty;
     }
-    public getType(){
+    public getType(): CampaignEnum[] {
         return this.type;
     }
-    public getHubs(){
+    public getHubs(): Hub[] {
         return this.hubs;
     }
-    public getPriority(){
+    public getPriority(): CampaignEnum {
         return this.priority;
     }
 
-    public setName(string:string){
-        this.name = string;
+    public setName(input: string): void {
+        this.name = input;
     }
-    public setTotQty(string:number){
-        this.totQty = string;
+    public setTotQty(input: number): void {
+        this.totQty = input;
     }
-    public setType(string:CampaignEnum[]){
-        this.type = string;
+    public setType(input: CampaignEnum[]): void {
+        this.type = input;
     }
-    public setHubs(string: Hub[]){
-        this.hubs = string;
+    public setHubs(input: Hub[]): void {
+        this.hubs = input;
     }
-    public setPriority(string: CampaignEnum){
-        this.priority = string;
+    public setPriority(input: CampaignEnum): void {
+        this.priority = input;
     }
 }

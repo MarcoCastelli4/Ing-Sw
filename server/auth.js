@@ -5,9 +5,9 @@ const jwt = require("jsonwebtoken");
 module.exports = fastifyPlugin(async (fastify, opts) => {
   const db = fastify.mongo
     .db(process.env.DATABASE)
-    .collection(process.env.COLLECTION);
+    .collection("Campaigns");
 
-  const dbUsers = fastify.mongo.db(process.env.DATABASE).collection("users");
+  const dbUsers = fastify.mongo.db(process.env.DATABASE).collection("Users");
 
   // Auth for the security api
   async function authForced(request, reply, done) {
