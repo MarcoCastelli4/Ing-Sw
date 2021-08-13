@@ -57,37 +57,50 @@ async function routes(fastify, options, next) {
     },
     preValidation: [],
     handler: async (request, reply) => {
-      const inputData = request.body;
+      try {
+        const inputData = request.body;
 
-      // Check if the user exist
-      let user = null;
-      if (inputData.email) {
-        user = await dbUsers.findOne({ email: inputData.email });
-      }
+        // Check if the user exist
+        let user = null;
+        let role = null;
+        if (inputData.email) {
+          user = await dbCitizens.findOne({ email: inputData.email });
+          role = "Citizen";
+        }
 
-      if (
-        user &&
-        inputData.password &&
-        user.password == md5(inputData.password)
-      ) {
-        // Set payload for jwt
-        let payload = {
-          _id: user._id,
-          role: 1,
-        };
+        else if (inputData.opCode) {
+          user = await dbOperators.findOne({ email: inputData.opCode });
+          role = "Operator";
+        }
 
-        const accessToken = getAccessToken(payload);
-        const refreshToken = await getRefreshToken(dbUsers, payload, true);
+        if (user) {
+          if (inputData.password && user.password == md5(inputData.password)) {
 
-        let response = {
-          accessToken: accessToken,
-          refreshToken: refreshToken,
-          id: user._id,
-          email: user.email,
-        };
-        respF(reply, response);
-      } else {
-        throw fastify.httpErrors.badRequest("userNotExists");
+            // Set payload for jwt
+            let payload = {
+              _id: user._id,
+            };
+
+            const accessToken = getAccessToken(payload);
+            const refreshToken = await getRefreshToken(inputData.email ? dbCitizens : dbOperators, payload, true);
+
+            delete user.password;
+
+            let response = {
+              accessToken: accessToken,
+              refreshToken: refreshToken,
+              user: user,
+            };
+            respF(reply, response);
+          } else {
+            throw fastify.httpErrors.badRequest("Wrong password");
+          }
+        } else {
+          throw fastify.httpErrors.badRequest("User does not exist");
+        }
+      } catch (err) {
+        console.log(err);
+        throw fastify.httpErrors.internalServerError(err);
       }
     },
   });
@@ -121,11 +134,14 @@ async function routes(fastify, options, next) {
     handler: async (request, reply) => {
       try {
         const inputData = request.body;
-        let user = await dbCitizens.findOne({fcCode: inputData.fcCode})
-        if (!(user.fcCode == inputData.fcCode)) {
+        let user = await dbCitizens.findOne({ fcCode: inputData.fcCode })
+        if (!user)
           throw fastify.httpErrors.badRequest("fcCode is not recorded in the DB");
+
+        if (user?.birthplace) {
+          throw fastify.httpErrors.badRequest("Citizen already registered");
         }
-        let email = await dbCitizens.findOne({email: inputData.email})
+        let email = await dbCitizens.findOne({ email: inputData.email })
         if (!email) {
           // Set payload for jwt
           let payload = {
@@ -136,14 +152,7 @@ async function routes(fastify, options, next) {
           const refreshToken = await getRefreshToken(dbCitizens, payload, true);
 
           // Add user
-          let user = {
-            _id: payload._id,
-            email: inputData.email,
-            password: md5(inputData.password),
-            refreshTokens: [refreshToken],
-          };
-          
-          await dbCitizens.updateOne(
+          let user = await dbCitizens.findOneAndUpdate(
             { fcCode: inputData.fcCode },
             {
               $set: {
@@ -155,10 +164,15 @@ async function routes(fastify, options, next) {
               }
             }
           );
+          
+          user.value["email"] = inputData.email;
+          user.value["birthplace"] = inputData.birthplace;
+          user.value["birthday"] = Date.parse(inputData.birthday);
 
           let response = {
             accessToken: accessToken,
             refreshToken: refreshToken,
+            user: user.value
           };
           respF(reply, response);
         } else {
@@ -166,7 +180,7 @@ async function routes(fastify, options, next) {
         }
       } catch (err) {
         console.log(err);
-        throw fastify.httpErrors.internalServerError('Something went wrong');
+        throw fastify.httpErrors.internalServerError(err);
       }
     },
   });

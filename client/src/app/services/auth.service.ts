@@ -1,4 +1,6 @@
 import { Injectable, Injector } from '@angular/core';
+import { Citizen } from '../models/class/citizen';
+import { Operator } from '../models/class/operator';
 
 @Injectable({
   providedIn: 'root'
@@ -9,8 +11,22 @@ export class AuthService {
 
   constructor() { }
 
+  private citizen: Citizen;
+  private operator: Operator;
+  public type: string;
   public id: string = localStorage.getItem("id");
   public email: string = localStorage.getItem("email");
+
+  public getCitizen(): Citizen{
+    return this.citizen;
+  }
+
+  public getOperator(): Operator{
+    return this.operator;
+  }
+
+  //public setCitizen(): void{}
+  //public setOperator (): void{}
 
   /// MANAGE REFRESH TOKEN
   private refreshToken: string = localStorage.getItem("refreshToken");
@@ -45,6 +61,7 @@ export class AuthService {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
     localStorage.removeItem("email");
+    localStorage.removeItem("type");
     localStorage.removeItem("id");
     location.href = "auth/login"
   }

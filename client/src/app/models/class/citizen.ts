@@ -3,20 +3,29 @@ import { CampaignEnum } from "../enumerations/campaign";
 
 export class Citizen implements User{
 
+    private _id: string;
     private fcCode: string;
     private name: string;
     private surname: string;
     private type: CampaignEnum;
     private email: string;
+    private birthplace: string;
+    private birthday: number;
 
     constructor(input: Citizen){
+        this._id = input._id;
         this.fcCode = input.fcCode;
         this.name = input.name;
         this.surname = input.surname;
         this.type = input.type;
         this.email = input.email;
+        this.birthplace = input.birthplace;
+        this.birthday = input.birthday;
     }
 
+    public getID(): string{
+        return this._id;
+    }
     public getFcCode(): string{
         return this.fcCode;
     }
@@ -32,7 +41,16 @@ export class Citizen implements User{
     public getEmail(): string{
         return this.email;
     }
+    public getBirthplace(): string{
+        return this.birthplace;
+    }
+    public getBirthday(): number{
+        return this.birthday;
+    }
 
+    public setID(input: string): void{
+        this._id = input;
+    }
     public setFcCode(input: string): void{
         this.fcCode = input;
     }
@@ -47,6 +65,12 @@ export class Citizen implements User{
     }
     public setEmail(input: string): void{
         this.email = input;
+    }
+    public setBirthplace(input: string): void{
+        this.birthplace = input;
+    }
+    public setBirthday(input: number): void{
+        this.birthday = input;
     }
 
     public login(): boolean{
