@@ -30,14 +30,11 @@ export class LoginComponent extends NbLoginComponent {
   login() {
     this.apiService.login({ email: this.user.email, password: this.user.password, opCode: this.user.opCode }).subscribe(
       (response) => {
-
-        if(this.user.email)
+        if(response.user.role == "Citizen")
           this.authService.citizen = new Citizen(response.user);
         else
           this.authService.operator = new Operator(response.user);
         
-        console.log(this.authService.citizen)
-        console.log(this.authService.operator)
         this.authService.setAccessToken(response.accessToken);
         this.authService.setRefreshToken(response.refreshToken);
         this.showMessages.success = true;

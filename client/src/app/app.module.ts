@@ -19,6 +19,7 @@ import {
   NbMenuModule,
   NbSidebarModule,
   NbToastrModule,
+  NbToastrService,
   NbWindowModule,
 } from '@nebular/theme';
 import { AuthService } from './services/auth.service';

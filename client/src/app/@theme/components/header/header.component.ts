@@ -52,7 +52,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
         map(({ item: { title } }) => title),
       )
       .subscribe((title) => {
-        console.log("ciao")
         if (title === "Log out") {
           this.authService.logout()
         }

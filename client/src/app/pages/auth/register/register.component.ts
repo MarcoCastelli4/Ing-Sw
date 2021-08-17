@@ -1,6 +1,5 @@
-import { Component, ComponentFactoryResolver } from '@angular/core';
+import { Component } from '@angular/core';
 import { NbRegisterComponent } from '@nebular/auth';
-import { NbDateService } from '@nebular/theme';
 import { Citizen } from '../../../models/class/citizen';
 import { ApiService } from '../../../services/api.service';
 import { AuthService } from '../../../services/auth.service';
@@ -61,7 +60,7 @@ export class RegisterComponent extends NbRegisterComponent {
                 else if (error.error.message == "BadRequestError: Citizen already registered") {
                     this.errors.push("Registrazione già effettuata");
                     location.href = "/auth/login"
-                }else
+                } else
                     this.errors.push("Riprova più tardi")
             }
         );

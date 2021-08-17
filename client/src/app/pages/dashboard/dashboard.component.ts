@@ -1,7 +1,5 @@
-import { Component, OnDestroy } from '@angular/core';
-import { NbThemeService } from '@nebular/theme';
-import { takeWhile } from 'rxjs/operators';
-import { SolarData } from '../../@core/data/solar';
+import { Component, Input, OnDestroy } from '@angular/core';
+import { NbSortDirection, NbSortRequest, NbThemeService, NbToastrService, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
 import { ApiService } from '../../services/api.service';
 import { AuthService } from '../../services/auth.service';
 
@@ -11,99 +9,124 @@ interface CardSettings {
   type: string;
 }
 
+interface TreeNode<T> {
+  data: T;
+  children?: TreeNode<T>[];
+  expanded?: boolean;
+}
+
+interface FSEntry {
+  name: string;
+  size: string;
+  kind: string;
+  items?: number;
+}
+
 @Component({
   selector: 'ngx-dashboard',
   styleUrls: ['./dashboard.component.scss'],
   templateUrl: './dashboard.component.html',
 })
-export class DashboardComponent implements OnDestroy {
 
-  private alive = true;
+export class DashboardComponent {
 
-  solarValue: number;
-  lightCard: CardSettings = {
-    title: 'Light',
-    iconClass: 'nb-lightbulb',
-    type: 'primary',
-  };
-  rollerShadesCard: CardSettings = {
-    title: 'Roller Shades',
-    iconClass: 'nb-roller-shades',
-    type: 'success',
-  };
-  wirelessAudioCard: CardSettings = {
-    title: 'Wireless Audio',
-    iconClass: 'nb-audio',
-    type: 'info',
-  };
-  coffeeMakerCard: CardSettings = {
-    title: 'Coffee Maker',
-    iconClass: 'nb-coffee-maker',
-    type: 'warning',
-  };
-
-  statusCards: string;
-
-  commonStatusCardsSet: CardSettings[] = [
-    this.lightCard,
-    this.rollerShadesCard,
-    this.wirelessAudioCard,
-    this.coffeeMakerCard,
-  ];
-
-  statusCardsByThemes: {
-    default: CardSettings[];
-    cosmic: CardSettings[];
-    corporate: CardSettings[];
-    dark: CardSettings[];
-  } = {
-      default: this.commonStatusCardsSet,
-      cosmic: this.commonStatusCardsSet,
-      corporate: [
-        {
-          ...this.lightCard,
-          type: 'warning',
-        },
-        {
-          ...this.rollerShadesCard,
-          type: 'primary',
-        },
-        {
-          ...this.wirelessAudioCard,
-          type: 'danger',
-        },
-        {
-          ...this.coffeeMakerCard,
-          type: 'info',
-        },
-      ],
-      dark: this.commonStatusCardsSet,
-    };
+  protected tableColumns = ['Nome', 'Vaccini disponibili', 'Categorie', 'Azioni'];
 
   constructor(
-    private themeService: NbThemeService,
-    private solarService: SolarData,
     private authService: AuthService,
-    private apiService: ApiService
-    ) {
+    private apiService: ApiService,
+    private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
+    private toastrService: NbToastrService
+  ) {
+
+    this.apiService.getCampaigns().subscribe(
+      (response) => {
+        console.log(response)
+        this.toastrService.success("Sottotitolo", "Titolo");
+      },
+      (error) => {
+        console.log(error)
+        this.toastrService.danger("Sottotitolo", "Titolo");
+      }
+    );
+
+    this.dataSource = this.dataSourceBuilder.create(this.data);
 
     if (this.authService.getAccessToken == null) {
       this.authService.logout();
     }
-    this.themeService.getJsTheme()
-      .pipe(takeWhile(() => this.alive))
-      .subscribe(theme => {
-        this.statusCards = this.statusCardsByThemes[theme.name];
-      });
-
-    this.solarService.getSolarData()
-      .pipe(takeWhile(() => this.alive))
-      .subscribe((data) => {
-        this.solarValue = data;
-      });
   }
 
-  ngOnDestroy() {
-    this.alive = false;
+  customColumn = 'name';
+  defaultColumns = [ 'size', 'kind', 'items' ];
+  allColumns = [ this.customColumn, ...this.defaultColumns ];
+
+  dataSource: NbTreeGridDataSource<FSEntry>;
+
+  sortColumn: string;
+  sortDirection: NbSortDirection = NbSortDirection.NONE;
+
+
+  updateSort(sortRequest: NbSortRequest): void {
+    this.sortColumn = sortRequest.column;
+    this.sortDirection = sortRequest.direction;
+  }
+
+  getSortDirection(column: string): NbSortDirection {
+    if (this.sortColumn === column) {
+      return this.sortDirection;
+    }
+    return NbSortDirection.NONE;
+  }
+
+  private data: TreeNode<FSEntry>[] = [
+    {
+      data: { name: 'Projects', size: '1.8 MB', items: 5, kind: 'dir' },
+      children: [
+        { data: { name: 'project-1.doc', kind: 'doc', size: '240 KB' } },
+        { data: { name: 'project-2.doc', kind: 'doc', size: '290 KB' } },
+        { data: { name: 'project-3', kind: 'txt', size: '466 KB' } },
+        { data: { name: 'project-4.docx', kind: 'docx', size: '900 KB' } },
+      ],
+    },
+    {
+      data: { name: 'Reports', kind: 'dir', size: '400 KB', items: 2 },
+      children: [
+        { data: { name: 'Report 1', kind: 'doc', size: '100 KB' } },
+        { data: { name: 'Report 2', kind: 'doc', size: '300 KB' } },
+      ],
+    },
+    {
+      data: { name: 'Other', kind: 'dir', size: '109 MB', items: 2 },
+      children: [
+        { data: { name: 'backup.bkp', kind: 'bkp', size: '107 MB' } },
+        { data: { name: 'secret-note.txt', kind: 'txt', size: '2 MB' } },
+      ],
+    },
+  ];
+
+  getShowOn(index: number) {
+    const minWithForMultipleColumns = 400;
+    const nextColumnStep = 100; 
+    return minWithForMultipleColumns + (nextColumnStep * index);
+  }
+}
+
+@Component({
+  selector: 'ngx-fs-icon',
+  template: `
+    <nb-tree-grid-row-toggle [expanded]="expanded" *ngIf="isDir(); else fileIcon">
+    </nb-tree-grid-row-toggle>
+    <ng-template #fileIcon>
+      <nb-icon icon="file-text-outline"></nb-icon>
+    </ng-template>
+  `,
+})
+export class FsIconComponent {
+  @Input() kind: string;
+  @Input() expanded: boolean;
+
+  isDir(): boolean {
+    return this.kind === 'dir';
   }
 }
