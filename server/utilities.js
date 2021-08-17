@@ -1,6 +1,39 @@
 const jwt = require("jsonwebtoken");
 const uuid = require("uuid");
 
+const hubSchema = {
+  type: "object",
+  properties: {
+    _id: { type: "string" },
+    name: { type: "string" },
+    city: { type: "string" },
+    totQty: { type: "number" },
+    availableQty: { type: "number" },
+    availableSlot: {
+      type: "array",
+      items: { type: "numbertype" }
+    }
+  }
+};
+
+const campaignSchema = {
+  type: "object",
+  properties: {
+    _id: { type: "string" },
+    name: { type: "string" },
+    totQty: { type: "number" },
+    type: { type: "string" },
+    hubs: {
+      type: "array",
+      items: {
+        hubSchema
+      }
+    },
+    priority: { type: "string" }
+
+  }
+}
+
 /**
  * Get the access token from jwt
  *
@@ -89,4 +122,6 @@ module.exports = {
   getRefreshToken,
   jwt,
   uuid,
+  hubSchema,
+  campaignSchema
 };

@@ -85,6 +85,7 @@ async function routes(fastify, options, next) {
             const refreshToken = await getRefreshToken(inputData.email ? dbCitizens : dbOperators, payload, true);
 
             delete user.password;
+            user["role"] = role;
 
             let response = {
               accessToken: accessToken,
