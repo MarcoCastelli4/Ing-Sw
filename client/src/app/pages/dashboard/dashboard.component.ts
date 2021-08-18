@@ -1,26 +1,13 @@
-import { Component, Input, OnDestroy } from '@angular/core';
-import { NbSortDirection, NbSortRequest, NbThemeService, NbToastrService, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
+import { ChangeDetectorRef, Component, Input } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
+import { NbDialogService, NbSortDirection, NbSortRequest, NbToastrService, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
+import { Campaign } from '../../models/class/campaign';
+import { CampaignEnum } from '../../models/enumerations/campaign';
 import { ApiService } from '../../services/api.service';
 import { AuthService } from '../../services/auth.service';
+import { ConfirmComponent } from '../../widgets/confirm/confirm.component';
+import { CreateCampaingComponent } from '../../widgets/create-campaign/create-campaing/create-campaing.component';
 
-interface CardSettings {
-  title: string;
-  iconClass: string;
-  type: string;
-}
-
-interface TreeNode<T> {
-  data: T;
-  children?: TreeNode<T>[];
-  expanded?: boolean;
-}
-
-interface FSEntry {
-  name: string;
-  size: string;
-  kind: string;
-  items?: number;
-}
 
 @Component({
   selector: 'ngx-dashboard',
@@ -30,103 +17,108 @@ interface FSEntry {
 
 export class DashboardComponent {
 
-  protected tableColumns = ['Nome', 'Vaccini disponibili', 'Categorie', 'Azioni'];
+  public campaigns = [];
+  public dataSource;
+  public displayedColumns: string[] = ["name", "type", "totQty", "actions"];
 
   constructor(
     private authService: AuthService,
     private apiService: ApiService,
-    private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
-    private toastrService: NbToastrService
+    private toastrService: NbToastrService,
+    public dialogService: NbDialogService,
+    public changeDetector: ChangeDetectorRef
   ) {
-
-    this.apiService.getCampaigns().subscribe(
-      (response) => {
-        console.log(response)
-        this.toastrService.success("Sottotitolo", "Titolo");
-      },
-      (error) => {
-        console.log(error)
-        this.toastrService.danger("Sottotitolo", "Titolo");
-      }
-    );
-
-    this.dataSource = this.dataSourceBuilder.create(this.data);
-
     if (this.authService.getAccessToken == null) {
       this.authService.logout();
     }
+
+    this.apiService.getCampaigns().subscribe(
+      (response) => {
+        response.forEach(element => {
+          element = this.enumToString(element);
+          this.campaigns.push(element);
+        });
+        this.dataSource = new MatTableDataSource(this.campaigns)
+        this.toastrService.success("Campagne caricate correttamente", "Operazione avvenuta con successo:");
+      },
+      (error) => {
+        console.log(error)
+        this.toastrService.danger("Caricamento campagne non riuscito", "Si è verificato un errore:");
+      }
+    );
   }
 
-  customColumn = 'name';
-  defaultColumns = [ 'size', 'kind', 'items' ];
-  allColumns = [ this.customColumn, ...this.defaultColumns ];
-
-  dataSource: NbTreeGridDataSource<FSEntry>;
-
-  sortColumn: string;
-  sortDirection: NbSortDirection = NbSortDirection.NONE;
-
-
-  updateSort(sortRequest: NbSortRequest): void {
-    this.sortColumn = sortRequest.column;
-    this.sortDirection = sortRequest.direction;
+  public createCampaign(): void {
+    this.dialogService.open(CreateCampaingComponent, {
+      context: {
+        operation: "create"
+      }
+    }).onClose.subscribe(res => {
+      if (res) {
+        res = this.enumToString(res);
+        this.campaigns.push(res);
+        this.dataSource = new MatTableDataSource(this.campaigns)
+      }
+    })
   }
 
-  getSortDirection(column: string): NbSortDirection {
-    if (this.sortColumn === column) {
-      return this.sortDirection;
-    }
-    return NbSortDirection.NONE;
+  public edit(_id: string): void {
+    let campaign = this.campaigns.filter(x => x._id === _id)[0]
+    localStorage.setItem("campaign", JSON.stringify(campaign))
+    this.dialogService.open(CreateCampaingComponent, {
+      context: {
+        operation: "edit",
+      }
+    }).onClose.subscribe(res => {
+      if (res) {
+        res = this.enumToString(res);
+        this.campaigns.forEach(x => {
+          if (x._id === res._id) {
+            let index = this.campaigns.indexOf(x);
+            this.campaigns[index] = res;
+          }
+        });
+        this.dataSource = new MatTableDataSource(this.campaigns)
+      }
+    })
+
   }
 
-  private data: TreeNode<FSEntry>[] = [
-    {
-      data: { name: 'Projects', size: '1.8 MB', items: 5, kind: 'dir' },
-      children: [
-        { data: { name: 'project-1.doc', kind: 'doc', size: '240 KB' } },
-        { data: { name: 'project-2.doc', kind: 'doc', size: '290 KB' } },
-        { data: { name: 'project-3', kind: 'txt', size: '466 KB' } },
-        { data: { name: 'project-4.docx', kind: 'docx', size: '900 KB' } },
-      ],
-    },
-    {
-      data: { name: 'Reports', kind: 'dir', size: '400 KB', items: 2 },
-      children: [
-        { data: { name: 'Report 1', kind: 'doc', size: '100 KB' } },
-        { data: { name: 'Report 2', kind: 'doc', size: '300 KB' } },
-      ],
-    },
-    {
-      data: { name: 'Other', kind: 'dir', size: '109 MB', items: 2 },
-      children: [
-        { data: { name: 'backup.bkp', kind: 'bkp', size: '107 MB' } },
-        { data: { name: 'secret-note.txt', kind: 'txt', size: '2 MB' } },
-      ],
-    },
-  ];
-
-  getShowOn(index: number) {
-    const minWithForMultipleColumns = 400;
-    const nextColumnStep = 100; 
-    return minWithForMultipleColumns + (nextColumnStep * index);
+  public delete(_id: string): void {
+    this.dialogService.open(ConfirmComponent, {
+      context: {
+        name: "a campagna"
+      }
+    }).onClose.subscribe(
+      res => {
+        if (res) {
+          this.apiService.deleteCampaign(_id).subscribe(
+            response => {
+              this.campaigns.forEach((x, i) => {
+                if (x._id === response)
+                  this.campaigns.splice(i, 1)
+              })
+              this.dataSource = new MatTableDataSource(this.campaigns)
+              this.toastrService.success("Campagna eliminata correttamente", "Operazione avvenuta con successo:");
+            },
+            error => {
+              console.log(error);
+              this.toastrService.danger("Cancellazione campagna non riuscita", "Si è verificato un errore:");
+            }
+          )
+        }
+      }
+    )
   }
-}
-
-@Component({
-  selector: 'ngx-fs-icon',
-  template: `
-    <nb-tree-grid-row-toggle [expanded]="expanded" *ngIf="isDir(); else fileIcon">
-    </nb-tree-grid-row-toggle>
-    <ng-template #fileIcon>
-      <nb-icon icon="file-text-outline"></nb-icon>
-    </ng-template>
-  `,
-})
-export class FsIconComponent {
-  @Input() kind: string;
-  @Input() expanded: boolean;
-
-  isDir(): boolean {
-    return this.kind === 'dir';
+  public enumToString(element): any {
+    let stringType = "";
+    element.type.forEach(x => {
+      if (stringType != "")
+        stringType = stringType + ",\n" + x
+      else
+        stringType = x;
+    });
+    element.type = stringType;
+    return element;
   }
 }

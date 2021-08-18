@@ -10,6 +10,7 @@ import {
   NbListModule,
   NbIconModule,
   NbTreeGridModule,
+  NbInputModule,
 } from '@nebular/theme';
 import { NgxEchartsModule } from 'ngx-echarts';
 
@@ -30,7 +31,9 @@ import { SolarComponent } from './solar/solar.component';
 import { PlayerComponent } from './rooms/player/player.component';
 import { TrafficComponent } from './traffic/traffic.component';
 import { TrafficChartComponent } from './traffic/traffic-chart.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatTableModule } from '@angular/material/table';
+import { CreateCampaingComponent } from '../../widgets/create-campaign/create-campaing/create-campaing.component';
 
 @NgModule({
   imports: [
@@ -47,7 +50,11 @@ import { FormsModule } from '@angular/forms';
     NbIconModule,
     NbButtonModule,
     NgxEchartsModule,
-    NbTreeGridModule
+    NbTreeGridModule,
+    ReactiveFormsModule,
+    NbInputModule,
+    NbSelectModule,
+    MatTableModule
   ],
   declarations: [
     DashboardComponent,
@@ -66,6 +73,7 @@ import { FormsModule } from '@angular/forms';
     SolarComponent,
     TrafficComponent,
     TrafficChartComponent,
+    CreateCampaingComponent
   ],
 })
 export class DashboardModule { }

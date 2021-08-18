@@ -9,9 +9,8 @@ module.exports = fastifyPlugin(async (fastify, opts) => {
 
   const dbUsers = fastify.mongo.db(process.env.DATABASE).collection("Users");
 
-  // Auth for the security api
-  async function authForced(request, reply, done) {
-    // Take the authorization token
+  async function checkAuth(request, reply, done) {
+
     let token;
     if (request.headers.Authorization) {
       token = request.headers.Authorization.split(" ")[1];
@@ -26,16 +25,19 @@ module.exports = fastifyPlugin(async (fastify, opts) => {
     // Verify the token and if is avaible set it
     try {
       const decoded = jwt.verify(token, process.env.SECRET_JWT);
+
+      // if(!(decoded.user.confirmed)){
+      //   throw "Verify mail"
+      // }
       if (decoded && decoded.user) {
         request.data = decoded.user;
       } else {
-        throw fastify.httpErrors.unauthorized("Unauthorized");
+        throw "Unauthorized"
       }
     } catch (err) {
-      throw fastify.httpErrors.unauthorized("Unauthorized");
+      throw fastify.httpErrors.unauthorized(err)
     }
-  }
 
-  // Auth security
-  fastify.decorate("authForced", authForced);
+  }
+  fastify.decorate("checkAuth", checkAuth);
 });

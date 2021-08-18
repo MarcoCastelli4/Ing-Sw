@@ -1,0 +1,73 @@
+<nb-card>
+    <nb-card-header>
+        {{operation=="create" ? "Crea" : "Modifica"}} campagna vaccinale
+    </nb-card-header>
+    <nb-card-body>
+        <form [formGroup]="campaingForm" aria-labelledby="title">
+            <div class="form-control-group">
+                <label class="label" for="input-name">Nome:</label>
+                <input nbInput fullWidth name="name" id="input-name" formControlName="name" placeholder="Nome"
+                    [status]="name.touched ? (name.invalid  ? 'danger' : 'success') : 'basic'"
+                    [attr.aria-invalid]="name.invalid && name.touched ? true : null">
+                <ng-container *ngIf="name.invalid && name.touched">
+                    <p class="caption status-danger" *ngIf="name.errors?.required">
+                        Nome necessario per procedere
+                    </p>
+                </ng-container>
+            </div>
+            <div class="form-control-group">
+                <label class="label" for="input-totQty">Quantità:</label>
+                <input type="number" nbInput fullWidth name="totQty" id="input-totQty" formControlName="totQty"
+                    placeholder="Quantità"
+                    [status]="totQty.touched ? (totQty.invalid  ? 'danger' : 'success') : 'basic'" min="0"
+                    [attr.aria-invalid]="totQty.invalid && totQty.touched ? true : null">
+                <ng-container *ngIf="totQty.invalid && totQty.touched">
+                    <p class="caption status-danger" *ngIf="totQty.errors?.required">
+                        Quantità necessarie per procedere
+                    </p>
+                </ng-container>
+            </div>
+            <div class="form-control-group">
+                <label class="label" for="input-type">Categorie:</label>
+                <nb-select multiple type="text" fullWidth name="type" id="input-type" formControlName="type"
+                    placeholder="Categorie" [status]="type.touched ? (type.invalid  ? 'danger' : 'success') : 'basic'"
+                    [attr.aria-invalid]="type.invalid && type.touched ? true : null">
+                    <nb-option *ngFor="let type of enum" value="{{type}}">
+                        {{ type }}
+                    </nb-option>
+                </nb-select>
+                <ng-container *ngIf="type.invalid && type.touched">
+                    <p class="caption status-danger" *ngIf="type.errors?.required">
+                        Categorie necessarie per procedere
+                    </p>
+                </ng-container>
+            </div>
+            <div class="form-control-group">
+                <label class="label" for="input-priority">Categoria con priorità:</label>
+                <nb-select type="text" fullWidth name="priority" id="input-priority" formControlName="priority"
+                    placeholder="Categoria con priorità"
+                    [status]="priority.touched ? (priority.invalid  ? 'danger' : 'success') : 'basic'"
+                    [attr.aria-invalid]="priority.invalid && priority.touched ? true : null">
+                    <nb-option *ngFor="let priority of enum" value="{{priority}}">
+                        {{ priority }}
+                    </nb-option>
+                </nb-select>
+                <ng-container *ngIf="priority.invalid && priority.touched">
+                    <p class="caption status-danger" *ngIf="priority.errors?.required">
+                        Categoria con priorità necessaria per procedere
+                    </p>
+                </ng-container>
+            </div>
+        </form>
+    </nb-card-body>
+    <nb-card-footer>
+        <div class="row">
+            <div class="col-6">
+                <button nbButton (click)="this.ref.close()">Annulla</button>
+            </div>
+            <div class="col-6">
+                <button nbButton (click)="submit()" [disabled]="campaingForm.invalid">Conferma</button>
+            </div>
+        </div>
+    </nb-card-footer>
+</nb-card>

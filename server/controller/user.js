@@ -11,7 +11,7 @@ const md5 = require("md5");
 async function routes(fastify, options, next) {
 
   // DB CAMPAIGN
-  const dbCampagins = fastify.mongo
+  const dbCampaigns = fastify.mongo
     .db(process.env.DATABASE)
     .collection("Campaigns");
   // DB HUBS
@@ -273,7 +273,7 @@ async function routes(fastify, options, next) {
         },
       },
     },
-    preValidation: [fastify.authForced],
+    preValidation: [fastify.checkAuth],
     handler: async (request, reply) => {
       let userId = request.data._id;
       let user = await dbUsers.findOne({ _id: userId });
@@ -313,7 +313,7 @@ async function routes(fastify, options, next) {
         },
       },
     },
-    preValidation: [fastify.authForced],
+    preValidation: [fastify.checkAuth],
     handler: async (request, reply) => {
       let userId = request.data._id;
       let user = await dbUsers.findOne({ _id: userId });

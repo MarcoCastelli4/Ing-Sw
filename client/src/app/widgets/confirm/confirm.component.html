@@ -1,0 +1,18 @@
+<nb-card>
+    <nb-card-header>
+        Elimina {{name.split(" ")[1]}}
+    </nb-card-header>
+    <nb-card-body>
+        Sei sicuro di voler eliminare quest{{name}}?<br> Una volta confermato non potrai più tornare indietro!
+    </nb-card-body>
+    <nb-card-footer>
+        <div class="row" >
+            <div class="col-6" style="display: flex; justify-content: center;">
+                <button nbButton (click)="this.ref.close(false)">No</button>
+            </div>
+            <div class="col-6" style="display: flex; justify-content: center;">
+                <button nbButton (click)="this.ref.close(true)">Si</button>
+            </div>
+        </div>
+    </nb-card-footer>
+</nb-card>

@@ -14,6 +14,7 @@ import {
   LoginRequest
 } from "../models/class/auth";
 import { Observable } from "rxjs";
+import { Campaign } from "../models/class/campaign";
 
 const authApi = function (bool: boolean) {
   let headers = {
@@ -53,15 +54,29 @@ export class ApiService {
     );
   }
 
-  //public postApp(obj: App): Observable<any> {
-  //  return this.http.post<any>(
-  //    getUrl("app"),
-  //    obj,
-  //    authApi(true)
-  //  );
-  //}
-  //
-  
+  public postCampaign(obj: Campaign): Observable<any> {
+    return this.http.post<any>(
+      getUrl("campaign"),
+      obj,
+      authApi(true)
+    );
+  }
+
+  public putCampaign(obj: Campaign): Observable<any> {
+    return this.http.put<any>(
+      getUrl("campaign"),
+      obj,
+      authApi(true)
+    )
+  }
+
+  public deleteCampaign(_id: string): Observable<any> {
+    return this.http.delete<any>(
+      getUrl("campaign") + "?_id=" + _id,
+      authApi(true)
+    );
+  }
+
   //
   //  public getData(id: string): Observable<any> {
   //    return this.http.get<any>(
