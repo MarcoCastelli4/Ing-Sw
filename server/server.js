@@ -146,6 +146,8 @@ fastify.get("/admin/:filename(.[A-Za-z]{1,4})", function (req, reply) {
 fastify.register(require("./controller/user"));
 // ROUTES CAMPAIGNS
 fastify.register(require("./controller/campaign"));
+//ROUTES HUBS
+fastify.register(require("./controller/hub"));
 
 
 //

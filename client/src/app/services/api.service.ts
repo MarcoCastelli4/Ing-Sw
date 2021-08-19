@@ -77,6 +77,14 @@ export class ApiService {
     );
   }
 
+  //───────────────────────────────────────────────────── HUBS REQUESTS ────────────────────────────────────────────
+  public getHubs(): Observable<any> {
+    return this.http.get<any>(
+      getUrl("hubs"),
+      authApi(true)
+    );
+  }
+
   //
   //  public getData(id: string): Observable<any> {
   //    return this.http.get<any>(

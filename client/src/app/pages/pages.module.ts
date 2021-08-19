@@ -8,6 +8,9 @@ import { ECommerceModule } from './e-commerce/e-commerce.module';
 import { PagesRoutingModule } from './pages-routing.module';
 import { MiscellaneousModule } from './miscellaneous/miscellaneous.module';
 import { ConfirmComponent } from '../widgets/confirm/confirm.component';
+import { HubsComponent } from './hubs/hubs.component';
+import { MatTableModule } from '@angular/material/table';
+
 
 @NgModule({
   imports: [
@@ -18,11 +21,13 @@ import { ConfirmComponent } from '../widgets/confirm/confirm.component';
     ECommerceModule,
     MiscellaneousModule,
     NbCardModule,
-    NbButtonModule
+    NbButtonModule,
+    MatTableModule
   ],
   declarations: [
     PagesComponent,
-    ConfirmComponent
+    ConfirmComponent,
+    HubsComponent
   ],
 })
 export class PagesModule {

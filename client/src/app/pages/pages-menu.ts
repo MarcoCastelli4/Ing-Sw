@@ -2,15 +2,15 @@ import { NbMenuItem } from '@nebular/theme';
 
 export const MENU_ITEMS: NbMenuItem[] = [
   {
-    title: 'E-commerce',
+    title: 'Campagne vaccinali',
     icon: 'shopping-cart-outline',
     link: '/pages/dashboard',
     home: true,
   },
   {
-    title: 'IoT Dashboard',
+    title: 'Ambulatori',
     icon: 'home-outline',
-    link: '/pages/iot-dashboard',
+    link: '/pages/hubs',
   },
   {
     title: 'FEATURES',
