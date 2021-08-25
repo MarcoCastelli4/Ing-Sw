@@ -13,15 +13,6 @@ async function routes(fastify, options, next) {
     fastify.route({
         url: "/campaigns",
         method: "GET",
-        querystring: {
-            type: "object",
-            required: ["_id"],
-            properties: {
-                _id: {
-                    type: "string",
-                },
-            },
-        },
         response: {
             200: {
                 type: "array",
@@ -34,7 +25,6 @@ async function routes(fastify, options, next) {
         handler: async (request, reply) => {
             try {
                 let campaigns = await dbCampaigns.find().toArray();
-                console.log(campaigns);
                 return respF(reply, campaigns);
             } catch (err) {
                 console.log(err);
@@ -63,7 +53,6 @@ async function routes(fastify, options, next) {
                 inputData._id = uuid.v1();
 
                 let query = await dbCampaigns.insertOne(inputData);
-
 
                 if (query.insertedCount == 0)
                     throw fastify.httpErrors.internalServerError("Error while creating the element");

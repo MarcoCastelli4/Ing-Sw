@@ -15,6 +15,7 @@ import {
 } from "../models/class/auth";
 import { Observable } from "rxjs";
 import { Campaign } from "../models/class/campaign";
+import { Slot } from "../models/class/slot";
 
 const authApi = function (bool: boolean) {
   let headers = {
@@ -73,6 +74,25 @@ export class ApiService {
   public deleteCampaign(_id: string): Observable<any> {
     return this.http.delete<any>(
       getUrl("campaign") + "?_id=" + _id,
+      authApi(true)
+    );
+  }
+
+  //
+  //───────────────────────────────────────────────────── CAMPAIGN SLOTS ────────────────────────────────────────────
+  //
+
+  public getSlots(hub_id: string): Observable<any> {
+    return this.http.get<any>(
+      getUrl("slots") + "?_id=" + hub_id,
+      authApi(true)
+    );
+  }
+
+  public postSlot(obj: Slot): Observable<any> {
+    return this.http.post<any>(
+      getUrl("slot"),
+      obj,
       authApi(true)
     );
   }
@@ -168,11 +188,14 @@ export class ApiService {
   }
 
   public refreshToken(token: string): Observable<Tokens> {
-    return this.http.post<Tokens>(
+    let req = this.http.post<Tokens>(
       getUrl("token"),
       { refreshToken: token },
       authApi(false)
     );
+    console.log(req);
+    console.log(token);
+    return req;
   }
   //
   //  public confirmEmail(id: string): Observable<any> {

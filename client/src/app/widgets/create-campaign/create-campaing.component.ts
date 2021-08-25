@@ -1,10 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { async } from '@angular/core/testing';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NbDialogRef, NbToastrService } from '@nebular/theme';
-import { Campaign } from '../../../models/class/campaign';
-import { CampaignEnum } from '../../../models/enumerations/campaign';
-import { ApiService } from '../../../services/api.service';
+import { CampaignEnum } from '../../models/enumerations/campaign';
+import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'ngx-create-campaing',

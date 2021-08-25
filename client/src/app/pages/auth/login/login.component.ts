@@ -23,18 +23,21 @@ export class LoginComponent extends NbLoginComponent {
     this.apiService = ApiService.injector.get(ApiService)
     this.authService = AuthService.injector.get(AuthService)
 
-    if(localStorage.getItem("accessToken"))
+    if (localStorage.getItem("accessToken"))
       location.href = "/pages/dashboard"
   }
 
   login() {
     this.apiService.login({ email: this.user.email, password: this.user.password, opCode: this.user.opCode }).subscribe(
       (response) => {
-        if(response.user.role == "Citizen")
+        if (response.user.role == "Citizen") {
           this.authService.citizen = new Citizen(response.user);
-        else
+          localStorage.setItem("citizen", JSON.stringify(this.authService.citizen))
+        }
+        else {
           this.authService.operator = new Operator(response.user);
-        
+          localStorage.setItem("operator", JSON.stringify(this.authService.operator))
+        }
         this.authService.setAccessToken(response.accessToken);
         this.authService.setRefreshToken(response.refreshToken);
         this.showMessages.success = true;
@@ -44,13 +47,13 @@ export class LoginComponent extends NbLoginComponent {
       (error) => {
         this.showMessages.error = true;
         console.log(error.error.message)
-        if(error.error.message == "BadRequestError: Wrong password")
+        if (error.error.message == "BadRequestError: Wrong password")
           this.errors.push("Password errata");
-        else if(error.error.message == "BadRequestErrorUser does not exist")
+        else if (error.error.message == "BadRequestErrorUser does not exist")
           this.errors.push("L'utente non esiste");
         else
           this.errors.push("Riprova più tardi");
-        
+
         console.log(error);
       }
     );

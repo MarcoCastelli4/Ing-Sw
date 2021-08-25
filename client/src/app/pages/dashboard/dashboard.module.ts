@@ -33,7 +33,7 @@ import { TrafficComponent } from './traffic/traffic.component';
 import { TrafficChartComponent } from './traffic/traffic-chart.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
-import { CreateCampaingComponent } from '../../widgets/create-campaign/create-campaing/create-campaing.component';
+import { CreateCampaingComponent } from '../../widgets/create-campaign/create-campaing.component';
 
 @NgModule({
   imports: [

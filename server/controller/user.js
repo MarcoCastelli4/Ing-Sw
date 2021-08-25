@@ -79,6 +79,7 @@ async function routes(fastify, options, next) {
             // Set payload for jwt
             let payload = {
               _id: user._id,
+              role: role
             };
 
             const accessToken = getAccessToken(payload);
@@ -135,6 +136,8 @@ async function routes(fastify, options, next) {
     handler: async (request, reply) => {
       try {
         const inputData = request.body;
+        let role = null;
+
         let user = await dbCitizens.findOne({ fcCode: inputData.fcCode })
         if (!user)
           throw fastify.httpErrors.badRequest("fcCode is not recorded in the DB");
@@ -147,6 +150,7 @@ async function routes(fastify, options, next) {
           // Set payload for jwt
           let payload = {
             _id: uuid.v1(),
+            role: "Citizen"
           };
 
           const accessToken = getAccessToken(payload);
@@ -212,6 +216,7 @@ async function routes(fastify, options, next) {
     },
     preValidation: [],
     handler: async (request, reply) => {
+      console.log("Refreshing token");
       let refreshToken = request.body.refreshToken;
 
       // Verify the token
@@ -221,18 +226,22 @@ async function routes(fastify, options, next) {
           // Check if the user exist and if the refreshToken is inside the refreshTokens list
 
           request.data = decoded.user;
-          let user = await dbUsers.findOne({ _id: decoded.user._id });
+          let user;
+          if(decoded.user.role == "Citizen")
+            user = await dbCitizens.findOne({ _id: decoded.user._id });
+          else
+            user = await dbOperators.findOne({ _id: decoded.user._id });
 
           if (user && user.refreshTokens && user.refreshTokens.length > 0) {
             // The token is valid return the accessToken
             let payload = {
               _id: user._id,
-              role: user.role,
+              role: decoded.user.role,
             };
 
             // Return another refreshToken
             const accessToken = getAccessToken(payload);
-            const refreshToken = await getRefreshToken(dbUsers, payload, true);
+            const refreshToken = await getRefreshToken(dbCitizens, payload, true);
 
             let response = {
               accessToken: accessToken,

@@ -1,6 +1,22 @@
 const jwt = require("jsonwebtoken");
 const uuid = require("uuid");
 
+const slotSchema = {
+  type: "object",
+  properties: {
+    _id: { type: "string" },
+    date: { type: "number" },
+    slot: { type: "string" },
+    campaign_id: { type: "string" },
+    hub_id: { type: "string" },
+    user_ids: {
+      type: "array",
+      properties: { type: "string" }
+    },
+    quantity: { type: "number" },
+  }
+}
+
 const hubSchema = {
   type: "object",
   properties: {
@@ -8,10 +24,11 @@ const hubSchema = {
     name: { type: "string" },
     city: { type: "string" },
     totQty: { type: "number" },
-    availableQty: { type: "number" },
-    availableSlot: {
+    slots: {
       type: "array",
-      items: { type: "numbertype" }
+      items: {
+        slotSchema
+      }
     }
   }
 };
@@ -123,5 +140,6 @@ module.exports = {
   jwt,
   uuid,
   hubSchema,
-  campaignSchema
+  campaignSchema,
+  slotSchema
 };

@@ -45,7 +45,7 @@ export class RegisterComponent extends NbRegisterComponent {
                 this.messages.push("")
                 console.log(response.user)
                 this.authService.citizen = new Citizen(response.user);
-                console.log(this.authService.citizen)
+                localStorage.setItem("citizen", JSON.stringify(this.authService.citizen))
                 //TODO open modal con categoria di appartenenza
                 location.href = "/pages/dashboard"
             },

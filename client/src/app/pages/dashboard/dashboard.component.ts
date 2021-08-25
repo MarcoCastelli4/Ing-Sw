@@ -1,12 +1,10 @@
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { NbDialogService, NbSortDirection, NbSortRequest, NbToastrService, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
-import { Campaign } from '../../models/class/campaign';
-import { CampaignEnum } from '../../models/enumerations/campaign';
 import { ApiService } from '../../services/api.service';
 import { AuthService } from '../../services/auth.service';
 import { ConfirmComponent } from '../../widgets/confirm/confirm.component';
-import { CreateCampaingComponent } from '../../widgets/create-campaign/create-campaing/create-campaing.component';
+import { CreateCampaingComponent } from '../../widgets/create-campaign/create-campaing.component';
 
 
 @Component({

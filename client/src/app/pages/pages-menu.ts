@@ -13,6 +13,11 @@ export const MENU_ITEMS: NbMenuItem[] = [
     link: '/pages/hubs',
   },
   {
+    title: 'Inserimento disponibilità',
+    icon: 'home-outline',
+    link: '/pages/reservation',
+  },
+  {
     title: 'FEATURES',
     group: true,
   },

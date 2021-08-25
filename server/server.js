@@ -148,6 +148,8 @@ fastify.register(require("./controller/user"));
 fastify.register(require("./controller/campaign"));
 //ROUTES HUBS
 fastify.register(require("./controller/hub"));
+//ROUTES SLOTS
+fastify.register(require("./controller/slot"));
 
 
 //

@@ -49,16 +49,17 @@ export class Interceptor implements HttpInterceptor {
     }
 
     private handle401Error(request: HttpRequest<any>, next: HttpHandler) {
+        let refreshToken = localStorage.getItem("refreshToken")
         if (!this.isRefreshing) {
             this.isRefreshing = true;
             this.refreshTokenSubject.next(null);
             console.log(
                 this.authService.getRefreshToken,
-                localStorage.getItem("refreshToken")
+                refreshToken
             );
-
+            this.apiService.refreshToken(refreshToken).pipe();
             return this.apiService
-                .refreshToken(localStorage.getItem("refreshToken"))
+                .refreshToken(refreshToken)
                 .pipe(
                     switchMap((tokens: Tokens) => {
                         console.log("Token refreshed");
@@ -79,6 +80,28 @@ export class Interceptor implements HttpInterceptor {
                         }
                     })
                 );
+
+            //return this.apiService.refreshToken(refreshToken).subscribe(
+            //    (res) => {
+            //        console.log("Token refreshed");
+            //        console.log(res);
+            //        this.isRefreshing = false;
+            //        this.authService.setAccessToken(res.accessToken);
+            //        this.authService.setRefreshToken(res.refreshToken);
+            //        this.refreshTokenSubject.next(res.accessToken);
+            //        console.log(next)
+            //        return next.handle(this.addToken(request, res.accessToken));
+            //    },
+            //    (err) => {
+            //        if (err instanceof HttpErrorResponse && err.status === 400) {
+            //            this.authService.logout();
+            //            return;
+            //        } else {
+            //            console.log(err);
+            //            return throwError(err);
+            //        }
+            //    },
+            //)
         } else {
             return this.refreshTokenSubject.pipe(
                 filter((token) => token != null),

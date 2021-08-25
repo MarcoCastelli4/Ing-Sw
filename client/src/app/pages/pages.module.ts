@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { NbButtonModule, NbCardModule, NbMenuModule } from '@nebular/theme';
+import { NbButtonModule, NbCalendarModule, NbCardModule, NbDatepickerModule, NbIconModule, NbInputModule, NbMenuModule, NbSelectModule } from '@nebular/theme';
 
 import { ThemeModule } from '../@theme/theme.module';
 import { PagesComponent } from './pages.component';
@@ -10,6 +10,10 @@ import { MiscellaneousModule } from './miscellaneous/miscellaneous.module';
 import { ConfirmComponent } from '../widgets/confirm/confirm.component';
 import { HubsComponent } from './hubs/hubs.component';
 import { MatTableModule } from '@angular/material/table';
+import { ReservationComponent } from './reservation/reservation.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CreateReservationComponent } from './reservation/create-reservation/create-reservation.component';
+import { CalendarCellComponent } from './reservation/calendar-cell/calendar-cell.component';
 
 
 @NgModule({
@@ -22,12 +26,23 @@ import { MatTableModule } from '@angular/material/table';
     MiscellaneousModule,
     NbCardModule,
     NbButtonModule,
-    MatTableModule
+    MatTableModule,
+    NbDatepickerModule.forRoot(),
+    NbInputModule,
+    NbSelectModule,
+    NbButtonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    NbCalendarModule,
+    NbIconModule
   ],
   declarations: [
     PagesComponent,
     ConfirmComponent,
-    HubsComponent
+    HubsComponent,
+    ReservationComponent,
+    CreateReservationComponent,
+    CalendarCellComponent
   ],
 })
 export class PagesModule {
