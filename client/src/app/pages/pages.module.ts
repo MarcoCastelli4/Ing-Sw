@@ -14,6 +14,8 @@ import { ReservationComponent } from './reservation/reservation.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CreateReservationComponent } from './reservation/create-reservation/create-reservation.component';
 import { CalendarCellComponent } from './reservation/calendar-cell/calendar-cell.component';
+import { FlagComponent } from './reservation/calendar-cell/flag.component';
+import { CitizenReserveComponent } from './reservation/citizen-reserve/citizen-reserve.component';
 
 
 @NgModule({
@@ -42,7 +44,9 @@ import { CalendarCellComponent } from './reservation/calendar-cell/calendar-cell
     HubsComponent,
     ReservationComponent,
     CreateReservationComponent,
-    CalendarCellComponent
+    CalendarCellComponent,
+    FlagComponent,
+    CitizenReserveComponent
   ],
 })
 export class PagesModule {

@@ -66,5 +66,14 @@ button[nbTreeGridRowToggle] {
 }
 .actions-row{
   display: flex;
-  justify-content: space-evenly;
+  justify-content: flex-start;
+  .action-button{
+    font-size: 12px;
+  }
+}
+td, th{
+  overflow: hidden;
+  width: 25%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

@@ -1,14 +1,12 @@
 import { Component } from '@angular/core';
 import { NbLoginComponent } from '@nebular/auth';
-import { Citizen } from '../../../models/class/citizen';
-import { Operator } from '../../../models/class/operator';
 import { ApiService } from '../../../services/api.service';
 import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
+  styleUrls: [],
 })
 export class LoginComponent extends NbLoginComponent {
 
@@ -30,14 +28,15 @@ export class LoginComponent extends NbLoginComponent {
   login() {
     this.apiService.login({ email: this.user.email, password: this.user.password, opCode: this.user.opCode }).subscribe(
       (response) => {
-        if (response.user.role == "Citizen") {
-          this.authService.citizen = new Citizen(response.user);
-          localStorage.setItem("citizen", JSON.stringify(this.authService.citizen))
-        }
-        else {
-          this.authService.operator = new Operator(response.user);
-          localStorage.setItem("operator", JSON.stringify(this.authService.operator))
-        }
+        //if (response.user.role == "Citizen") {
+        //  this.authService.citizen = new Citizen(response.user);
+        //  localStorage.setItem("citizen", JSON.stringify(this.authService.citizen))
+        //}
+        //else {
+        //  this.authService.operator = new Operator(response.user);
+        //  localStorage.setItem("operator", JSON.stringify(this.authService.operator))
+        //}
+        localStorage.setItem("user_type", response.user.role)
         this.authService.setAccessToken(response.accessToken);
         this.authService.setRefreshToken(response.refreshToken);
         this.showMessages.success = true;

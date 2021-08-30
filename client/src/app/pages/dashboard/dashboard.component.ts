@@ -17,6 +17,7 @@ export class DashboardComponent {
 
   public campaigns = [];
   public dataSource;
+  public userRole: string;
   public displayedColumns: string[] = ["name", "type", "totQty", "actions"];
 
   constructor(
@@ -32,7 +33,8 @@ export class DashboardComponent {
 
     this.apiService.getCampaigns().subscribe(
       (response) => {
-        response.forEach(element => {
+        this.userRole = response.role; 
+        response.campaigns.forEach(element => {
           element = this.enumToString(element);
           this.campaigns.push(element);
         });
@@ -108,6 +110,7 @@ export class DashboardComponent {
       }
     )
   }
+
   public enumToString(element): any {
     let stringType = "";
     element.type.forEach(x => {
@@ -118,5 +121,9 @@ export class DashboardComponent {
     });
     element.type = stringType;
     return element;
+  }
+
+  public reserve(id: string){
+    location.href = "/pages/reservation?id=" + id;
   }
 }

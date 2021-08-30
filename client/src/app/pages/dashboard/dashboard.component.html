@@ -3,7 +3,7 @@
     <nb-card>
       <nb-card-header class="card-header">
         Campagne vaccinali disponibili
-        <button nbButton (click)="createCampaign()">Crea campagna<nb-icon icon="plus-outline"></nb-icon> </button>
+        <button *ngIf="userRole == 'Operator'" nbButton (click)="createCampaign()">Crea campagna<nb-icon icon="plus-outline"></nb-icon> </button>
       </nb-card-header>
       <nb-card-body>
         <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
@@ -23,12 +23,16 @@
             <td mat-cell *matCellDef="let element">{{element.totQty}}</td>
           </ng-container>
 
-          <ng-container matColumnDef="actions">
+          <ng-container style="width: 20%;" matColumnDef="actions">
             <th mat-header-cell *matHeaderCellDef>Azioni</th>
             <td mat-cell *matCellDef="let element">
-              <div class="actions-row">
-                <nb-icon icon="trash-outline" (click)="delete(element._id)" title="Elimina"></nb-icon>&nbsp;&nbsp;
-                <nb-icon icon="edit-outline" (click)="edit(element._id)" title="Modifica"></nb-icon>
+              <div *ngIf="userRole=='Operator'" class="actions-row">
+                <button (click)="delete(element._id)" title="Elimina" class="action-button" nbButton>Elimina <nb-icon icon="trash-outline"></nb-icon></button>&nbsp;
+                <button (click)="edit(element._id)" title="Modifica" class="action-button" nbButton>Modifica <nb-icon icon="edit-outline"></nb-icon></button>&nbsp;
+                <button (click)="reserve(element._id)" title="Inserisci" class="action-button" nbButton>Inserisci <nb-icon icon="plus-outline"></nb-icon></button>
+              </div>
+              <div *ngIf="userRole=='Citizen'" class="actions-row">
+                <button (click)="reserve(element._id)" title="Prenota" class="action-button" nbButton>Prenota <nb-icon icon="plus-outline"></nb-icon></button>
               </div>
             </td>
           </ng-container>

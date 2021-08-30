@@ -97,6 +97,13 @@ export class ApiService {
     );
   }
 
+  public postReservation(obj): Observable<any> {
+    return this.http.post<any>(
+      getUrl("reservation"),
+      obj,
+      authApi(true)
+    );
+  }
   //───────────────────────────────────────────────────── HUBS REQUESTS ────────────────────────────────────────────
   public getHubs(): Observable<any> {
     return this.http.get<any>(

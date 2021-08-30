@@ -24,6 +24,7 @@ import { AuthService } from './services/auth.service';
 import { ApiService } from './services/api.service';
 import { Interceptor } from './services/interceptor';
 import { ReactiveFormsModule } from '@angular/forms';
+import { DataService } from './services/data.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -61,5 +62,6 @@ export class AppModule {
   constructor(private injector: Injector){
     ApiService.injector = this.injector;
     AuthService.injector = this.injector;
+    DataService.injector = this.injector;
   }
 }

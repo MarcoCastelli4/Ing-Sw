@@ -3,7 +3,7 @@ import { NbMenuItem } from '@nebular/theme';
 export const MENU_ITEMS: NbMenuItem[] = [
   {
     title: 'Campagne vaccinali',
-    icon: 'shopping-cart-outline',
+    icon: 'shield-outline',
     link: '/pages/dashboard',
     home: true,
   },
@@ -11,11 +11,6 @@ export const MENU_ITEMS: NbMenuItem[] = [
     title: 'Ambulatori',
     icon: 'home-outline',
     link: '/pages/hubs',
-  },
-  {
-    title: 'Inserimento disponibilità',
-    icon: 'home-outline',
-    link: '/pages/reservation',
   },
   {
     title: 'FEATURES',

@@ -15,9 +15,15 @@ async function routes(fastify, options, next) {
         method: "GET",
         response: {
             200: {
-                type: "array",
-                items: {
-                    campaignSchema
+                type: "object",
+                properties: {
+                    role: { type: "string" },
+                    hubs: {
+                        type: "array",
+                        items: {
+                            campaignSchema
+                        }
+                    }
                 }
             }
         },
@@ -25,7 +31,13 @@ async function routes(fastify, options, next) {
         handler: async (request, reply) => {
             try {
                 let campaigns = await dbCampaigns.find().toArray();
-                return respF(reply, campaigns);
+
+                let res = {
+                    role: request.data.role,
+                    campaigns: campaigns
+                }
+
+                return respF(reply, res);
             } catch (err) {
                 console.log(err);
                 throw fastify.httpErrors.internalServerError(err);

@@ -1,0 +1,38 @@
+<nb-card>
+    <nb-card-header class="card-header">
+        Prenota vaccino
+    </nb-card-header>
+    <nb-card-body>
+        <form [formGroup]="reservationForm" aria-labelledby="title">
+            <div class="form-control-group">
+                <label class="label" for="input-date">Giorno:</label>
+                <input nbInput disabled="true" type="text" fullWidth name="date" id="input-date" value="{{this.date.getDate() + '/' + this.date.getMonth() + '/' + this.date.getFullYear()}}">
+            </div>
+            <div class="form-control-group">
+                <label class="label" for="input-slot">Slot:</label>
+                <nb-select type="text" fullWidth name="slot" id="input-slot" formControlName="slot" placeholder="Slot"
+                    [status]="slot.touched ? (slot.invalid  ? 'danger' : 'success') : 'basic'"
+                    [attr.aria-invalid]="slot.invalid && slot.touched ? true : null">
+                    <nb-option *ngFor="let slot of slots" value="{{slot._id}}">
+                        {{ slot.slot }}
+                    </nb-option>
+                </nb-select>
+                <ng-container *ngIf="slot.invalid && slot.touched">
+                    <p class="caption status-danger" *ngIf="slot.errors?.required">
+                        Slot necessario per procedere
+                    </p>
+                </ng-container>
+            </div>
+        </form>
+    </nb-card-body>
+    <nb-card-footer>
+        <div class="row">
+            <div class="col-6">
+                <button nbButton (click)="exit()">Annulla</button>
+            </div>
+            <div class="col-6">
+                <button nbButton (click)="submit()" [disabled]="reservationForm.invalid">Inserisci</button>
+            </div>
+        </div>
+    </nb-card-footer>
+</nb-card>

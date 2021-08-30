@@ -20,7 +20,6 @@ export class HubsComponent {
     private apiService: ApiService,
     private authService: AuthService,
     private toastrService: NbToastrService
-
     )
   {
 
@@ -29,13 +28,13 @@ export class HubsComponent {
     }
     this.apiService.getHubs().subscribe(
       (response) => {
-        this.dataSource = new MatTableDataSource(response)
-        console.log(response); 
-        this.toastrService.success("Hubs caricati correttamente", "Operazione avvenuta con successo:");
+        this.dataSource = new MatTableDataSource(response.hubs)
+        console.log(response);
+        this.toastrService.success("Ambulatori caricati correttamente", "Operazione avvenuta con successo:");
       },
       (error) => {
         console.log(error)
-        this.toastrService.danger("Caricamento hubs non riuscito", "Si è verificato un errore:");
+        this.toastrService.danger("Caricamento ambulatori non riuscito", "Si è verificato un errore:");
       }
     );
   }

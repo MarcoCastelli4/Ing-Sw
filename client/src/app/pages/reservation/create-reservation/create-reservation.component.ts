@@ -4,6 +4,7 @@ import { NbDialogRef, NbToastrService } from '@nebular/theme';
 import { Campaign } from '../../../models/class/campaign';
 import { Hub } from '../../../models/class/hub';
 import { ApiService } from '../../../services/api.service';
+import { DataService } from '../../../services/data.service';
 
 @Component({
   selector: 'ngx-reservation',
@@ -16,13 +17,15 @@ export class CreateReservationComponent implements OnInit {
 
   public reservationForm: FormGroup;
   public campaigns: Campaign[];
-  slots = ["8:00-8:20"]
+  public slots = this.dataService.slotsSelect;
 
   constructor(
     private fb: FormBuilder,
     private apiService: ApiService,
     private toastrService: NbToastrService,
-    private ref: NbDialogRef<CreateReservationComponent>
+    private ref: NbDialogRef<CreateReservationComponent>,
+    public dataService: DataService
+
   ) {
 
     this.apiService.getCampaigns().subscribe(
@@ -56,12 +59,14 @@ export class CreateReservationComponent implements OnInit {
   ngOnInit(): void { }
 
   public submit() {
+    this.reservationForm.value.date = (this.reservationForm.value.date).getTime();
+    this.reservationForm.value.campaign_id = location.href.split("=")[1];
     this.apiService.postSlot(this.reservationForm.value).subscribe(
       (response) => {
         this.toastrService.success("Slot inserito correttamente", "Operazione avvenuta con successo:");
-        let campaign = this.reservationForm.value;
-        campaign._id = response
-        //this.ref.close(campaign);
+        let slot = this.reservationForm.value;
+        slot._id = response;
+        this.ref.close(slot);
       },
       (error) => {
         console.log(error)
@@ -69,6 +74,8 @@ export class CreateReservationComponent implements OnInit {
       }
     );
   }
-  public exit() { }
+  public exit() { 
+    this.ref.close();
+  }
 
 }

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { NbDialogService, NbToastrService } from '@nebular/theme';
 import { ApiService } from '../../services/api.service';
+import { DataService } from '../../services/data.service';
 import { CalendarCellComponent } from './calendar-cell/calendar-cell.component';
 import { CreateReservationComponent } from './create-reservation/create-reservation.component';
 
@@ -15,32 +16,32 @@ export class ReservationComponent implements OnInit {
 
   public reservationForm: FormGroup;
   public hubs;
+  public userRole: string;
   public reservations;
   public calendarCellComponent = CalendarCellComponent;
   public data = new Date();
 
+  public slots = [];
+
   constructor(
-    private fb: FormBuilder,
     private apiService: ApiService,
     private dialogService: NbDialogService,
-    private toastrService: NbToastrService
+    private toastrService: NbToastrService,
+    private dataService: DataService
   ) {
 
     this.apiService.getHubs().subscribe(
-      (res) => { 
-        this.hubs = res;
+      (res) => {
+        this.hubs = res.hubs;
+        this.userRole = res.role;
         console.log(res)
         this.toastrService.success("Ambulatori caricati correttamente", "Operazione avvenuta con successo:");
       },
-      (err) => { 
+      (err) => {
         this.toastrService.danger("Caricamento ambulatori fallito", "Si è verificato un errore:");
-        console.log(err) 
+        console.log(err)
       }
     )
-    //this.apiService.getSlots().subscribe(
-    //  (res) => { console.log(res) },
-    //  (err) => { console.log(err) }
-    //)
   }
 
   get campaign() { return this.reservationForm.get('campaign') }
@@ -49,8 +50,7 @@ export class ReservationComponent implements OnInit {
   get slot() { return this.reservationForm.get('slot') }
   get quantity() { return this.reservationForm.get('quantity') }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void { }
 
   public createSlot() {
     this.dialogService.open(CreateReservationComponent, {
@@ -64,19 +64,28 @@ export class ReservationComponent implements OnInit {
     })
   }
 
-  public getSlots(_id: string){
+  public getSlots(_id: string) {
+    this.slots = [];
     this.apiService.getSlots(_id).subscribe(
-      (res) => { 
+      (res) => {
         this.reservations = res;
-        console.log(res)
+        this.reservations.forEach(x => {
+          if (x.date > Date.now()) {
+            this.slots.push(x)
+          }
+        });
+        console.log("sending")
+        this.dataService.sendSlots(this.slots)
+
         this.toastrService.success("Ambulatori caricati correttamente", "Operazione avvenuta con successo:");
       },
-      (err) => { 
+      (err) => {
         this.toastrService.danger("Caricamento ambulatori fallito", "Si è verificato un errore:");
-        console.log(err) 
+        console.log(err)
       }
     )
   }
+
   public exit() { }
 
 }

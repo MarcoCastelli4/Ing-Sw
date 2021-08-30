@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { NbRegisterComponent } from '@nebular/auth';
-import { Citizen } from '../../../models/class/citizen';
 import { ApiService } from '../../../services/api.service';
 import { AuthService } from '../../../services/auth.service';
 
@@ -11,7 +10,6 @@ import { AuthService } from '../../../services/auth.service';
 export class RegisterComponent extends NbRegisterComponent {
     private apiService;
     private authService;
-
 
     ngOnInit() {
         this.user.email = "antonelgabor@gmail.com";
@@ -41,12 +39,14 @@ export class RegisterComponent extends NbRegisterComponent {
                 this.authService.setAccessToken(response.accessToken);
                 this.authService.setRefreshToken(response.refreshToken);
                 localStorage.setItem("email", this.user.email);
+                localStorage.setItem("user_type", "Citizen")
                 this.showMessages.success = true;
                 this.messages.push("")
                 console.log(response.user)
-                this.authService.citizen = new Citizen(response.user);
-                localStorage.setItem("citizen", JSON.stringify(this.authService.citizen))
+                //this.authService.citizen = new Citizen(response.user);
+                //localStorage.setItem("citizen", JSON.stringify(this.authService.citizen))
                 //TODO open modal con categoria di appartenenza
+                
                 location.href = "/pages/dashboard"
             },
             (error) => {

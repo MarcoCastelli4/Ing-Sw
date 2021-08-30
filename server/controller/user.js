@@ -165,11 +165,11 @@ async function routes(fastify, options, next) {
                 password: md5(inputData.password),
                 refreshTokens: [refreshToken],
                 birthplace: inputData.birthplace,
-                birthday: Date.parse(inputData.birthday)
+                birthday: Date.parse(inputData.birthday),
+                reservations: []
               }
             }
           );
-          
           user.value["email"] = inputData.email;
           user.value["birthplace"] = inputData.birthplace;
           user.value["birthday"] = Date.parse(inputData.birthday);
