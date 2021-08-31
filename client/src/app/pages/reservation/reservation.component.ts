@@ -4,7 +4,7 @@ import { NbDialogService, NbToastrService } from '@nebular/theme';
 import { ApiService } from '../../services/api.service';
 import { DataService } from '../../services/data.service';
 import { CalendarCellComponent } from './calendar-cell/calendar-cell.component';
-import { CreateReservationComponent } from './create-reservation/create-reservation.component';
+import { OperatorReservationComponent } from './operator-reservation/operator-reservation.component';
 
 @Component({
   selector: 'ngx-reservation',
@@ -52,7 +52,7 @@ export class ReservationComponent implements OnInit {
   ngOnInit(): void { }
 
   public createSlot() {
-    this.dialogService.open(CreateReservationComponent, {
+    this.dialogService.open(OperatorReservationComponent, {
       context: {
         hubs: this.hubs
       }

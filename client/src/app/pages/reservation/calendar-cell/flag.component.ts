@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, Input, NgZone } from "@angular/core";
 import { NbDialogService } from "@nebular/theme";
 import { Subscription } from "rxjs";
 import { DataService } from "../../../services/data.service";
-import { CitizenReserveComponent } from "../citizen-reserve/citizen-reserve.component";
+import { CitizenReservationComponent } from "../citizen-reservation/citizen-reservation.component";
 
 @Component({
     selector: "ngx-flag",
@@ -45,7 +45,7 @@ export class FlagComponent {
     }
 
     public openDialog() {
-        this.dialogService.open(CitizenReserveComponent, {
+        this.dialogService.open(CitizenReservationComponent, {
             context: {
                 date: this.date,
                 hub_id: this.hub_id,
