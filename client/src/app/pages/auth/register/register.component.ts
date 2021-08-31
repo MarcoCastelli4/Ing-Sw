@@ -6,6 +6,7 @@ import { AuthService } from '../../../services/auth.service';
 @Component({
     selector: 'register',
     templateUrl: './register.component.html',
+    styleUrls: ['../auth.scss']
 })
 export class RegisterComponent extends NbRegisterComponent {
     private apiService;
@@ -64,5 +65,31 @@ export class RegisterComponent extends NbRegisterComponent {
                     this.errors.push("Riprova più tardi")
             }
         );
+    }
+    public showPassword = false;
+    public showPasswordConfirm = false;
+  
+    getInputType(buttonNumber: number) {
+    if(buttonNumber==1){
+        if (this.showPassword) {
+            return 'text';
+        }
+    return 'password';
+    }
+    else if(buttonNumber==2){
+        if (this.showPasswordConfirm) {
+         return 'text';
+        }
+     return 'password';
+    }
+
+}
+
+  
+    toggleShowPassword(buttonNumber: number) {
+        if(buttonNumber==1)
+      this.showPassword = !this.showPassword;
+      else if(buttonNumber==2)
+        this.showPasswordConfirm=!this.showPasswordConfirm;
     }
 }

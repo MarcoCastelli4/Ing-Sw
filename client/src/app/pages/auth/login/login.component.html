@@ -23,7 +23,7 @@
   </ul>
 </nb-alert>
 
-<form (ngSubmit)="login()" #form="ngForm" aria-labelledby="title">
+<form #form="ngForm" aria-labelledby="title">
 
   <div class="form-control-group" *ngIf="citizen">
     <label class="label" for="input-email">Email:</label>
@@ -63,11 +63,23 @@
       <label class="label" for="input-password">Password:</label>
       <!--<a class="forgot-password caption-2" routerLink="../request-password">Forgot Password?</a>-->
     </span>
-    <input nbInput fullWidth [(ngModel)]="user.password" #password="ngModel" name="password" type="password"
-      id="input-password" placeholder="Password" fieldSize="large"
-      [status]="password.dirty ? (password.invalid  ? 'danger' : 'success') : 'basic'"
-      [required]="getConfigValue('forms.validation.password.required')" [minlength]="8" [maxlength]="50"
-      [attr.aria-invalid]="password.invalid && password.touched ? true : null">
+    
+      
+   <div class="password-input">
+      <input [type]="getInputType()" fullWidth nbInput [(ngModel)]="user.password" #password="ngModel" name="password"
+        id="input-password" placeholder="Password" 
+        [status]="password.dirty ? (password.invalid  ? 'danger' : 'success') : 'basic'"
+        [required]="getConfigValue('forms.validation.password.required')" [minlength]="8" [maxlength]="50"
+        [attr.aria-invalid]="password.invalid && password.touched ? true : null">
+
+        <button nbSuffix nbButton ghost (click)="toggleShowPassword()">
+          <nb-icon [icon]="showPassword ? 'eye-outline' : 'eye-off-2-outline'"
+                   pack="eva"
+                   [attr.aria-label]="showPassword ? 'hide password' : 'show password'">
+          </nb-icon>
+        </button>
+    </div>
+ 
     <ng-container *ngIf="password.invalid && password.touched ">
       <p class="caption status-danger" *ngIf="password.errors?.required">
         Password necessaria per procedere
@@ -77,6 +89,7 @@
       </p>
     </ng-container>
   </div>
+   
 
   <!--
   <div class="form-control-group accept-group">
@@ -84,7 +97,7 @@
   </div>
   -->
 
-  <button nbButton fullWidth status="primary" size="large" [disabled]="submitted || !form.valid"
+  <button (click)="login()" nbButton fullWidth status="primary" size="large" [disabled]="submitted || !form.valid"
     [class.btn-pulse]="submitted">
     Log In
   </button>

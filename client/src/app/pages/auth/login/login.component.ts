@@ -6,7 +6,7 @@ import { AuthService } from '../../../services/auth.service';
 @Component({
   selector: 'login',
   templateUrl: './login.component.html',
-  styleUrls: [],
+  styleUrls: ['../auth.scss']
 })
 export class LoginComponent extends NbLoginComponent {
 
@@ -58,4 +58,17 @@ export class LoginComponent extends NbLoginComponent {
       }
     );
   }
+   public showPassword = false;
+  
+    getInputType() {
+      if (this.showPassword) {
+        return 'text';
+      }
+      return 'password';
+    }
+  
+    toggleShowPassword() {
+      this.showPassword = !this.showPassword;
+    }
+  
 }

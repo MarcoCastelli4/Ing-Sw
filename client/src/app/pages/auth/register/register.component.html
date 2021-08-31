@@ -14,7 +14,7 @@
     </ul>
 </nb-alert>
 
-<form (ngSubmit)="register()" #form="ngForm" aria-labelledby="title">
+<form #form="ngForm" aria-labelledby="title">
 
     <div class="form-control-group">
         <label class="label" for="input-fcCode">Codice fiscale:</label>
@@ -72,8 +72,16 @@
 
     <div class="form-control-group">
         <label class="label" for="input-password">Password:</label>
-        <input nbInput [(ngModel)]="user.password" #password="ngModel" type="password" id="input-password"
+        <div class="password-input">
+        <input nbInput [(ngModel)]="user.password" #password="ngModel" [type]="getInputType(1)" id="input-password"
             name="password" placeholder="Password" fullWidth fieldSize="large">
+            <button nbSuffix nbButton ghost (click)="toggleShowPassword(1)">
+                <nb-icon [icon]="showPassword ? 'eye-outline' : 'eye-off-2-outline'"
+                         pack="eva"
+                         [attr.aria-label]="showPassword ? 'hide password' : 'show password'">
+                </nb-icon>
+            </button>
+        </div>
         <ng-container *ngIf="password.invalid && password.touched">
             <p class="caption status-danger" *ngIf="password.errors?.required">
                 Password necessaria per proseguire
@@ -86,8 +94,16 @@
 
     <div class="form-control-group">
         <label class="label" for="input-re-password">Conferma password:</label>
-        <input nbInput [(ngModel)]="user.confirmPassword" #rePass="ngModel" type="password" id="input-re-password"
+        <div class="password-input">
+        <input nbInput [(ngModel)]="user.confirmPassword" #rePass="ngModel" [type]="getInputType(2)" id="input-re-password"
             name="rePass" placeholder="Conferma password" fullWidth fieldSize="large">
+            <button nbSuffix nbButton ghost (click)="toggleShowPassword(2)">
+                <nb-icon [icon]="showPassword ? 'eye-outline' : 'eye-off-2-outline'"
+                         pack="eva"
+                         [attr.aria-label]="showPassword ? 'hide password' : 'show password'">
+                </nb-icon>
+            </button>
+        </div>
         <ng-container *ngIf="rePass.invalid && rePass.touched">
             <p class="caption status-danger" *ngIf="rePass.errors?.required">
                 Conferma password necessaria per proseguire
@@ -96,6 +112,7 @@
                 Le due password non corrispondono.
             </p>
         </ng-container>
+    
     </div>
 
     <!--
@@ -106,7 +123,7 @@
     </div>
     -->
 
-    <button nbButton fullWidth status="primary" size="large" [disabled]="submitted || !form.valid"
+    <button (click)="register()" nbButton fullWidth status="primary" size="large" [disabled]="submitted || !form.valid"
         [class.btn-pulse]="submitted">
         Register
     </button>

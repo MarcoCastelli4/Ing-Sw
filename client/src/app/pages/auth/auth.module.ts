@@ -10,6 +10,7 @@ import {
   NbButtonModule,
   NbCheckboxModule,
   NbDatepickerModule,
+  NbIconModule,
   NbInputModule
 } from '@nebular/theme';
 import { LoginComponent } from './login/login.component';
@@ -26,7 +27,8 @@ import { RegisterComponent } from './register/register.component';
     NbCheckboxModule,
     AuthRoutingModule,
     NbAuthModule,
-    NbDatepickerModule.forRoot()
+    NbDatepickerModule.forRoot(),
+    NbIconModule
   ],
   declarations: [
     LoginComponent,

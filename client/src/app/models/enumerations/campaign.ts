@@ -1,12 +1,11 @@
 export enum CampaignEnum {
-    "over 80",
-    "79-70",
-    "69-60",
-    "59-50",
-    "49-40",
-    "39-30",
-    "under 30",
-    "paziente oncologico",
-    "paziente iperteso",
-    "paziente a rischio"
+    "Elevata fragilità",
+    "Over 80",
+    "70-79",
+    "60-69",
+    "50-59",
+    "30-49",
+    "18-29",
+    "10-17",
+    "0-9"
 }
