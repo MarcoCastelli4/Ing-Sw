@@ -69,11 +69,12 @@ async function routes(fastify, options, next) {
         }
 
         else if (inputData.opCode) {
-          user = await dbOperators.findOne({ email: inputData.opCode });
+          user = await dbOperators.findOne({ opCode: inputData.opCode });
           role = "Operator";
         }
 
         if (user) {
+          console.log(inputData, user.password, md5(inputData.password))
           if (inputData.password && user.password == md5(inputData.password)) {
 
             // Set payload for jwt
