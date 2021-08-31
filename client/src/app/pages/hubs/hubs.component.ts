@@ -29,7 +29,6 @@ export class HubsComponent {
     this.apiService.getHubs().subscribe(
       (response) => {
         this.dataSource = new MatTableDataSource(response.hubs)
-        console.log(response);
         this.toastrService.success("Ambulatori caricati correttamente", "Operazione avvenuta con successo:");
       },
       (error) => {

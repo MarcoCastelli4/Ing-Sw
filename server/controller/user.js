@@ -74,7 +74,6 @@ async function routes(fastify, options, next) {
         }
 
         if (user) {
-          console.log(inputData, user.password, md5(inputData.password))
           if (inputData.password && user.password == md5(inputData.password)) {
 
             // Set payload for jwt

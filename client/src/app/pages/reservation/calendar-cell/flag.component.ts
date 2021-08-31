@@ -23,9 +23,7 @@ export class FlagComponent {
         private ref: ChangeDetectorRef,
         private dialogService: NbDialogService
     ) {
-        console.log(this.date);
         this.subscription = this.dataService.getSlots().subscribe(slots => {
-            console.log(slots)
             // Pulisci l'eventuale valore di un hub selezionato precedentemente
             this.cellColor = "";
             this.ref.markForCheck();

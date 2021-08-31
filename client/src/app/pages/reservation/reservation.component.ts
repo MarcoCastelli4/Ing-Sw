@@ -34,7 +34,6 @@ export class ReservationComponent implements OnInit {
       (res) => {
         this.hubs = res.hubs;
         this.userRole = res.role;
-        console.log(res)
         this.toastrService.success("Ambulatori caricati correttamente", "Operazione avvenuta con successo:");
       },
       (err) => {
@@ -74,7 +73,6 @@ export class ReservationComponent implements OnInit {
             this.slots.push(x)
           }
         });
-        console.log("sending")
         this.dataService.sendSlots(this.slots)
 
         this.toastrService.success("Ambulatori caricati correttamente", "Operazione avvenuta con successo:");

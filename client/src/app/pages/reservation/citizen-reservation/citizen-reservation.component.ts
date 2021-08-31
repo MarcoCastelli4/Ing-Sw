@@ -5,11 +5,11 @@ import { ApiService } from '../../../services/api.service';
 import { DataService } from '../../../services/data.service';
 
 @Component({
-  selector: 'ngx-citizen-reserve',
-  templateUrl: './citizen-reserve.component.html',
-  styleUrls: ['./citizen-reserve.component.scss']
+  selector: 'ngx-citizen-reservation',
+  templateUrl: './citizen-reservation.component.html',
+  styleUrls: ['./citizen-reservation.component.scss']
 })
-export class CitizenReserveComponent implements OnInit {
+export class CitizenReservationComponent implements OnInit {
   @Input() date: Date;
   @Input() hub_id: string;
   @Input() slots: [];
@@ -21,7 +21,7 @@ export class CitizenReserveComponent implements OnInit {
     private fb: FormBuilder,
     private apiService: ApiService,
     private toastrService: NbToastrService,
-    private ref: NbDialogRef<CitizenReserveComponent>,
+    private ref: NbDialogRef<CitizenReservationComponent>,
     public dataService: DataService
 
   ) {

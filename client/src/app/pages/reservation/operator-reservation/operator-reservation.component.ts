@@ -7,11 +7,11 @@ import { ApiService } from '../../../services/api.service';
 import { DataService } from '../../../services/data.service';
 
 @Component({
-  selector: 'ngx-reservation',
-  templateUrl: './create-reservation.component.html',
-  styleUrls: ['./create-reservation.component.scss']
+  selector: 'ngx-operator-reservation',
+  templateUrl: './operator-reservation.component.html',
+  styleUrls: ['./operator-reservation.component.scss']
 })
-export class CreateReservationComponent implements OnInit {
+export class OperatorReservationComponent implements OnInit {
 
   @Input() hubs: Hub[];
 
@@ -23,7 +23,7 @@ export class CreateReservationComponent implements OnInit {
     private fb: FormBuilder,
     private apiService: ApiService,
     private toastrService: NbToastrService,
-    private ref: NbDialogRef<CreateReservationComponent>,
+    private ref: NbDialogRef<OperatorReservationComponent>,
     public dataService: DataService
 
   ) {

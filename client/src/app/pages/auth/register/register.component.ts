@@ -43,7 +43,6 @@ export class RegisterComponent extends NbRegisterComponent {
                 localStorage.setItem("user_type", "Citizen")
                 this.showMessages.success = true;
                 this.messages.push("")
-                console.log(response.user)
                 //this.authService.citizen = new Citizen(response.user);
                 //localStorage.setItem("citizen", JSON.stringify(this.authService.citizen))
                 //TODO open modal con categoria di appartenenza
