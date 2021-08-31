@@ -2,10 +2,10 @@
 
 <div class="row buttons">
   <div class="col-6">
-    <button nbButton (click)="citizen = true">Cittadino</button>
+    <button nbButton (click)="citizen = true; this.user.opCode = ''">Cittadino</button>
   </div>
   <div class="col-6">
-    <button nbButton (click)="citizen = false">Operatore</button>
+    <button nbButton (click)="citizen = false; this.user.email = ''">Operatore</button>
   </div>
 </div>
 

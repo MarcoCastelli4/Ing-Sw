@@ -26,6 +26,7 @@ export class LoginComponent extends NbLoginComponent {
   }
 
   login() {
+    console.log(this.user)
     this.apiService.login({ email: this.user.email, password: this.user.password, opCode: this.user.opCode }).subscribe(
       (response) => {
         //if (response.user.role == "Citizen") {
