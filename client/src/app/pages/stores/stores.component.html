@@ -1,0 +1,34 @@
+<div class="row">
+  <div class="col-12">
+    <nb-card>
+      <nb-card-header class="card-header">
+        Magazzini
+      </nb-card-header>
+      <nb-card-body>
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Nome</th>
+            <td mat-cell *matCellDef="let element">{{element.name}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef>Categorie</th>
+            <td mat-cell style="white-space: pre;" *matCellDef="let element">{{element.type}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="totQty">
+            <th mat-header-cell *matHeaderCellDef>Quantità</th>
+            <td mat-cell *matCellDef="let element">
+                {{element.totQty}}
+              <button (click)="changeQty(element._id, true)" status="success" nbButton style="margin: 2px 2px"><nb-icon icon="plus-outline"></nb-icon></button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>

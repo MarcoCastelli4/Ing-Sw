@@ -23,6 +23,10 @@
     cursor: pointer;
   }
 
+  nb-icon {
+    color: white;
+  }
+
   ::ng-deep nb-search button {
     padding: 0!important;
   }
@@ -39,16 +43,19 @@
       color: nb-theme(text-hint-color);
       nb-icon {
         font-size: 1.75rem;
+        color: nb-theme(text-hint-color);
       }
     }
 
     .logo {
       padding: 0 1.25rem;
-      font-size: 1.0rem;
+      font-size: 1.3rem;
+      font-weight: 700;
       @include nb-ltr(border-left, 1px solid nb-theme(divider-color));
       @include nb-rtl(border-right, 1px solid nb-theme(divider-color));
       white-space: nowrap;
       text-decoration: none;
+      color: nb-theme(color-primary-default);
     }
   }
 

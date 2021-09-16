@@ -1,13 +1,5 @@
 <h1 id="title" class="title">Login</h1>
 
-<div class="row buttons">
-  <div class="col-6">
-    <button nbButton (click)="citizen = true; this.user.opCode = ''">Cittadino</button>
-  </div>
-  <div class="col-6">
-    <button nbButton (click)="citizen = false; this.user.email = ''">Operatore</button>
-  </div>
-</div>
 
 <nb-alert *ngIf="showMessages.error && errors?.length && !submitted" outline="danger" role="alert">
   <p class="alert-title"><b>Qualcosa è andato storto:</b></p>
@@ -27,51 +19,28 @@
 
   <div class="form-control-group" *ngIf="citizen">
     <label class="label" for="input-email">Email:</label>
-    <input nbInput fullWidth [(ngModel)]="user.email" #email="ngModel" name="email" id="input-email" pattern=".+@.+\..+"
-      placeholder="Email" fieldSize="large" autofocus
-      [status]="email.dirty ? (email.invalid  ? 'danger' : 'success') : 'basic'"
-      [required]="getConfigValue('forms.validation.email.required')"
-      [attr.aria-invalid]="email.invalid && email.touched ? true : null">
-    <ng-container *ngIf="email.invalid && email.touched">
-      <p class="caption status-danger" *ngIf="email.errors?.required">
+    <input nbInput fullWidth [(ngModel)]="user.email" name="email" id="input-email" 
+      placeholder="Email" fieldSize="large" autofocus>
+    <ng-container *ngIf="user && !user.email">
+      <p class="caption status-danger">
         Email necessaria per procedere
-      </p>
-      <p class="caption status-danger" *ngIf="email.errors?.pattern">
-        Email errata
       </p>
     </ng-container>
   </div>
 
   <div class="form-control-group" *ngIf="!citizen">
     <label class="label" for="input-opCode">Codice operatore:</label>
-    <input nbInput fullWidth [(ngModel)]="user.opCode" #opCode="ngModel" name="opCode" id="input-opCode"
-      placeholder="Codice operatore" fieldSize="large" required>
-    <ng-container *ngIf="opCode.invalid && opCode.touched">
-      <p class="caption status-danger" *ngIf="opCode.errors?.required">
-        Codice operatore necessario per procedere
-      </p>
-      <!--
-        <p class="caption status-danger" *ngIf="opCode.errors?.pattern">
-          Codice operatore errato
-        </p>
-      -->
-    </ng-container>
+    <input nbInput fullWidth [(ngModel)]="user.email" name="opCode" placeholder="Codice operatore" fieldSize="large" required>
   </div>
 
   <div class="form-control-group">
     <span class="label-with-link">
       <label class="label" for="input-password">Password:</label>
-      <!--<a class="forgot-password caption-2" routerLink="../request-password">Forgot Password?</a>-->
     </span>
     
       
    <div class="password-input">
-      <input [type]="getInputType()" fullWidth nbInput [(ngModel)]="user.password" #password="ngModel" name="password"
-        id="input-password" placeholder="Password" 
-        [status]="password.dirty ? (password.invalid  ? 'danger' : 'success') : 'basic'"
-        [required]="getConfigValue('forms.validation.password.required')" [minlength]="8" [maxlength]="50"
-        [attr.aria-invalid]="password.invalid && password.touched ? true : null">
-
+      <input [type]="showPassword?'text':'password'" name="Password" fullWidth nbInput [(ngModel)]="user.password" placeholder="Password" >
         <button nbSuffix nbButton ghost (click)="toggleShowPassword()">
           <nb-icon [icon]="showPassword ? 'eye-outline' : 'eye-off-2-outline'"
                    pack="eva"
@@ -80,24 +49,25 @@
         </button>
     </div>
  
-    <ng-container *ngIf="password.invalid && password.touched ">
-      <p class="caption status-danger" *ngIf="password.errors?.required">
+    <ng-container *ngIf="user && !user.password ">
+      <p class="caption status-danger">
         Password necessaria per procedere
-      </p>
-      <p class="caption status-danger" *ngIf="password.errors?.minlength || password.errors?.maxlength">
-        La password deve contenere da 8 a 50 caratteri
       </p>
     </ng-container>
   </div>
    
 
-  <!--
-  <div class="form-control-group accept-group">
-    <nb-checkbox name="rememberMe" [(ngModel)]="user.rememberMe" *ngIf="rememberMe">Remember me</nb-checkbox>
+<div class="row buttons" style="margin-bottom:10px">
+  <div class="col-6">
+    <button nbButton [status]="citizen?'primary':'default'" (click)="changeLogin(true)" style="width:100%">Cittadino</button>
   </div>
-  -->
+  <div class="col-6">
+    <button nbButton [status]="!citizen?'primary':'default'" (click)="changeLogin(false)" style="width:100%">Operatore</button>
+  </div>
 
-  <button (click)="login()" nbButton fullWidth status="primary" size="large" [disabled]="submitted || !form.valid"
+  </div>
+
+  <button (click)="login()" nbButton fullWidth status="success" size="large" [disabled]="submitted || !form.valid"
     [class.btn-pulse]="submitted">
     Log In
   </button>

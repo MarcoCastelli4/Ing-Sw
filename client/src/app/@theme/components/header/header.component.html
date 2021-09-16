@@ -8,9 +8,6 @@
 </div>
 
 <div class="header-container">
-  <nb-select [selected]="currentTheme" (selectedChange)="changeTheme($event)" status="primary">
-    <nb-option *ngFor="let theme of themes" [value]="theme.value"> {{ theme.name }}</nb-option>
-  </nb-select>
   <nb-actions size="small">
 
     <!--
@@ -18,11 +15,8 @@
       <nb-search type="rotate-layout"></nb-search>
     </nb-action>
     -->
-    <nb-action class="user-action" *nbIsGranted="['view', 'user']" >
-      <nb-user [nbContextMenu]="userMenu"
-               [name]="user?.email ? user?.email : user?.opCode "
-               nbContextMenuTag="user-context-menu">
-      </nb-user>
+    <nb-action class="control-item" >
+      <button nbButton status="danger" (click)="logout()"><nb-icon icon="log-out"></nb-icon>Esci</button>
     </nb-action>
   </nb-actions>
 </div>
