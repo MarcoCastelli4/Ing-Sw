@@ -3,7 +3,7 @@ const {
     uuid,
     slotSchema
 } = require("../utilities");
-var ObjectID = require("mongodb").ObjectID
+var ObjectID = require("mongodb").ObjectID;
 
 async function routes(fastify, options, next) {
     // DB HUBS

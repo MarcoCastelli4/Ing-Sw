@@ -8,6 +8,7 @@ const {
   citizenSchema
 } = require("../utilities");
 const md5 = require("md5");
+var ObjectID = require("mongodb").ObjectID;
 
 async function routes(fastify, options, next) {
 
@@ -228,7 +229,7 @@ async function routes(fastify, options, next) {
 
           request.data = decoded.user;
           let user;
-          if(decoded.user.role == "Citizen")
+          if (decoded.user.role == "Citizen")
             user = await dbCitizens.findOne({ _id: decoded.user._id });
           else
             user = await dbOperators.findOne({ _id: decoded.user._id });
@@ -361,26 +362,25 @@ async function routes(fastify, options, next) {
     url: "/citizen",
     method: "GET",
     response: {
-        200: {
-            type: "object",
-            items: {
-                citizenSchema
-            }
+      200: {
+        type: "object",
+        items: {
+          citizenSchema
         }
+      }
     },
     preValidation: [fastify.checkAuth],
     handler: async (request, reply) => {
-        try {
-           let userId = request.data._id;
-           let user = await dbCitizens.findOne({ _id: userId });
-            console.log(user);
-            return respF(reply, user);
-        } catch (err) {
-            console.log(err);
-            throw fastify.httpErrors.internalServerError(err);
-        }
+      try {
+        let userId = request.data._id;
+        let user = await dbCitizens.findOne({ _id: ObjectID(userId) });
+        return respF(reply, user);
+      } catch (err) {
+        console.log(err);
+        throw fastify.httpErrors.internalServerError(err);
+      }
     }
-});
+  });
 }
 
 module.exports = routes;

@@ -1,13 +1,9 @@
-import { ChangeDetectorRef, Component, Input } from "@angular/core";
+import { ChangeDetectorRef, Component } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
 import { Router } from "@angular/router";
 import {
   NbDialogService,
-  NbSortDirection,
-  NbSortRequest,
   NbToastrService,
-  NbTreeGridDataSource,
-  NbTreeGridDataSourceBuilder,
 } from "@nebular/theme";
 import { ApiService } from "../../services/api.service";
 import { AuthService } from "../../services/auth.service";
@@ -38,6 +34,23 @@ export class DashboardComponent {
       this.authService.logout();
     }
 
+    this.apiService.getCitizen().subscribe(
+      (response) => {
+        this.citizen = response;
+        //this.toastrService.success(
+        //  "Utente caricato correttamente",
+        //  "Operazione avvenuta con successo:"
+        //);
+      },
+      (error) => {
+        console.log(error);
+        this.toastrService.danger(
+          "Caricamento utente non riuscito",
+          "Si è verificato un errore:"
+        );
+      }
+    );
+
     this.apiService.getCampaigns().subscribe(
       (response) => {
         this.userRole = response.role;
@@ -59,23 +72,6 @@ export class DashboardComponent {
         );
       }
     );
-
-    this.apiService.getCitizen().subscribe(
-      (response) => {
-        this.citizen=response;
-        this.toastrService.success(
-          "Utente caricato correttamente",
-          "Operazione avvenuta con successo:"
-        );
-      },
-      (error) => {
-        console.log(error);
-        this.toastrService.danger(
-          "Caricamento utente non riuscito",
-          "Si è verificato un errore:"
-        );
-      }
-    );
   }
 
   public createCampaign(): void {
@@ -92,6 +88,15 @@ export class DashboardComponent {
           this.dataSource = new MatTableDataSource(this.campaigns);
         }
       });
+  }
+
+  public checkType(element) {
+    console.log(this.citizen)
+    if (element.type.includes(this.citizen.type))
+      return true;
+    else
+      return false;
+
   }
 
   public edit(_id: string): void {
