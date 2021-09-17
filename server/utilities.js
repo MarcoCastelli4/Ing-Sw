@@ -51,6 +51,24 @@ const campaignSchema = {
   }
 }
 
+const citizenSchema = {
+  type: "object",
+  properties: {
+    _id: { type: "string" },
+    fcCode: { type: "string" },
+    type: { type: "string" },
+    birthday: { type: "double" },
+    email: { type: "string" },
+    password: { type: "string" },
+    /*
+    reservation: {
+      type: "array",
+
+    }*/
+
+  }
+}
+
 /**
  * Get the access token from jwt
  *

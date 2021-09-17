@@ -204,6 +204,16 @@ export class ApiService {
     console.log(token);
     return req;
   }
+
+  //chiedo Citizen
+  public getCitizen(): Observable<any> {
+        return this.http.get<any>(
+        getUrl("citizen"),
+        authApi(true)
+    );
+  }
+
+
   //
   //  public confirmEmail(id: string): Observable<any> {
   //    return this.http.put<any>(
@@ -237,12 +247,7 @@ export class ApiService {
   //    );
   //  }
   //
-  //  public getUser(id: string): Observable<any> {
-  //    return this.http.get<any>(
-  //      getUrl("user") + "?_id=" + id,
-  //      authApi(true)
-  //    );
-  //  }
+  //  
   //
   //  public editUser(obj: UserPut): Observable<any> {
   //    return this.http.put<Tokens>(

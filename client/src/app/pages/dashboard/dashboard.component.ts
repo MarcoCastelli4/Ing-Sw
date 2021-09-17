@@ -24,6 +24,7 @@ export class DashboardComponent {
   public dataSource;
   public userRole: string;
   public displayedColumns: string[] = ["name", "type", "totQty", "actions"];
+  public citizen;
 
   constructor(
     private authService: AuthService,
@@ -54,6 +55,23 @@ export class DashboardComponent {
         console.log(error);
         this.toastrService.danger(
           "Caricamento campagne non riuscito",
+          "Si è verificato un errore:"
+        );
+      }
+    );
+
+    this.apiService.getCitizen().subscribe(
+      (response) => {
+        this.citizen=response;
+        this.toastrService.success(
+          "Utente caricato correttamente",
+          "Operazione avvenuta con successo:"
+        );
+      },
+      (error) => {
+        console.log(error);
+        this.toastrService.danger(
+          "Caricamento utente non riuscito",
           "Si è verificato un errore:"
         );
       }

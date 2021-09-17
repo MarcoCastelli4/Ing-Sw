@@ -5,6 +5,7 @@ const {
   getAccessToken,
   getRefreshToken,
   uuid,
+  citizenSchema
 } = require("../utilities");
 const md5 = require("md5");
 
@@ -354,6 +355,32 @@ async function routes(fastify, options, next) {
       }
     },
   });
+
+  //GET USER
+  fastify.route({
+    url: "/citizen",
+    method: "GET",
+    response: {
+        200: {
+            type: "object",
+            items: {
+                citizenSchema
+            }
+        }
+    },
+    preValidation: [fastify.checkAuth],
+    handler: async (request, reply) => {
+        try {
+           let userId = request.data._id;
+           let user = await dbCitizens.findOne({ _id: userId });
+            console.log(user);
+            return respF(reply, user);
+        } catch (err) {
+            console.log(err);
+            throw fastify.httpErrors.internalServerError(err);
+        }
+    }
+});
 }
 
 module.exports = routes;

@@ -32,7 +32,7 @@
                 <button (click)="reserve(element._id)" title="Inserisci" class="action-button" status="primary" nbButton><nb-icon icon="plus-outline"></nb-icon></button>
               </div>
               <div *ngIf="userRole=='Citizen'" class="actions-row container-button">
-                <button (click)="reserve(element._id)" title="Prenota" status="primary" class="action-button" nbButton style="margin: 2px 2px"><nb-icon icon="plus-outline"></nb-icon></button>
+                <button [disabled]="!(element.type.includes(this.user.type))" (click)="reserve(element._id)" title="Prenota" status="primary" class="action-button" nbButton style="margin: 2px 2px"><nb-icon icon="plus-outline"></nb-icon></button>
               </div>
             </td>
           </ng-container>
