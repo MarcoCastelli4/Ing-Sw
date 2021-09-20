@@ -60,11 +60,16 @@ const citizenSchema = {
     birthday: { type: "double" },
     email: { type: "string" },
     password: { type: "string" },
-    /*
+    
     reservation: {
       type: "array",
+      items:{
+        id_campaign: "string",
+        id_hub: "string",
+        id_slot: "string"
+      }
 
-    }*/
+    }
 
   }
 }

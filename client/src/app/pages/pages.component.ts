@@ -27,6 +27,12 @@ export class PagesComponent {
           icon: "home-outline",
           link: "/pages/hubs",
         },
+        {
+          title: "Le mie prenotazioni",
+          icon: "person-outline",
+          link: "/pages/my_vax_reservation",
+          home: true,
+        },
       ];
     } else {
       this.menu = [
