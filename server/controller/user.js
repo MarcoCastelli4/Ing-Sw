@@ -357,7 +357,7 @@ async function routes(fastify, options, next) {
     },
   });
 
-  //GET USER
+  //GET USER & his reservation
   fastify.route({
     url: "/citizen",
     method: "GET",
@@ -373,7 +373,24 @@ async function routes(fastify, options, next) {
     handler: async (request, reply) => {
       try {
         let userId = request.data._id;
+
+        //Ottengo cittadino specificato dall'Id
         let user = await dbCitizens.findOne({ _id: ObjectID(userId) });
+
+        //Ottengo per il cittadino un'array di prenotazioni che sono formate dall'hub, dalla campagna e dallo slot orario
+        user.reservations.forEach(reservation => {
+          let hub = await dbHubs.findOne({_id: ObjectID(reservation.hub_id)})
+          user.reservations.hub = hub;
+          hub.slots.forEach(slot =>{
+            if(slot._id == reservation.slot_id){
+              user.reservations.slot = slot;
+            }
+          })
+          let campaign=await dbCampaigns.findOne({_id: ObjectID(reservation.campaign_id)})
+          user.reservations.campaign=campaign;
+
+        });
+        
         return respF(reply, user);
       } catch (err) {
         console.log(err);

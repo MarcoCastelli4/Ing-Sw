@@ -9,22 +9,22 @@
 
           <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef>Nome</th>
-            <td mat-cell *matCellDef="let element">{{element.name}}</td>
+            <td mat-cell *matCellDef="let hub">{{hub.name}}</td>
           </ng-container>
 
           <ng-container matColumnDef="city">
             <th mat-header-cell *matHeaderCellDef>Città</th>
-            <td mat-cell style="white-space: pre;" *matCellDef="let element">{{element.city}} </td>
+            <td mat-cell style="white-space: pre;" *matCellDef="let hub">{{hub.city}} </td>
           </ng-container>
 
           <ng-container matColumnDef="address">
             <th mat-header-cell *matHeaderCellDef>Indirizzo</th>
-            <td mat-cell *matCellDef="let element">{{element.address ?element.address : '-'}}</td>
+            <td mat-cell *matCellDef="let hub">{{hub.address ?hub.address : '-'}}</td>
           </ng-container>
 
           <ng-container matColumnDef="maps">
             <th mat-header-cell *matHeaderCellDef>Maps</th>
-            <td mat-cell *matCellDef="let element"><a [href]="'https://www.google.it/maps/search/'+element.address" target="_blank">Direzioni</a></td>
+            <td mat-cell *matCellDef="let hub"><a [href]="'https://www.google.it/maps/search/'+hub.address" target="_blank">Direzioni</a></td>
           </ng-container>
 
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
