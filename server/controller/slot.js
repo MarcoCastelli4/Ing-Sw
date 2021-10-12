@@ -65,14 +65,19 @@ async function routes(fastify, options, next) {
         handler: async (request, reply) => {
             try {
                 let inputData = request.body;
-                inputData._id = uuid.v1();
-                inputData.availableQty = inputData.quantity;
-                inputData.user_ids = [];
+                let slots = inputData.slots;
 
-                await dbHubs.findOneAndUpdate(
-                    { _id: ObjectID(inputData.hub_id) },
-                    { $push: { slots: inputData } }
-                );
+                slots.forEach(async (slot) => {
+                    inputData._id = uuid.v1();
+                    inputData.availableQty = inputData.quantity;
+                    inputData.user_ids = [];
+                    delete inputData.slots;
+                    inputData.slot = slot;
+                    
+                    console.log(slot)
+                    let res = await update(inputData, slot)
+                    console.log(res)
+                });
 
                 return respF(reply, inputData._id);
             } catch (err) {
@@ -81,7 +86,15 @@ async function routes(fastify, options, next) {
             }
         }
     });
-
+    function update(inputData, slot) {
+        return new Promise((resolve, reject) => {
+            let operation = dbHubs.findOneAndUpdate(
+                { _id: ObjectID(inputData.hub_id) },
+                { $push: { slots: inputData } }
+            );
+            resolve(operation)
+        })
+    }
     /**
      * Funzione che nella tabella utenti aggiunge un elemento all'array reservations (con id di campaing, hub e slot)
      * e nella tabella degli hub, all'altezza dello slot selezionato lo user_id e decrementa la disponibilità
@@ -117,7 +130,7 @@ async function routes(fastify, options, next) {
                         throw fastify.httpErrors.badRequest("User already reserved a vaccine for this campaign");
                     }
                 });
-                
+
                 await dbCitizens.updateOne(
                     { _id: request.data._id },
                     { $push: { reservations: citizenReservation } }
