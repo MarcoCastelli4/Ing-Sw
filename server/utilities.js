@@ -61,12 +61,16 @@ const citizenSchema = {
     email: { type: "string" },
     password: { type: "string" },
     
-    reservation: {
+    reservations: {
       type: "array",
       items:{
-        id_campaign: "string",
-        id_hub: "string",
-        id_slot: "string"
+        /*
+        campaign_id: "string",
+        hub_id: "string",
+        slot_id: "string"*/
+        campaignSchema,
+        hubSchema,
+        slotSchema
       }
 
     }

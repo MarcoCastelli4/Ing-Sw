@@ -24,15 +24,14 @@ export class my_vax_reservationComponent {
       this.authService.logout();
     }
 
-    //ottengo le prenotazioni del mio utente
+    //ottengo il mio cittadino con le sue prenotazioni 
     this.apiService.getCitizen().subscribe(
       (response) => {
         this.citizen = response;
-        //this.toastrService.success(
-        //  "Utente caricato correttamente",
-        //  "Operazione avvenuta con successo:"
-        //);
+        console.log(this.citizen); //togliere
         this.dataSource = new MatTableDataSource(this.citizen);
+
+       
       },
       (error) => {
         console.log(error);
