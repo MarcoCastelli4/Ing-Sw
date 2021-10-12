@@ -17,7 +17,7 @@ export class OperatorReservationComponent implements OnInit {
 
   public reservationForm: FormGroup;
   public campaigns: Campaign[];
-  public slots = this.dataService.slotsSelect;
+  public slotsSelect = this.dataService.slotsSelect;
 
   constructor(
     private fb: FormBuilder,
@@ -27,7 +27,6 @@ export class OperatorReservationComponent implements OnInit {
     public dataService: DataService
 
   ) {
-
     this.apiService.getCampaigns().subscribe(
       (res) => {
         this.campaigns = res;
@@ -43,7 +42,7 @@ export class OperatorReservationComponent implements OnInit {
       campaign_id: ["", Validators.required],
       hub_id: ["", Validators.required],
       date: [new Date(Date.now()), Validators.required],
-      slot: ["", Validators.required],
+      slots: [[], Validators.required],
       quantity: [0, Validators.required],
     })
   }
@@ -51,20 +50,20 @@ export class OperatorReservationComponent implements OnInit {
   get campaign_id() { return this.reservationForm.get('campaign_id') }
   get hub_id() { return this.reservationForm.get('hub_id') }
   get date() { return this.reservationForm.get('date') }
-  get slot() { return this.reservationForm.get('slot') }
+  get slots() { return this.reservationForm.get('slots') }
   get quantity() { return this.reservationForm.get('quantity') }
 
   ngOnInit(): void { }
 
   public submit() {
+    console.log("Log form: ", this.reservationForm.value);
     this.reservationForm.value.date = (this.reservationForm.value.date).getTime();
     this.reservationForm.value.campaign_id = location.href.split("=")[1];
     this.apiService.postSlot(this.reservationForm.value).subscribe(
       (response) => {
-        this.toastrService.success("Slot inserito correttamente", "Operazione avvenuta con successo:");
-        let slot = this.reservationForm.value;
-        slot._id = response;
-        this.ref.close(slot);
+        this.toastrService.success("Slot inseriti correttamente", "Operazione avvenuta con successo:");
+        // Alla chiusura ritorna true per far ricaricare gli hubs
+        this.ref.close(true);
       },
       (error) => {
         console.log(error)
@@ -72,7 +71,7 @@ export class OperatorReservationComponent implements OnInit {
       }
     );
   }
-  public exit() { 
+  public exit() {
     this.ref.close();
   }
 

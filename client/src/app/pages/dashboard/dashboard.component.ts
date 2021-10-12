@@ -91,7 +91,6 @@ export class DashboardComponent {
   }
 
   public checkType(element) {
-    console.log(this.citizen)
     if (element.type.includes(this.citizen.type))
       return true;
     else

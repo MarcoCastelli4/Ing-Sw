@@ -33,6 +33,7 @@ export class ReservationComponent implements OnInit {
     this.apiService.getHubs().subscribe(
       (res) => {
         this.hubs = res.hubs;
+        console.log(this.hubs)
         this.userRole = res.role;
         this.toastrService.success("Ambulatori caricati correttamente", "Operazione avvenuta con successo:");
       },
