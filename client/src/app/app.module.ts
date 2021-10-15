@@ -20,6 +20,7 @@ import {
   NbToastrModule,
   NbWindowModule,
 } from '@nebular/theme';
+import { NbDateFnsDateModule } from "@nebular/date-fns";
 import { AuthService } from './services/auth.service';
 import { ApiService } from './services/api.service';
 import { Interceptor } from './services/interceptor';
@@ -36,6 +37,7 @@ import { DataService } from './services/data.service';
     NbSidebarModule.forRoot(),
     NbMenuModule.forRoot(),
     NbDatepickerModule.forRoot(),
+    NbDateFnsDateModule.forRoot({ format: 'dd/MM/yyyy' }),
     NbDialogModule.forRoot(),
     NbWindowModule.forRoot(),
     NbToastrModule.forRoot(),
@@ -59,7 +61,7 @@ import { DataService } from './services/data.service';
   ]
 })
 export class AppModule {
-  constructor(private injector: Injector){
+  constructor(private injector: Injector) {
     ApiService.injector = this.injector;
     AuthService.injector = this.injector;
     DataService.injector = this.injector;

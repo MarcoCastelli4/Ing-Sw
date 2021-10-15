@@ -15,6 +15,7 @@ import {
 } from '@nebular/theme';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
+import { NbDateFnsDateModule } from '@nebular/date-fns';
 
 @NgModule({
   imports: [
@@ -28,7 +29,7 @@ import { RegisterComponent } from './register/register.component';
     AuthRoutingModule,
     NbAuthModule,
     NbDatepickerModule.forRoot(),
-    //NbDateFnsDateModule.forRoot({ format: 'dd/MM/yyyy' }),
+    NbDateFnsDateModule.forRoot({ format: 'dd/MM/yyyy' }),
     NbIconModule,
   ],
   declarations: [
