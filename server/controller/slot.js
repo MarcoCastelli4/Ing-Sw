@@ -116,25 +116,32 @@ async function routes(fastify, options, next) {
                     hub_id: inputData.hub_id,
                     reservations: [inputData.slot]
                 }
-                let user = await dbCitizens.findOne({ _id: request.data._id });
-                user.reservations?.forEach(x => {
+
+                let user = await dbCitizens.findOne({ _id: ObjectID(request.data._id) });
+
+                for (let x of user?.reservations) {
                     if (x.campaign_id == inputData.campaign_id) {
                         throw fastify.httpErrors.badRequest("User already reserved a vaccine for this campaign");
                     }
-                });
+                }
 
-                await dbCitizens.updateOne(
-                    { _id: request.data._id },
-                    { $push: { reservations: citizenReservation } }
+                let citizenQuery = await dbCitizens.updateOne(
+                    { _id: ObjectID(request.data._id) },
+                    { $push: { "reservations": citizenReservation } },
+                    { upsert: true }
                 );
 
-                await dbHubs.updateOne(
+                let hubQuery = await dbHubs.updateOne(
                     { _id: ObjectID(inputData.hub_id), "slots._id": inputData.slot },
-                    { $push: { "slots.$.user_ids": request.data._id }, $inc: { "slots.$.availableQty": -1 } }
+                    { $push: { "slots.$.user_ids": request.data._id }, "slots.$.availableQty": { $gte: 1 }, $inc: { "slots.$.availableQty": -1 } }
                 );
+
+                if (hubQuery?.modifiedCount == 0 || citizenQuery.modifiedCount == 0)
+                    throw "DB query failed";
 
                 return respF(reply, "Success");
             } catch (err) {
+                console.log(err)
                 throw fastify.httpErrors.internalServerError(err);
             }
         }

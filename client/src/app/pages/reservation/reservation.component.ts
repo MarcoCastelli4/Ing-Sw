@@ -69,11 +69,11 @@ export class ReservationComponent implements OnInit {
     this.apiService.getSlots(_id).subscribe(
       (res) => {
         this.reservations = res;
-        this.reservations.forEach(x => {
-          if (x.date > Date.now()) {
+        for (let x of this.reservations) {
+          if (x.date > Date.now() && x.availableQty > 0) {
             this.slots.push(x)
           }
-        });
+        }
         this.dataService.sendSlots(this.slots)
 
         this.toastrService.success("Ambulatori caricati correttamente", "Operazione avvenuta con successo:");

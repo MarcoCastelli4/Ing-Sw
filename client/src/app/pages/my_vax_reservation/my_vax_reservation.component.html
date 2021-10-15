@@ -10,22 +10,22 @@
 
           <ng-container matColumnDef="campaign">
             <th mat-header-cell *matHeaderCellDef>Campagna</th>
-            <td mat-cell *matCellDef="let element">{{element.campaign}}</td> <!--TODO: Devo visualizzare nome della campagna-->
+            <td mat-cell *matCellDef="let element">{{element.campaign.name}}</td> <!--TODO: Devo visualizzare nome della campagna-->
           </ng-container>
 
           <ng-container matColumnDef="hub">
             <th mat-header-cell *matHeaderCellDef>Hub</th>
-            <td mat-cell style="white-space: pre;" *matCellDef="let element">{{element.hub}} </td> <!--TODO: Devo visualizzare l'indirizzo del hub--->
+            <td mat-cell style="white-space: pre;" *matCellDef="let element">{{element.hub.name}} </td> <!--TODO: Devo visualizzare l'indirizzo del hub--->
           </ng-container>
 
           <ng-container matColumnDef="date">
             <th mat-header-cell *matHeaderCellDef>Data</th>
-            <td mat-cell *matCellDef="let element">{{element.date}}</td> <!--TODO: Devo visualizzare la data del vaccino-->
+            <td mat-cell *matCellDef="let element">{{element.reservations[0].date}}</td> <!--TODO: Devo visualizzare la data del vaccino-->
           </ng-container>
 
           <ng-container matColumnDef="timeSlot">
             <th mat-header-cell *matHeaderCellDef>Fascia oraria</th>
-            <td mat-cell *matCellDef="let element">{{element.timeSlot}}</td> <!--TODO: Devo visualizzare il time slot nel quale ho prenotato-->
+            <td mat-cell *matCellDef="let element">{{element.reservations[0].slot}}</td> <!--TODO: Devo visualizzare il time slot nel quale ho prenotato-->
           </ng-container> 
 
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

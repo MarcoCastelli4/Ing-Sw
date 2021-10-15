@@ -378,19 +378,24 @@ async function routes(fastify, options, next) {
         let user = await dbCitizens.findOne({ _id: ObjectID(userId) });
 
         //Ottengo per il cittadino un'array di prenotazioni che sono formate dall'hub, dalla campagna e dallo slot orario
-        user.reservations?.forEach(async (reservation) => {
+        for (let reservation of user?.reservations) {
           let hub = await dbHubs.findOne({ _id: ObjectID(reservation.hub_id) })
-          user.reservations.hub = hub;
-          hub.slots.forEach(slot => {
-            if (slot._id == reservation.slot_id) {
-              user.reservations.slot = slot;
+          reservation.hub = hub;
+          delete reservation.hub_id;
+          
+          // Riporto le info sugli slot alla proprietà reservations (e non più hub)
+          for(let slot of hub.slots){
+            let index = reservation.reservations.indexOf(slot._id)
+            if (reservation.reservations.indexOf(slot._id) != -1) {
+              reservation.reservations[index] = slot;
             }
-          })
-          let campaign = await dbCampaigns.findOne({ _id: ObjectID(reservation.campaign_id) })
-          user.reservations.campaign = campaign;
+          }
 
-        });
-
+          let campaign = await dbCampaigns.findOne({ _id: reservation.campaign_id })
+          reservation.campaign = campaign;
+          delete reservation.campaign_id;
+        }
+        
         return respF(reply, user);
       } catch (err) {
         console.log(err);
