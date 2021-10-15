@@ -34,22 +34,24 @@ export class DashboardComponent {
       this.authService.logout();
     }
 
-    this.apiService.getCitizen().subscribe(
-      (response) => {
-        this.citizen = response;
-        //this.toastrService.success(
-        //  "Utente caricato correttamente",
-        //  "Operazione avvenuta con successo:"
-        //);
-      },
-      (error) => {
-        console.log(error);
-        this.toastrService.danger(
-          "Caricamento utente non riuscito",
-          "Si è verificato un errore:"
-        );
-      }
-    );
+    if (localStorage.getItem("user_type") == "Citizen") {
+      this.apiService.getCitizen().subscribe(
+        (response) => {
+          this.citizen = response;
+          //this.toastrService.success(
+          //  "Utente caricato correttamente",
+          //  "Operazione avvenuta con successo:"
+          //);
+        },
+        (error) => {
+          console.log(error);
+          this.toastrService.danger(
+            "Caricamento utente non riuscito",
+            "Si è verificato un errore:"
+          );
+        }
+      );
+    }
 
     this.apiService.getCampaigns().subscribe(
       (response) => {

@@ -1,3 +1,4 @@
+import { ContentObserver } from '@angular/cdk/observers';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NbDialogRef, NbToastrService } from '@nebular/theme';
@@ -25,7 +26,6 @@ export class CitizenReservationComponent implements OnInit {
     public dataService: DataService
 
   ) {
-    //this.showDate = this.date.getDate() + "/" + this.date.getMonth() + "/" + this.date.getFullYear()
     this.reservationForm = this.fb.group({
       slot: ["", Validators.required],
     })
@@ -33,7 +33,10 @@ export class CitizenReservationComponent implements OnInit {
 
   get slot() { return this.reservationForm.get('slot') }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    let month = this.date.getMonth() + 1;
+    this.showDate = this.date.getDate() + '/' + month + '/' + this.date.getFullYear();
+  }
 
   public submit() {
     let campaign_id = location.href.split("=")[1];
@@ -50,9 +53,9 @@ export class CitizenReservationComponent implements OnInit {
       },
       (error) => {
         console.log(error)
-        if(error.error.message=="BadRequestError: User already reserved a vaccine for this campaign")
+        if (error.error.message == "BadRequestError: User already reserved a vaccine for this campaign")
           this.toastrService.danger("Hai già prenotato un vaccino per questa campagna", "Si è verificato un errore:");
-        else 
+        else
           this.toastrService.danger("Prenotazione fallita", "Si è verificato un errore:");
       }
     );

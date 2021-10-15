@@ -46,7 +46,7 @@ export class RegisterComponent extends NbRegisterComponent {
                 //this.authService.citizen = new Citizen(response.user);
                 //localStorage.setItem("citizen", JSON.stringify(this.authService.citizen))
                 //TODO open modal con categoria di appartenenza
-                
+
                 location.href = "/pages/dashboard"
             },
             (error) => {
@@ -67,28 +67,27 @@ export class RegisterComponent extends NbRegisterComponent {
     }
     public showPassword = false;
     public showPasswordConfirm = false;
-  
+
     getInputType(buttonNumber: number) {
-    if(buttonNumber==1){
-        if (this.showPassword) {
-            return 'text';
+        if (buttonNumber == 1) {
+            if (this.showPassword) {
+                return 'text';
+            }
+            return 'password';
         }
-    return 'password';
-    }
-    else if(buttonNumber==2){
-        if (this.showPasswordConfirm) {
-         return 'text';
+        else if (buttonNumber == 2) {
+            if (this.showPasswordConfirm) {
+                return 'text';
+            }
+            return 'password';
         }
-     return 'password';
+
     }
 
-}
-
-  
     toggleShowPassword(buttonNumber: number) {
-        if(buttonNumber==1)
-      this.showPassword = !this.showPassword;
-      else if(buttonNumber==2)
-        this.showPasswordConfirm=!this.showPasswordConfirm;
+        if (buttonNumber == 1)
+            this.showPassword = !this.showPassword;
+        else if (buttonNumber == 2)
+            this.showPasswordConfirm = !this.showPasswordConfirm;
     }
 }

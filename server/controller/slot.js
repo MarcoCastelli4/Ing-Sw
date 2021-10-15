@@ -67,17 +67,18 @@ async function routes(fastify, options, next) {
                 let inputData = request.body;
                 let slots = inputData.slots;
 
-                slots.forEach(async (slot) => {
+                for (let slot of slots) {
                     inputData._id = uuid.v1();
                     inputData.availableQty = inputData.quantity;
                     inputData.user_ids = [];
                     delete inputData.slots;
                     inputData.slot = slot;
-                    
-                    console.log(slot)
-                    let res = await update(inputData, slot)
-                    console.log(res)
-                });
+
+                    await dbHubs.findOneAndUpdate(
+                        { _id: ObjectID(inputData.hub_id) },
+                        { $push: { slots: inputData } }
+                    );
+                }
 
                 return respF(reply, inputData._id);
             } catch (err) {
@@ -86,15 +87,6 @@ async function routes(fastify, options, next) {
             }
         }
     });
-    function update(inputData, slot) {
-        return new Promise((resolve, reject) => {
-            let operation = dbHubs.findOneAndUpdate(
-                { _id: ObjectID(inputData.hub_id) },
-                { $push: { slots: inputData } }
-            );
-            resolve(operation)
-        })
-    }
     /**
      * Funzione che nella tabella utenti aggiunge un elemento all'array reservations (con id di campaing, hub e slot)
      * e nella tabella degli hub, all'altezza dello slot selezionato lo user_id e decrementa la disponibilità

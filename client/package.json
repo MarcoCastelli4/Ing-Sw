@@ -44,6 +44,7 @@
     "@angular/router": "^11.0.9",
     "@asymmetrik/ngx-leaflet": "3.0.1",
     "@nebular/auth": "7.0.0",
+    "@nebular/date-fns": "^5.1.0",
     "@nebular/eva-icons": "7.0.0",
     "@nebular/security": "7.0.0",
     "@nebular/theme": "7.0.0",

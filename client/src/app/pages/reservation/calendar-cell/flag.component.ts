@@ -45,17 +45,19 @@ export class FlagComponent {
     }
 
     public openDialog() {
-        this.dialogService.open(CitizenReservationComponent, {
-            context: {
-                date: this.date,
-                hub_id: this.hub_id,
-                slots: this.slots
-            }
-        }).onClose.subscribe(
-            res => {
-                console.log(res);
-            }
-        );
+        if (localStorage.getItem("user_type") == "Citizen") {
+            this.dialogService.open(CitizenReservationComponent, {
+                context: {
+                    date: this.date,
+                    hub_id: this.hub_id,
+                    slots: this.slots
+                }
+            }).onClose.subscribe(
+                res => {
+                    console.log(res);
+                }
+            );
+        }
     }
 
     ngOnDestroy() {

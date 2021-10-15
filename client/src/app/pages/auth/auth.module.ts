@@ -28,7 +28,8 @@ import { RegisterComponent } from './register/register.component';
     AuthRoutingModule,
     NbAuthModule,
     NbDatepickerModule.forRoot(),
-    NbIconModule
+    //NbDateFnsDateModule.forRoot({ format: 'dd/MM/yyyy' }),
+    NbIconModule,
   ],
   declarations: [
     LoginComponent,
