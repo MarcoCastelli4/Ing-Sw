@@ -30,9 +30,8 @@ export class my_vax_reservationComponent {
         this.citizen = response;
         console.log(this.citizen); //togliere
         this.dataSource = new MatTableDataSource(this.citizen.reservations);
-        //Da settare il timestamp
-        //let month = this.date.getMonth() + 1;
-        //this.showDate = this.date.getDate() + '/' + month + '/' + this.date.getFullYear();
+       
+       
       },
       (error) => {
         console.log(error);
@@ -43,4 +42,13 @@ export class my_vax_reservationComponent {
       }
     );
   }
+
+
+  timeStampToDate(timestamp) {
+    var date = new Date(timestamp);
+    let month = date.getMonth() + 1;
+    return date.getDate() + '/' + month + '/' + date.getFullYear();
+    };
+
+
 }
