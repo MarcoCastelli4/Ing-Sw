@@ -47,11 +47,6 @@ export class PagesComponent {
           icon: "home-outline",
           link: "/pages/hubs",
         },
-        {
-          title: "Magazzini",
-          icon: "cube-outline",
-          link: "/pages/stores",
-        },
       ];
     }
   }

@@ -6,7 +6,6 @@ import { DashboardComponent } from "./dashboard/dashboard.component";
 import { NotFoundComponent } from "./miscellaneous/not-found/not-found.component";
 import { HubsComponent } from "./hubs/hubs.component";
 import { ReservationComponent } from "./reservation/reservation.component";
-import { StoresComponent } from "./stores/stores.component";
 import { my_vax_reservationComponent } from "./my_vax_reservation/my_vax_reservation.component";
 
 const routes: Routes = [
@@ -29,10 +28,6 @@ const routes: Routes = [
       {
         path: "my_vax_reservation",
         component: my_vax_reservationComponent,
-      },
-      {
-        path: "stores",
-        component: StoresComponent,
       },
       {
         path: "",

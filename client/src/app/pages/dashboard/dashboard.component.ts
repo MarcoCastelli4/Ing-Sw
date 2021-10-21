@@ -93,11 +93,10 @@ export class DashboardComponent {
   }
 
   public checkType(element) {
-    if (element.type.includes(this.citizen.type))
+    if (element.type.includes(this.citizen?.type))
       return true;
     else
       return false;
-
   }
 
   public edit(_id: string): void {

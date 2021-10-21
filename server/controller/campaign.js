@@ -63,6 +63,7 @@ async function routes(fastify, options, next) {
             try {
                 let inputData = request.body;
                 inputData._id = uuid.v1();
+                inputData.deletable = true;
 
                 let query = await dbCampaigns.insertOne(inputData);
 
@@ -131,6 +132,7 @@ async function routes(fastify, options, next) {
         handler: async (request, reply) => {
             try {
                 let query = await dbCampaigns.deleteOne({ _id: request.query._id });
+                
                 if (query.deletedCount == 0)
                     throw fastify.httpErrors.internalServerError("Error while deleting the element");
 

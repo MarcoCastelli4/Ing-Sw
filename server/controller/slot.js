@@ -14,6 +14,10 @@ async function routes(fastify, options, next) {
     const dbCitizens = fastify.mongo
         .db(process.env.DATABASE)
         .collection("Citizens");
+    // DB CAMPAIGN
+    const dbCampaigns = fastify.mongo
+        .db(process.env.DATABASE)
+        .collection("Campaigns");
 
     fastify.route({
         url: "/slots",
@@ -80,6 +84,19 @@ async function routes(fastify, options, next) {
                     );
                 }
 
+                let campaign = await dbCampaigns.findOne(
+                    { _id: inputData.campaign_id }
+                );
+                console.log(campaign, "-", inputData.campaign_id)
+
+                if (campaign.deletable) {
+                    await dbCampaigns.findOneAndUpdate(
+                        { _id: inputData.campaign_id },
+                        { $set: { deletable: false } }
+                    );
+                }
+
+
                 return respF(reply, inputData._id);
             } catch (err) {
                 console.log(err);
@@ -118,6 +135,7 @@ async function routes(fastify, options, next) {
                 }
 
                 let user = await dbCitizens.findOne({ _id: ObjectID(request.data._id) });
+                let slot = await dbHubs.findOne({ _id: ObjectID(inputData.hub_id), "slots._id": inputData.slot },);
 
                 for (let x of user?.reservations) {
                     if (x.campaign_id == inputData.campaign_id) {
@@ -131,12 +149,15 @@ async function routes(fastify, options, next) {
                     { upsert: true }
                 );
 
+                if (slot.availableQty < 1)
+                    throw "No available vaccine for this slot";
+
                 let hubQuery = await dbHubs.updateOne(
                     { _id: ObjectID(inputData.hub_id), "slots._id": inputData.slot },
-                    { $push: { "slots.$.user_ids": request.data._id }, "slots.$.availableQty": { $gte: 1 }, $inc: { "slots.$.availableQty": -1 } }
+                    { $push: { "slots.$.user_ids": request.data._id }, $inc: { "slots.$.availableQty": -1 } }
                 );
 
-                if (hubQuery?.modifiedCount == 0 || citizenQuery.modifiedCount == 0)
+                if (hubQuery?.modifiedCount == 0 || citizenQuery?.modifiedCount == 0)
                     throw "DB query failed";
 
                 return respF(reply, "Success");

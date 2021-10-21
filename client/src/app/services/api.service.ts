@@ -200,8 +200,6 @@ export class ApiService {
       { refreshToken: token },
       authApi(false)
     );
-    console.log(req);
-    console.log(token);
     return req;
   }
 

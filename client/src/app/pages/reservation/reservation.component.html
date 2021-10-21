@@ -22,21 +22,20 @@
                 <h4>Legenda: </h4>
                 <div *ngIf="userRole=='Citizen'">
                     <span class="info">
-                        <div class="flag" style="background-color: green;"></div> giorni nei quali è possibile prenotare un vaccino
+                        <div class="flag" style="background-color: green;"></div> giorni nei quali è possibile prenotare
+                        un vaccino
                     </span>
                     <span class="info">
-                        <div class="flag" style="background-color: red;"></div> giorni nei quali non è
-                        possibile prenotarsi
+                        - In tutti gli altri giorni non è possibile prenotare un vaccino
                     </span>
                 </div>
                 <div *ngIf="userRole=='Operator'">
                     <span class="info">
-                        <div class="flag" style="background-color: green;"></div> giorni nei quali è
-                        possibile inserire la disponibilità
-                    </span>
-                    <span class="info">
                         <div class="flag" style="background-color: red;"></div> giorni nei quali sono già
                         state inserite tutte le disponibilità
+                    </span>
+                    <span class="info">
+                        - In tutti gli altri giorni è possibile insere una nuova disponibilità
                     </span>
                 </div>
             </div>

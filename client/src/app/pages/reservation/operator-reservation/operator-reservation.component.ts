@@ -56,7 +56,6 @@ export class OperatorReservationComponent implements OnInit {
   ngOnInit(): void { }
 
   public submit() {
-    console.log("Log form: ", this.reservationForm.value);
     this.reservationForm.value.date = (this.reservationForm.value.date).getTime();
     this.reservationForm.value.campaign_id = location.href.split("=")[1];
     this.apiService.postSlot(this.reservationForm.value).subscribe(

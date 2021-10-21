@@ -32,7 +32,6 @@ export class CreateCampaingComponent implements OnInit {
       this.ref.close(false);
     }
     const res = this.campaign?.type.split(",\n");
-    // TODO get hubs from BE
     this.enum = this.getEnum();
     this.campaingForm = this.fb.group({
       _id: [this.campaign?._id ? this.campaign?._id : ""],
@@ -40,16 +39,7 @@ export class CreateCampaingComponent implements OnInit {
         this.campaign?.name ? this.campaign?.name : "",
         Validators.required,
       ],
-      totQty: [
-        this.campaign?.totQty ? this.campaign?.totQty : "",
-        Validators.required,
-      ],
       type: [res ? res : [], Validators.required],
-      hubs: [this.campaign?.hubs ? this.campaign?.hubs : ""],
-      priority: [
-        this.campaign?.priority ? this.campaign?.priority : "",
-        Validators.required,
-      ],
     });
   }
 
@@ -57,14 +47,8 @@ export class CreateCampaingComponent implements OnInit {
   get name() {
     return this.campaingForm.get("name");
   }
-  get totQty() {
-    return this.campaingForm.get("totQty");
-  }
   get type() {
     return this.campaingForm.get("type");
-  }
-  get priority() {
-    return this.campaingForm.get("priority");
   }
 
   getEnum() {

@@ -54,7 +54,6 @@ export class FlagComponent {
                 }
             }).onClose.subscribe(
                 res => {
-                    console.log(res);
                 }
             );
         }

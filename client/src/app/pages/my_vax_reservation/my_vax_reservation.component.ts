@@ -28,7 +28,6 @@ export class my_vax_reservationComponent {
     this.apiService.getCitizen().subscribe(
       (response) => {
         this.citizen = response;
-        console.log(this.citizen); //togliere
         this.dataSource = new MatTableDataSource(this.citizen.reservations);
        
        
