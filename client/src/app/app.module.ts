@@ -26,6 +26,7 @@ import { ApiService } from './services/api.service';
 import { Interceptor } from './services/interceptor';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DataService } from './services/data.service';
+import { DataManagement } from './models/class/data_management';
 
 @NgModule({
   declarations: [AppComponent],
@@ -46,7 +47,7 @@ import { DataService } from './services/data.service';
     }),
     CoreModule.forRoot(),
     ThemeModule.forRoot(),
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   bootstrap: [AppComponent],
   providers: [
@@ -56,6 +57,7 @@ import { DataService } from './services/data.service';
       multi: true,
       //deps: [AuthService, ApiService],
     },
+    DataManagement,
     AuthService,
     ApiService,
   ]

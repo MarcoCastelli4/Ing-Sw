@@ -38,12 +38,14 @@ export const getUrl = function (path: string) {
   providedIn: "root",
 })
 export class ApiService {
-
+  static instance: ApiService;
   static injector: Injector;
 
   constructor(
     private http: HttpClient
-  ) { }
+  ) {
+    ApiService.instance = this;
+  }
   //
   //───────────────────────────────────────────────────── CAMPAIGN REQUESTS ────────────────────────────────────────────
   //
@@ -205,9 +207,9 @@ export class ApiService {
 
   //chiedo Citizen
   public getCitizen(): Observable<any> {
-        return this.http.get<any>(
-        getUrl("citizen"),
-        authApi(true)
+    return this.http.get<any>(
+      getUrl("citizen"),
+      authApi(true)
     );
   }
 

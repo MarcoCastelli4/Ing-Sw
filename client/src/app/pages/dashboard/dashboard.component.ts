@@ -5,6 +5,7 @@ import {
   NbDialogService,
   NbToastrService,
 } from "@nebular/theme";
+import { DataManagement } from "../../models/class/data_management";
 import { ApiService } from "../../services/api.service";
 import { AuthService } from "../../services/auth.service";
 import { ConfirmComponent } from "../../widgets/confirm/confirm.component";
@@ -28,20 +29,22 @@ export class DashboardComponent {
     private toastrService: NbToastrService,
     public dialogService: NbDialogService,
     public changeDetector: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    private dataManagement: DataManagement
   ) {
     if (this.authService.getAccessToken == null) {
       this.authService.logout();
     }
-
-    if (localStorage.getItem("user_type") == "Citizen") {
-      this.apiService.getCitizen().subscribe(
+    this.userRole = "Citizen";
+    this.citizen = this.dataManagement.citizen;
+    if (!this.dataManagement.isDoneApi.citizen) {
+      this.dataManagement.getCitizenApi().subscribe(
         (response) => {
           this.citizen = response;
-          //this.toastrService.success(
-          //  "Utente caricato correttamente",
-          //  "Operazione avvenuta con successo:"
-          //);
+          this.toastrService.success(
+            "",
+            "Utente caricato correttamente!"
+          );
         },
         (error) => {
           console.log(error);
@@ -53,27 +56,27 @@ export class DashboardComponent {
       );
     }
 
-    this.apiService.getCampaigns().subscribe(
-      (response) => {
-        this.userRole = response.role;
-        response.campaigns.forEach((element) => {
-          element = this.enumToString(element);
-          this.campaigns.push(element);
-        });
-        this.dataSource = new MatTableDataSource(this.campaigns);
-        this.toastrService.success(
-          "Campagne caricate correttamente",
-          "Operazione avvenuta con successo:"
-        );
-      },
-      (error) => {
-        console.log(error);
-        this.toastrService.danger(
-          "Caricamento campagne non riuscito",
-          "Si è verificato un errore:"
-        );
-      }
-    );
+    this.campaigns = this.dataManagement.campaigns;
+    if (!this.dataManagement.isDoneApi.campaigns) {
+      this.dataManagement.getCampaignsApi().subscribe(
+        (response) => {
+          this.dataSource = new MatTableDataSource(response);
+          this.toastrService.success(
+            "",
+            "Campagne caricate correttamente!"
+          );
+        },
+        (error) => {
+          console.log(error);
+          this.toastrService.danger(
+            "Caricamento campagne non riuscito",
+            "Si è verificato un errore:"
+          );
+        }
+      );
+    } else {
+      this.dataSource = new MatTableDataSource(this.campaigns);
+    }
   }
 
   public createCampaign(): void {
@@ -85,7 +88,8 @@ export class DashboardComponent {
       })
       .onClose.subscribe((res) => {
         if (res) {
-          res = this.enumToString(res);
+          //TODO Verificare la chiusura del modal createCampaign
+          //res = this.enumToString(res);
           this.campaigns.push(res);
           this.dataSource = new MatTableDataSource(this.campaigns);
         }
@@ -93,7 +97,7 @@ export class DashboardComponent {
   }
 
   public checkType(element) {
-    if (element.type.includes(this.citizen?.type))
+    if (Object.values(element.type).includes(this.citizen?.type))
       return true;
     else
       return false;
@@ -110,7 +114,8 @@ export class DashboardComponent {
       })
       .onClose.subscribe((res) => {
         if (res) {
-          res = this.enumToString(res);
+          //TODO Verificare la chiusura del modal di modifica
+          //res = this.enumToString(res);
           this.campaigns.forEach((x) => {
             if (x._id === res._id) {
               let index = this.campaigns.indexOf(x);
@@ -152,18 +157,6 @@ export class DashboardComponent {
           );
         }
       });
-  }
-
-  public enumToString(element): any {
-    let stringType = "";
-    if (Array.isArray(element.type)) {
-      element.type.forEach((x) => {
-        if (stringType != "") stringType = stringType + ",\n" + x;
-        else stringType = x;
-      });
-      element.type = stringType;
-    }
-    return element;
   }
 
   public reserve(id: string) {
