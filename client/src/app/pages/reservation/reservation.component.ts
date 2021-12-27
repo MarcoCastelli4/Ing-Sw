@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { NbDialogService, NbToastrService } from '@nebular/theme';
+import { DataManagement } from '../../models/class/data_management';
 import { ApiService } from '../../services/api.service';
 import { DataService } from '../../services/data.service';
 import { CalendarCellComponent } from './calendar-cell/calendar-cell.component';
@@ -27,20 +28,30 @@ export class ReservationComponent implements OnInit {
     private apiService: ApiService,
     private dialogService: NbDialogService,
     private toastrService: NbToastrService,
-    private dataService: DataService
+    private dataService: DataService,
+    private dataManagement: DataManagement
   ) {
 
-    this.apiService.getHubs().subscribe(
-      (res) => {
-        this.hubs = res.hubs;
-        this.userRole = res.role;
-        this.toastrService.success("Ambulatori caricati correttamente", "Operazione avvenuta con successo:");
-      },
-      (err) => {
-        this.toastrService.danger("Caricamento ambulatori fallito", "Si è verificato un errore:");
-        console.log(err)
-      }
-    )
+    this.hubs = this.dataManagement.hubs;
+    if (!this.dataManagement.isDoneApi.hubs) {
+      this.dataManagement.getHubsApi().subscribe(
+        (response) => {
+          this.hubs = response;
+          this.userRole = this.dataManagement.userRole;
+          this.toastrService.success(
+            "",
+            "Ambulatori caricati correttamente!"
+          );
+        },
+        (error) => {
+          console.log(error);
+          this.toastrService.danger(
+            "Caricamento ambulatori non riuscito",
+            "Si è verificato un errore:"
+          );
+        }
+      )
+    }
   }
 
   get campaign() { return this.reservationForm.get('campaign') }

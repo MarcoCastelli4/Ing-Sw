@@ -2,49 +2,64 @@ import { CampaignEnum } from "../enumerations/campaign";
 import { Hub } from "./hub";
 
 export class Campaign {
-    private name: string;
-    private totQty: number;
-    private type: CampaignEnum[];
-    private hubs: Hub[];
-    private priority: CampaignEnum;
+    private _id: string;
+    private _name: string;
+    private _totQty: number;
+    private _type: CampaignEnum[];
+    private _hubs: Hub[];
+    private _priority: CampaignEnum;
+    private _deletalble: boolean;
 
     constructor(campaign: Campaign) {
+        this.id = campaign.id;
         this.name = campaign.name;
         this.totQty = campaign.totQty;
         this.type = campaign.type;
         this.hubs = campaign.hubs;
         this.priority = campaign.priority;
+        this.deletalble = campaign.deletalble;
     }
 
-    public getName(): string {
-        return this.name;
+    public get id(): string {
+        return this._id;
     }
-    public getTotQty(): number {
-        return this.totQty;
+    public set id(value: string) {
+        this._id = value;
     }
-    public getType(): CampaignEnum[] {
-        return this.type;
+    public get name(): string {
+        return this._name;
     }
-    public getHubs(): Hub[] {
-        return this.hubs;
+    public set name(value: string) {
+        this._name = value;
     }
-    public getPriority(): CampaignEnum {
-        return this.priority;
+    public get totQty(): number {
+        return this._totQty;
     }
-
-    public setName(input: string): void {
-        this.name = input;
+    public set totQty(value: number) {
+        this._totQty = value;
     }
-    public setTotQty(input: number): void {
-        this.totQty = input;
+    public get type(): CampaignEnum[] {
+        return this._type;
     }
-    public setType(input: CampaignEnum[]): void {
-        this.type = input;
+    public set type(value: CampaignEnum[]) {
+        this._type = value;
     }
-    public setHubs(input: Hub[]): void {
-        this.hubs = input;
+    public get hubs(): Hub[] {
+        return this._hubs;
     }
-    public setPriority(input: CampaignEnum): void {
-        this.priority = input;
+    public set hubs(value: Hub[]) {
+        this._hubs = value;
+    }
+    public get priority(): CampaignEnum {
+        return this._priority;
+    }
+    public set priority(value: CampaignEnum) {
+        this._priority = value;
+    }
+    public get deletalble(): boolean {
+        return this._deletalble;
+    }
+    public set deletalble(value: boolean) {
+        this._deletalble = value;
     }
 }

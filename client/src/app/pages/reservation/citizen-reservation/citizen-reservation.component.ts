@@ -1,8 +1,8 @@
-import { ContentObserver } from '@angular/cdk/observers';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NbDialogRef, NbToastrService } from '@nebular/theme';
-import { ApiService } from '../../../services/api.service';
+import { DataManagement } from '../../../models/class/data_management';
+import { Slot } from '../../../models/class/slot';
 import { DataService } from '../../../services/data.service';
 
 @Component({
@@ -20,11 +20,10 @@ export class CitizenReservationComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private apiService: ApiService,
     private toastrService: NbToastrService,
     private ref: NbDialogRef<CitizenReservationComponent>,
+    private dataManagement: DataManagement,
     public dataService: DataService
-
   ) {
     this.reservationForm = this.fb.group({
       slot: ["", Validators.required],
@@ -41,14 +40,18 @@ export class CitizenReservationComponent implements OnInit {
   public submit() {
     let campaign_id = location.href.split("=")[1];
     let request = {
+      id:"",
       campaign_id: campaign_id,
       hub_id: this.hub_id,
       date: this.date.getTime(),
-      slot: this.reservationForm.value.slot
+      slot: this.reservationForm.value.slot,
+      user_ids: [],
+      quantity: 0
     }
-    this.apiService.postReservation(request).subscribe(
-      (response) => {
-        this.toastrService.success("Prenotazione effettuata correttamente", "Operazione avvenuta con successo:");
+    
+    this.dataManagement.createReservation(new Slot(request)).subscribe(
+      () => {
+        this.toastrService.success("", "Prenotazione effettuata correttamente!");
         this.ref.close();
       },
       (error) => {
@@ -58,7 +61,7 @@ export class CitizenReservationComponent implements OnInit {
         else
           this.toastrService.danger("Prenotazione fallita", "Si è verificato un errore:");
       }
-    );
+    )
   }
   public exit() {
     this.ref.close();

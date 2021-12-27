@@ -1,7 +1,6 @@
 import { Component } from "@angular/core";
-import { MatTableDataSource } from "@angular/material/table";
 import { NbToastrService } from "@nebular/theme";
-import { ApiService } from "../../services/api.service";
+import { DataManagement } from "../../models/class/data_management";
 import { AuthService } from "../../services/auth.service";
 
 @Component({
@@ -15,39 +14,38 @@ export class my_vax_reservationComponent {
   public citizen;
 
   constructor(
-    private apiService: ApiService,
     private authService: AuthService,
-    private toastrService: NbToastrService
-    
+    private toastrService: NbToastrService,
+    private dataManagement: DataManagement
+
   ) {
     if (this.authService.getAccessToken == null) {
       this.authService.logout();
     }
-
     //ottengo il mio cittadino con le sue prenotazioni 
-    this.apiService.getCitizen().subscribe(
-      (response) => {
-        this.citizen = response;
-        this.dataSource = new MatTableDataSource(this.citizen.reservations);
-       
-       
-      },
-      (error) => {
-        console.log(error);
-        this.toastrService.danger(
-          "Caricamento utente non riuscito",
-          "Si è verificato un errore:"
-        );
-      }
-    );
+    this.citizen = this.dataManagement.citizen;
+    if (!this.dataManagement.isDoneApi.citizen) {
+      this.dataManagement.getCitizenApi().subscribe(
+        (response) => {
+          this.citizen = response;
+          this.toastrService.success(
+            "",
+            "Utente caricato correttamente!"
+          );
+        },
+        (error) => {
+          console.log(error);
+          this.toastrService.danger(
+            "Caricamento utente non riuscito",
+            "Si è verificato un errore:"
+          );
+        }
+      );
+    }
   }
-
-
   timeStampToDate(timestamp) {
     var date = new Date(timestamp);
     let month = date.getMonth() + 1;
     return date.getDate() + '/' + month + '/' + date.getFullYear();
-    };
-
-
+  };
 }

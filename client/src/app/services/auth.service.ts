@@ -58,11 +58,7 @@ export class AuthService {
     this.email = undefined;
     this.accessToken = null;
     this.refreshToken = null;
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
-    localStorage.removeItem("email");
-    localStorage.removeItem("type");
-    localStorage.removeItem("id");
+    localStorage.clear();
     location.href = "auth/login"
   }
 }

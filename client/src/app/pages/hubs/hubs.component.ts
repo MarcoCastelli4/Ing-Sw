@@ -1,7 +1,8 @@
 import { Component } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
 import { NbToastrService } from "@nebular/theme";
-import { ApiService } from "../../services/api.service";
+import { DataManagement } from "../../models/class/data_management";
+import { Hub } from "../../models/class/hub";
 import { AuthService } from "../../services/auth.service";
 
 @Component({
@@ -12,30 +13,37 @@ import { AuthService } from "../../services/auth.service";
 export class HubsComponent {
   public dataSource;
   public displayedColumns: string[] = ["name", "city", "address", "maps"];
+  public hubs: Hub[];
 
   constructor(
-    private apiService: ApiService,
     private authService: AuthService,
-    private toastrService: NbToastrService
+    private toastrService: NbToastrService,
+    private dataManagement: DataManagement
   ) {
     if (this.authService.getAccessToken == null) {
       this.authService.logout();
     }
-    this.apiService.getHubs().subscribe(
-      (response) => {
-        this.dataSource = new MatTableDataSource(response.hubs);
-        this.toastrService.success(
-          "Ambulatori caricati correttamente",
-          "Operazione avvenuta con successo:"
-        );
-      },
-      (error) => {
-        console.log(error);
-        this.toastrService.danger(
-          "Caricamento ambulatori non riuscito",
-          "Si è verificato un errore:"
-        );
-      }
-    );
+    this.hubs = this.dataManagement.hubs;
+    console.log(this.hubs)
+    if (!this.dataManagement.isDoneApi.hubs) {
+      this.dataManagement.getHubsApi().subscribe(
+        (response) => {
+          this.dataSource = new MatTableDataSource(response);
+          this.toastrService.success(
+            "",
+            "Ambulatori caricati correttamente!"
+          );
+        },
+        (error) => {
+          console.log(error);
+          this.toastrService.danger(
+            "Caricamento ambulatori non riuscito",
+            "Si è verificato un errore:"
+          );
+        }
+      )
+    }else{
+      this.dataSource = new MatTableDataSource(this.hubs);
+    }
   }
 }

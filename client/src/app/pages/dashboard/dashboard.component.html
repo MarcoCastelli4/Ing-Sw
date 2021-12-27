@@ -3,7 +3,7 @@
     <nb-card>
       <nb-card-header class="card-header">
         Campagne vaccinali disponibili
-        <button *ngIf="userRole == 'Operator'" nbButton status="success"(click)="createCampaign()">Crea campagna</button>
+        <button *ngIf="userRole == 'Operator'" nbButton status="success"(click)="create()">Crea campagna</button>
       </nb-card-header>
       <nb-card-body>
         <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">

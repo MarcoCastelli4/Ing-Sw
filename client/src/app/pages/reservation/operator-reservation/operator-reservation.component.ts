@@ -2,8 +2,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NbDialogRef, NbToastrService } from '@nebular/theme';
 import { Campaign } from '../../../models/class/campaign';
+import { DataManagement } from '../../../models/class/data_management';
 import { Hub } from '../../../models/class/hub';
-import { ApiService } from '../../../services/api.service';
 import { DataService } from '../../../services/data.service';
 
 @Component({
@@ -21,22 +21,31 @@ export class OperatorReservationComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private apiService: ApiService,
     private toastrService: NbToastrService,
     private ref: NbDialogRef<OperatorReservationComponent>,
-    public dataService: DataService
-
+    public dataService: DataService,
+    public dataManagement: DataManagement
   ) {
-    this.apiService.getCampaigns().subscribe(
-      (res) => {
-        this.campaigns = res;
-        //this.toastrService.success("Campagne caricate correttamente", "Operazione avvenuta con successo:");
-      },
-      (err) => {
-        console.log(err)
-        //this.toastrService.danger("Caricamento campagne non riuscito", "Si è verificato un errore:");
-      }
-    );
+
+    this.campaigns = this.dataManagement.campaigns;
+    if (!this.dataManagement.isDoneApi.campaigns) {
+      this.dataManagement.getCampaignsApi().subscribe(
+        () => {
+          this.campaigns = this.dataManagement.campaigns;
+          this.toastrService.success(
+            "",
+            "Campagne caricate correttamente!"
+          );
+        },
+        (error) => {
+          console.log(error);
+          this.toastrService.danger(
+            "Caricamento campagne non riuscito",
+            "Si è verificato un errore:"
+          );
+        }
+      );
+    }
 
     this.reservationForm = this.fb.group({
       campaign_id: ["", Validators.required],
@@ -58,8 +67,9 @@ export class OperatorReservationComponent implements OnInit {
   public submit() {
     this.reservationForm.value.date = (this.reservationForm.value.date).getTime();
     this.reservationForm.value.campaign_id = location.href.split("=")[1];
-    this.apiService.postSlot(this.reservationForm.value).subscribe(
-      (response) => {
+
+    this.dataManagement.createSlotApi(this.reservationForm.value).subscribe(
+      () => {
         this.toastrService.success("Slot inseriti correttamente", "Operazione avvenuta con successo:");
         // Alla chiusura ritorna true per far ricaricare gli hubs
         this.ref.close(true);
@@ -73,5 +83,4 @@ export class OperatorReservationComponent implements OnInit {
   public exit() {
     this.ref.close();
   }
-
 }

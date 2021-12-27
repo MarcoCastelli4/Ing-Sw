@@ -64,6 +64,8 @@ import { DataManagement } from './models/class/data_management';
 })
 export class AppModule {
   constructor(private injector: Injector) {
+    DataManagement.injector = this.injector;
+    //Da togliere
     ApiService.injector = this.injector;
     AuthService.injector = this.injector;
     DataService.injector = this.injector;

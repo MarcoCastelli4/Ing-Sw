@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NbRegisterComponent } from '@nebular/auth';
-import { ApiService } from '../../../services/api.service';
+import { DataManagement } from '../../../models/class/data_management';
 import { AuthService } from '../../../services/auth.service';
 
 @Component({
@@ -9,8 +9,8 @@ import { AuthService } from '../../../services/auth.service';
     styleUrls: ['../auth.scss']
 })
 export class RegisterComponent extends NbRegisterComponent {
-    private apiService;
     private authService;
+    private dataManagement;
 
     ngOnInit() {
         this.user.email = "antonelgabor@gmail.com";
@@ -23,7 +23,7 @@ export class RegisterComponent extends NbRegisterComponent {
         if (localStorage.getItem("accessToken"))
             location.href = "/pages/dashboard"
 
-        this.apiService = ApiService.injector.get(ApiService)
+        this.dataManagement = DataManagement.injector.get(DataManagement)
         this.authService = AuthService.injector.get(AuthService)
     }
 
@@ -35,18 +35,15 @@ export class RegisterComponent extends NbRegisterComponent {
     }
 
     register() {
-        this.apiService.signUp(this.user).subscribe(
+        this.dataManagement.register(this.user).subscribe(
             (response) => {
                 this.authService.setAccessToken(response.accessToken);
                 this.authService.setRefreshToken(response.refreshToken);
                 localStorage.setItem("email", this.user.email);
-                localStorage.setItem("user_type", "Citizen")
+                localStorage.setItem("userRole", "Citizen")
                 this.showMessages.success = true;
                 this.messages.push("")
-                //this.authService.citizen = new Citizen(response.user);
-                //localStorage.setItem("citizen", JSON.stringify(this.authService.citizen))
                 //TODO open modal con categoria di appartenenza
-
                 location.href = "/pages/dashboard"
             },
             (error) => {

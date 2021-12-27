@@ -1,18 +1,26 @@
 import { User } from "../abstract/user";
 import { CampaignEnum } from "../enumerations/campaign";
 
-export class Citizen implements User{
-
+export class Citizen implements User {
     private _id: string;
-    private fcCode: string;
-    private name: string;
-    private surname: string;
-    private type: CampaignEnum;
-    private email: string;
-    private birthplace: string;
-    private birthday: number;
+    private _fcCode: string;
+    private _name: string;
+    private _surname: string;
+    private _type: CampaignEnum;
+    private _email: string;
+    private _birthplace: string;
+    private _birthday: number;
+    /**
+     * Array di oggetti con:
+     * campaing_id
+     * hub_id
+     * reservations (array di stringhe, ovvero gli id delgi ) 
+     */
 
-    constructor(input: Citizen){
+    private _reservations: [];
+
+
+    constructor(input: Citizen) {
         this._id = input._id;
         this.fcCode = input.fcCode;
         this.name = input.name;
@@ -22,58 +30,56 @@ export class Citizen implements User{
         this.birthplace = input.birthplace;
         this.birthday = input.birthday;
     }
-
-    public getID(): string{
-        return this._id;
+    public get fcCode(): string {
+        return this._fcCode;
     }
-    public getFcCode(): string{
-        return this.fcCode;
+    public set fcCode(value: string) {
+        this._fcCode = value;
     }
-    public getName(): string{
-        return this.name;
+    public get name(): string {
+        return this._name;
     }
-    public getSurname(): string{
-        return this.surname;
+    public set name(value: string) {
+        this._name = value;
     }
-    public getType(): CampaignEnum{
-        return this.type;
+    public get surname(): string {
+        return this._surname;
     }
-    public getEmail(): string{
-        return this.email;
+    public set surname(value: string) {
+        this._surname = value;
     }
-    public getBirthplace(): string{
-        return this.birthplace;
+    public get type(): CampaignEnum {
+        return this._type;
     }
-    public getBirthday(): number{
-        return this.birthday;
+    public set type(value: CampaignEnum) {
+        this._type = value;
     }
-
-    public setID(input: string): void{
-        this._id = input;
+    public get email(): string {
+        return this._email;
     }
-    public setFcCode(input: string): void{
-        this.fcCode = input;
+    public set email(value: string) {
+        this._email = value;
     }
-    public setName(input: string): void{
-        this.name = input;
+    public get birthplace(): string {
+        return this._birthplace;
     }
-    public setSurname(input: string): void{
-        this.surname = input;
+    public set birthplace(value: string) {
+        this._birthplace = value;
     }
-    public setType(input: CampaignEnum): void{
-        this.type = input;
+    public get birthday(): number {
+        return this._birthday;
     }
-    public setEmail(input: string): void{
-        this.email = input;
+    public set birthday(value: number) {
+        this._birthday = value;
     }
-    public setBirthplace(input: string): void{
-        this.birthplace = input;
+    public get reservations(): [] {
+        return this._reservations;
     }
-    public setBirthday(input: number): void{
-        this.birthday = input;
+    public set reservations(value: []) {
+        this._reservations = value;
     }
 
-    public login(): boolean{
+    public login(): boolean {
         return false;
     }
 }

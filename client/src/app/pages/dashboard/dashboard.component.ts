@@ -6,7 +6,6 @@ import {
   NbToastrService,
 } from "@nebular/theme";
 import { DataManagement } from "../../models/class/data_management";
-import { ApiService } from "../../services/api.service";
 import { AuthService } from "../../services/auth.service";
 import { ConfirmComponent } from "../../widgets/confirm/confirm.component";
 import { CreateCampaingComponent } from "../../widgets/create-campaign/create-campaing.component";
@@ -19,13 +18,12 @@ import { CreateCampaingComponent } from "../../widgets/create-campaign/create-ca
 export class DashboardComponent {
   public campaigns = [];
   public dataSource;
-  public userRole: string;
+  public userRole: string = this.dataManagement.userRole ?? localStorage.getItem("userRole");
   public displayedColumns: string[] = ["name", "type", "totQty", "actions"];
   public citizen;
 
   constructor(
     private authService: AuthService,
-    private apiService: ApiService,
     private toastrService: NbToastrService,
     public dialogService: NbDialogService,
     public changeDetector: ChangeDetectorRef,
@@ -35,26 +33,31 @@ export class DashboardComponent {
     if (this.authService.getAccessToken == null) {
       this.authService.logout();
     }
-    this.userRole = "Citizen";
-    this.citizen = this.dataManagement.citizen;
-    if (!this.dataManagement.isDoneApi.citizen) {
-      this.dataManagement.getCitizenApi().subscribe(
-        (response) => {
-          this.citizen = response;
-          this.toastrService.success(
-            "",
-            "Utente caricato correttamente!"
-          );
-        },
-        (error) => {
-          console.log(error);
-          this.toastrService.danger(
-            "Caricamento utente non riuscito",
-            "Si è verificato un errore:"
-          );
-        }
-      );
-    }
+    if (this.userRole == "Citizen") {
+      this.citizen = this.dataManagement.citizen;
+      if (!this.dataManagement.isDoneApi.citizen) {
+        this.dataManagement.getCitizenApi().subscribe(
+          (response) => {
+            this.citizen = response;
+            //TODO da verificare
+            this.userRole = "Citizen";
+            this.toastrService.success(
+              "", 
+              "Utente caricato correttamente!"
+            );
+          },
+          (error) => {
+            console.log(error);
+            this.toastrService.danger(
+              "Caricamento utente non riuscito",
+              "Si è verificato un errore:"
+            );
+          }
+        );
+      }
+    } else if (!this.userRole)
+      // Dati corrotti, è necessario ri-eseguire il login
+      this.authService.logout();
 
     this.campaigns = this.dataManagement.campaigns;
     if (!this.dataManagement.isDoneApi.campaigns) {
@@ -79,7 +82,7 @@ export class DashboardComponent {
     }
   }
 
-  public createCampaign(): void {
+  public create(): void {
     this.dialogService
       .open(CreateCampaingComponent, {
         context: {
@@ -87,20 +90,16 @@ export class DashboardComponent {
         },
       })
       .onClose.subscribe((res) => {
+        // se res è true (creazione andata a buon fine), aggiorna la tabella
         if (res) {
-          //TODO Verificare la chiusura del modal createCampaign
-          //res = this.enumToString(res);
-          this.campaigns.push(res);
+          this.toastrService.success(
+            "",
+            "Campagna creata correttamente!"
+          );
+          this.campaigns = this.dataManagement.campaigns;
           this.dataSource = new MatTableDataSource(this.campaigns);
         }
       });
-  }
-
-  public checkType(element) {
-    if (Object.values(element.type).includes(this.citizen?.type))
-      return true;
-    else
-      return false;
   }
 
   public edit(_id: string): void {
@@ -115,13 +114,11 @@ export class DashboardComponent {
       .onClose.subscribe((res) => {
         if (res) {
           //TODO Verificare la chiusura del modal di modifica
-          //res = this.enumToString(res);
-          this.campaigns.forEach((x) => {
-            if (x._id === res._id) {
-              let index = this.campaigns.indexOf(x);
-              this.campaigns[index] = res;
-            }
-          });
+          this.toastrService.success(
+            "",
+            "Campagna modificata correttamente!"
+          );
+          this.campaigns = this.dataManagement.campaigns;
           this.dataSource = new MatTableDataSource(this.campaigns);
         }
       });
@@ -136,16 +133,14 @@ export class DashboardComponent {
       })
       .onClose.subscribe((res) => {
         if (res) {
-          this.apiService.deleteCampaign(_id).subscribe(
-            (response) => {
-              this.campaigns.forEach((x, i) => {
-                if (x._id === response) this.campaigns.splice(i, 1);
-              });
-              this.dataSource = new MatTableDataSource(this.campaigns);
+          this.dataManagement.deleteCampaignApi(_id).subscribe(
+            () => {
               this.toastrService.success(
-                "Campagna eliminata correttamente",
-                "Operazione avvenuta con successo:"
+                "",
+                "Campagna eliminata correttamente!"
               );
+              this.campaigns = this.dataManagement.campaigns;
+              this.dataSource = new MatTableDataSource(this.campaigns);
             },
             (error) => {
               console.log(error);
@@ -154,12 +149,19 @@ export class DashboardComponent {
                 "Si è verificato un errore:"
               );
             }
-          );
+          )
         }
       });
   }
 
   public reserve(id: string) {
     this.router.navigate(["/pages/reservation"], { queryParams: { id: id } });
+  }
+
+  public checkType(element) {
+    if (Object.values(element.type).includes(this.citizen?.type))
+      return true;
+    else
+      return false;
   }
 }

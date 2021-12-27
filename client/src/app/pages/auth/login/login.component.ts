@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { NbLoginComponent } from "@nebular/auth";
-import { ApiService } from "../../../services/api.service";
+import { DataManagement } from "../../../models/class/data_management";
 import { AuthService } from "../../../services/auth.service";
 
 @Component({
@@ -9,7 +9,7 @@ import { AuthService } from "../../../services/auth.service";
   styleUrls: ["../auth.scss"],
 })
 export class LoginComponent extends NbLoginComponent {
-  private apiService;
+  private dataManagement;
   private authService;
   // Varibabile funzionale per la vista, serve a mostrare come input email se è true e codice operatore se false
   public citizen: boolean = true;
@@ -17,27 +17,25 @@ export class LoginComponent extends NbLoginComponent {
     email: string;
     password: string;
   } = {
-    email: "antonelgabor@gmail.com",
-    password: "Password..99",
-  };
+      email: "antonelgabor@gmail.com",
+      password: "Password..99",
+    };
 
   ngOnInit() {
-    this.apiService = ApiService.injector.get(ApiService);
+    this.dataManagement = DataManagement.injector.get(DataManagement);
+    //TODO da togliere
     this.authService = AuthService.injector.get(AuthService);
 
     if (localStorage.getItem("accessToken")) location.href = "/pages/dashboard";
   }
 
   login() {
-    this.apiService
-      .login({
-        email: this.citizen ? this.user.email : "",
-        password: this.user.password,
-        opCode: !this.citizen ? this.user.email : "",
-      })
-      .subscribe(
+    this.dataManagement.login({
+      email: this.citizen ? this.user.email : "",
+      password: this.user.password,
+      opCode: !this.citizen ? this.user.email : "",
+    }).subscribe(
         (response) => {
-          localStorage.setItem("user_type", response.user.role);
           this.authService.setAccessToken(response.accessToken);
           this.authService.setRefreshToken(response.refreshToken);
           this.showMessages.success = true;

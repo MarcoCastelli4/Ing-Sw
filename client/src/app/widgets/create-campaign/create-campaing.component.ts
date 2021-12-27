@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { NbDialogRef, NbToastrService } from "@nebular/theme";
+import { DataManagement } from "../../models/class/data_management";
 import { CampaignEnum } from "../../models/enumerations/campaign";
-import { ApiService } from "../../services/api.service";
 
 @Component({
   selector: "ngx-create-campaing",
@@ -19,8 +19,8 @@ export class CreateCampaingComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     public ref: NbDialogRef<CreateCampaingComponent>,
-    private apiService: ApiService,
-    private toastrService: NbToastrService
+    private toastrService: NbToastrService,
+    private dataManagement: DataManagement
   ) {
     this.campaign = JSON.parse(localStorage.getItem("campaign"));
     localStorage.removeItem("campaign");
@@ -56,19 +56,13 @@ export class CreateCampaingComponent implements OnInit {
     return keys.slice(keys.length / 2);
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   public submit() {
     if (this.operation == "create") {
-      this.apiService.postCampaign(this.campaingForm.value).subscribe(
-        (response) => {
-          this.toastrService.success(
-            "Campagna creata correttamente",
-            "Operazione avvenuta con successo:"
-          );
-          const campaign = this.campaingForm.value;
-          campaign._id = response;
-          this.ref.close(campaign);
+      this.dataManagement.createCampaignApi(this.campaingForm.value).subscribe(
+        () => {
+          this.ref.close(true);
         },
         (error) => {
           console.log(error);
@@ -77,15 +71,11 @@ export class CreateCampaingComponent implements OnInit {
             "Si è verificato un errore:"
           );
         }
-      );
+      )
     } else {
-      this.apiService.putCampaign(this.campaingForm.value).subscribe(
-        (response) => {
-          this.toastrService.success(
-            "Campagna modificata correttamente",
-            "Operazione avvenuta con successo:"
-          );
-          this.ref.close(this.campaingForm.value);
+      this.dataManagement.editCampaignApi(this.campaingForm.value).subscribe(
+        () => {
+          this.ref.close(true);
         },
         (error) => {
           console.log(error);
@@ -94,7 +84,7 @@ export class CreateCampaingComponent implements OnInit {
             "Si è verificato un errore:"
           );
         }
-      );
+      )
     }
   }
 }

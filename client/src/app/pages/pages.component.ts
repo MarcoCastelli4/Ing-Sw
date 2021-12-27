@@ -13,7 +13,7 @@ import { NbMenuItem } from "@nebular/theme";
 export class PagesComponent {
   menu;
   constructor() {
-    const operator = localStorage.getItem("user_type") === "Operator";
+    const operator = localStorage.getItem("userRole") === "Operator";
     if (!operator) {
       this.menu = [
         {

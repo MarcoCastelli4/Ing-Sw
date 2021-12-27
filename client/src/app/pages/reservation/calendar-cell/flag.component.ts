@@ -45,7 +45,7 @@ export class FlagComponent {
     }
 
     public openDialog() {
-        if (localStorage.getItem("user_type") == "Citizen") {
+        if (localStorage.getItem("userRole") == "Citizen") {
             this.dialogService.open(CitizenReservationComponent, {
                 context: {
                     date: this.date,

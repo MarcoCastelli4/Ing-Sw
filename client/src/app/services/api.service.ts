@@ -73,6 +73,11 @@ export class ApiService {
     )
   }
 
+  /**
+   * 
+   * @param _id della campagna
+   * @returns id se l'operazione è andata a buon fine, errore altrinenti
+   */
   public deleteCampaign(_id: string): Observable<any> {
     return this.http.delete<any>(
       getUrl("campaign") + "?_id=" + _id,
@@ -205,7 +210,6 @@ export class ApiService {
     return req;
   }
 
-  //chiedo Citizen
   public getCitizen(): Observable<any> {
     return this.http.get<any>(
       getUrl("citizen"),
