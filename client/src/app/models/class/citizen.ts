@@ -1,7 +1,6 @@
-import { User } from "../abstract/user";
 import { CampaignEnum } from "../enumerations/campaign";
 
-export class Citizen implements User {
+export class Citizen {
     private _id: string;
     private _fcCode: string;
     private _name: string;
@@ -16,9 +15,7 @@ export class Citizen implements User {
      * hub_id
      * reservations (array di stringhe, ovvero gli id delgi ) 
      */
-
     private _reservations: [];
-
 
     constructor(input: Citizen) {
         this._id = input._id;
@@ -77,9 +74,5 @@ export class Citizen implements User {
     }
     public set reservations(value: []) {
         this._reservations = value;
-    }
-
-    public login(): boolean {
-        return false;
     }
 }

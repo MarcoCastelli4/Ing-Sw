@@ -104,7 +104,7 @@ export class ApiService {
     );
   }
 
-  public postReservation(obj): Observable<any> {
+  public postReservation(obj: Slot): Observable<any> {
     return this.http.post<any>(
       getUrl("reservation"),
       obj,
@@ -118,76 +118,6 @@ export class ApiService {
       authApi(true)
     );
   }
-
-  //
-  //  public getData(id: string): Observable<any> {
-  //    return this.http.get<any>(
-  //      getUrl("data") + "?_id=" + id,
-  //      authApi(true)
-  //    );
-  //  }
-  //  public deleteData(_id: string): Observable<any> {
-  //    return this.http.delete<any>(
-  //      getUrl("data") + "?_id=" + _id,
-  //      authApi(true)
-  //    );
-  //  }
-  //
-  //  // Save the whole desk, all the sections
-  //  public saveAllData(obj: any): Observable<any> {
-  //    return this.http.post<any>(
-  //      getUrl("data"),
-  //      obj,
-  //      authApi(true)
-  //    );
-  //  }
-  //
-  //
-  //───────────────────────────────────────────────────── MODULE REQUESTS ────────────────────────────────────────────
-  //
-
-  //  public putModule(obj: Module): Observable<any> {
-  //    return this.http.put<any>(
-  //      getUrl("module"),
-  //      obj,
-  //      authApi(true)
-  //    );
-  //  }
-
-
-  //
-  //───────────────────────────────────────────────────── CONTRIBUTORS REQUESTS ────────────────────────────────────────────
-  //
-
-  //  public getContributors(id: string): Observable<any> {
-  //    return this.http.get<any>(
-  //      getUrl("contributors") + "?_id=" + id,
-  //      authApi(true)
-  //    );
-  //  }
-  //
-  //  public putContributor(obj: ContributorRequest): Observable<any> {
-  //    return this.http.put<any>(
-  //      getUrl("contributor"),
-  //      obj,
-  //      authApi(true)
-  //    )
-  //  }
-  //
-  //  public removeContributor(user_id: string, data_id: string, type: string): Observable<any> {
-  //    return this.http.delete<any>(
-  //      getUrl("contributor") + "?user_id=" + user_id + "&data_id=" + data_id + "&type=" + type,
-  //      authApi(true)
-  //    );
-  //  }
-  //
-  //  public postInvitationLink(data_id: string, permission: string): Observable<any> {
-  //    return this.http.post<any>(
-  //      getUrl("invite"),
-  //      { data_id: data_id, permission: permission },
-  //      authApi(true)
-  //    );
-  //  }
 
   //
   //───────────────────────────────────────────────────── USER REQUESTS ────────────────────────────────────────────

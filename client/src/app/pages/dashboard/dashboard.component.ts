@@ -5,6 +5,7 @@ import {
   NbDialogService,
   NbToastrService,
 } from "@nebular/theme";
+import { Campaign } from "../../models/class/campaign";
 import { DataManagement } from "../../models/class/data_management";
 import { AuthService } from "../../services/auth.service";
 import { ConfirmComponent } from "../../widgets/confirm/confirm.component";
@@ -19,7 +20,7 @@ export class DashboardComponent {
   public campaigns = [];
   public dataSource;
   public userRole: string = this.dataManagement.userRole ?? localStorage.getItem("userRole");
-  public displayedColumns: string[] = ["name", "type", "totQty", "actions"];
+  public displayedColumns: string[] = ["name", "type", "actions"];
   public citizen;
 
   constructor(
@@ -42,7 +43,7 @@ export class DashboardComponent {
             //TODO da verificare
             this.userRole = "Citizen";
             this.toastrService.success(
-              "", 
+              "",
               "Utente caricato correttamente!"
             );
           },
@@ -154,12 +155,12 @@ export class DashboardComponent {
       });
   }
 
-  public reserve(id: string) {
+  public reserve(id: string): void {
     this.router.navigate(["/pages/reservation"], { queryParams: { id: id } });
   }
 
-  public checkType(element) {
-    if (Object.values(element.type).includes(this.citizen?.type))
+  public checkType(row: Campaign): boolean {
+    if (Object.values(row.type).includes(this.citizen?.type))
       return true;
     else
       return false;

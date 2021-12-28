@@ -1,11 +1,12 @@
-
 export class Hub {
-    private name: string;
-    private city: string;
-    private address: string;
-    private totQty: number;
-    private availableQty: number;
-    private availableSlot: Date[];
+    private _name: string;
+    private _city: string;
+    private _address: string;
+    private _totQty: number;
+    // TODO: Controllare se serve
+    private _availableQty: number;
+    // TODO: Controllare se serve
+    private _availableSlot: Date[];
 
     constructor(hub: Hub) {
         this.name = hub.name;
@@ -16,42 +17,40 @@ export class Hub {
         this.availableSlot = hub.availableSlot;
     }
 
-    public getName(): string {
-        return this.name;
+    public get name(): string {
+        return this._name;
     }
-    public getCity(): string {
-        return this.city;
+    public set name(value: string) {
+        this._name = value;
     }
-    public getAddress(): string {
-        return this.address;
+    public get city(): string {
+        return this._city;
     }
-    public getTotQty(): number {
-        return this.totQty;
+    public set city(value: string) {
+        this._city = value;
     }
-    public getAvailableQty(): number {
-        return this.availableQty;
+    public get address(): string {
+        return this._address;
     }
-    public getAvailableSlot(): Date[] {
-        return this.availableSlot;
+    public set address(value: string) {
+        this._address = value;
     }
-
-    public setName(input: string): void {
-        this.name = input;
+    public get totQty(): number {
+        return this._totQty;
     }
-    public setCity(input: string): void {
-        this.city = input;
+    public set totQty(value: number) {
+        this._totQty = value;
     }
-    public setAddress(input: string): void {
-        this.address = input;
+    public get availableSlot(): Date[] {
+        return this._availableSlot;
     }
-    public setTotQty(input: number): void {
-        this.totQty = input;
+    public set availableSlot(value: Date[]) {
+        this._availableSlot = value;
     }
-    public setAvailableQty(input: number): void {
-        this.availableQty = input;
+    public get availableQty(): number {
+        return this._availableQty;
     }
-    public setAvailableSlot(input: Date[]): void {
-        this.availableSlot = input;
+    public set availableQty(value: number) {
+        this._availableQty = value;
     }
-
 }

@@ -49,7 +49,7 @@ export class CitizenReservationComponent implements OnInit {
       quantity: 0
     }
     
-    this.dataManagement.createReservation(new Slot(request)).subscribe(
+    this.dataManagement.createReservationApi(new Slot(request)).subscribe(
       () => {
         this.toastrService.success("", "Prenotazione effettuata correttamente!");
         this.ref.close();

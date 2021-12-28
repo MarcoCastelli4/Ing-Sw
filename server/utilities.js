@@ -38,7 +38,6 @@ const campaignSchema = {
   properties: {
     _id: { type: "string" },
     name: { type: "string" },
-    totQty: { type: "number" },
     type: { type: "string" },
     hubs: {
       type: "array",

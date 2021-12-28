@@ -62,7 +62,7 @@ export class ReservationComponent implements OnInit {
 
   ngOnInit(): void { }
 
-  public createSlot() {
+  public createSlot(): void {
     this.dialogService.open(OperatorReservationComponent, {
       context: {
         hubs: this.hubs
@@ -73,7 +73,7 @@ export class ReservationComponent implements OnInit {
     })
   }
 
-  public getSlots(_id: string) {
+  public getSlots(_id: string): void {
     this.slots = [];
     this.apiService.getSlots(_id).subscribe(
       (res) => {
@@ -93,7 +93,4 @@ export class ReservationComponent implements OnInit {
       }
     )
   }
-
-  public exit() { }
-
 }

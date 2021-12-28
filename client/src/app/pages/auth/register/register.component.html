@@ -31,27 +31,23 @@
     </div>
 
     <div class="form-control-group">
-        <label class="label" for="input-birthplace">Luogo di nascita:</label>
-        <input nbInput [(ngModel)]="user.birthplace" #birthplace="ngModel" required id="input-birthplace"
-            name="birthplace" placeholder="Luogo di nascita" fullWidth fieldSize="large">
-        <ng-container *ngIf="birthplace.invalid && birthplace.touched">
-            <p class="caption status-danger" *ngIf="birthplace.errors?.required">
-                Luogo di nascita necessario per procedere
+        <label class="label" for="input-name">Nome:</label>
+        <input nbInput [(ngModel)]="user.name" #name="ngModel" required id="input-name"
+            name="name" placeholder="Nome" fullWidth fieldSize="large">
+        <ng-container *ngIf="name.invalid && name.touched">
+            <p class="caption status-danger" *ngIf="name.errors?.required">
+                Nome necessario per procedere
             </p>
         </ng-container>
     </div>
 
     <div class="form-control-group">
-        <label class="label" for="input-birthday">Data di nascita:</label>
-        <input nbInput [(ngModel)]="user.birthday" required id="input-birthday" name="birthday" #birthday="ngModel"
-            [nbDatepicker]="datepicker" placeholder="Data di nascita" fullWidth fieldSize="large">
-        <nb-datepicker #datepicker format="dd/MM/yyyy"></nb-datepicker>
-        <ng-container *ngIf="!checkBirthDate()">
-            <p class="caption status-danger" *ngIf="!birthday.errors?.required">
-                Data di nascita non valida
-            </p>
-            <p class="caption status-danger" *ngIf="birthday.errors?.required">
-                Data di nascita necessaria per procedere
+        <label class="label" for="input-surname">Cognome:</label>
+        <input nbInput [(ngModel)]="user.surname" #surname="ngModel" required id="input-surname"
+            name="surname" placeholder="Cognome" fullWidth fieldSize="large">
+        <ng-container *ngIf="surname.invalid && surname.touched">
+            <p class="caption status-danger" *ngIf="surname.errors?.required">
+                Cognome necessario per procedere
             </p>
         </ng-container>
     </div>

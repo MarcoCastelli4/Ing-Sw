@@ -98,7 +98,7 @@ async function routes(fastify, options, next) {
 
                 let query = await dbCampaigns.updateOne(
                     { _id: inputData._id },
-                    { $set: { name: inputData.name, type: inputData.type, hubs: inputData.hubs, priority: inputData.priority, totQty: inputData.totQty }, },
+                    { $set: { name: inputData.name, type: inputData.type, hubs: inputData.hubs, priority: inputData.priority }, },
                     { upsert: true }
                 );
 
@@ -132,7 +132,7 @@ async function routes(fastify, options, next) {
         handler: async (request, reply) => {
             try {
                 let query = await dbCampaigns.deleteOne({ _id: request.query._id });
-                
+
                 if (query.deletedCount == 0)
                     throw fastify.httpErrors.internalServerError("Error while deleting the element");
 

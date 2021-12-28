@@ -29,8 +29,8 @@ export class LoginComponent extends NbLoginComponent {
     if (localStorage.getItem("accessToken")) location.href = "/pages/dashboard";
   }
 
-  login() {
-    this.dataManagement.login({
+  public login(): void {
+    this.dataManagement.loginApi({
       email: this.citizen ? this.user.email : "",
       password: this.user.password,
       opCode: !this.citizen ? this.user.email : "",
@@ -72,7 +72,7 @@ export class LoginComponent extends NbLoginComponent {
     }
   }
 
-  toggleShowPassword() {
+  public toggleShowPassword(): void {
     this.showPassword = !this.showPassword;
   }
 }

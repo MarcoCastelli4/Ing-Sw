@@ -58,7 +58,7 @@ export class CreateCampaingComponent implements OnInit {
 
   ngOnInit(): void { }
 
-  public submit() {
+  public submit(): void{
     if (this.operation == "create") {
       this.dataManagement.createCampaignApi(this.campaingForm.value).subscribe(
         () => {

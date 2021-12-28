@@ -144,9 +144,6 @@ async function routes(fastify, options, next) {
         if (!user)
           throw fastify.httpErrors.badRequest("fcCode is not recorded in the DB");
 
-        if (user?.birthplace) {
-          throw fastify.httpErrors.badRequest("Citizen already registered");
-        }
         let email = await dbCitizens.findOne({ email: inputData.email })
         if (!email) {
           // Set payload for jwt
@@ -164,10 +161,10 @@ async function routes(fastify, options, next) {
             {
               $set: {
                 email: inputData.email,
+                name: inputData.name,
+                surname: inputData.surname,
                 password: md5(inputData.password),
                 refreshTokens: [refreshToken],
-                birthplace: inputData.birthplace,
-                birthday: Date.parse(inputData.birthday),
                 reservations: []
               }
             }

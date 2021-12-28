@@ -1,22 +1,16 @@
-import { User } from "../abstract/user";
+export class Operator{
 
-export class Operator implements User{
-
-    private id: string;
+    private _id: string;
 
     constructor(input: Operator){
         this.id = input.id;
     }
-
-    public getId(): string{
-        return this.id;
-    }
-
-    public setId(input: string): void{
-        this.id = input;
-    }
     
-    public login(): boolean{
-        return false;
+    public get id(): string {
+        return this._id;
     }
+    public set id(value: string) {
+        this._id = value;
+    }
+
 }

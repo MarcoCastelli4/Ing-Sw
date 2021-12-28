@@ -2,7 +2,7 @@ import { Injectable, Injector } from "@angular/core";
 import { Observable, throwError } from "rxjs";
 import { catchError, map } from "rxjs/operators";
 import { ApiService } from "../../services/api.service";
-import { SignUpRequest, Tokens } from "./auth";
+import { LoginRequest, SignUpRequest, Tokens } from "./auth";
 import { Campaign } from "./campaign";
 import { Citizen } from "./citizen";
 import { Hub } from "./hub";
@@ -14,7 +14,7 @@ import { Slot } from "./slot";
 })
 
 export class DataManagement {
-    static injector: Injector
+    static injector: Injector;
 
     private _citizen: Citizen;
     private _campaigns: Campaign[] = [];
@@ -22,6 +22,9 @@ export class DataManagement {
     private _operator: Operator;
     private _userRole: string;
 
+    /**
+     * Oggetto usato per sapere se in questa istanza sono già state effettuate le varie richieste per ricevere i dati
+     */
     private _isDoneApi = {
         citizen: false,
         campaigns: false,
@@ -218,11 +221,10 @@ export class DataManagement {
      * All'utente aggiunge l'id dello slot
      * @returns 
      */
-    public createReservation(slot: Slot): Observable<void> {
+    public createReservationApi(slot: Slot): Observable<void> {
         return ApiService.instance.postReservation(slot).pipe(map(
             () => {
-                this.citizen.reservations.push(slot);
-                
+                //this.citizen.reservations.push();
             },
         ), catchError((error) => {
             return throwError(error);
@@ -234,7 +236,7 @@ export class DataManagement {
 
     //--------------------------------------------------AUTH APIS--------------------------------------------------//
 
-    public login(obj): Observable<Tokens> {
+    public loginApi(obj: LoginRequest): Observable<Tokens> {
         return ApiService.instance.login(obj).pipe(map(
             (response) => {
                 if (response.user.role == "Citizen")
@@ -253,7 +255,7 @@ export class DataManagement {
         )
     }
 
-    public register(user: SignUpRequest): Observable<Tokens> {
+    public registerApi(user: SignUpRequest): Observable<Tokens> {
         return ApiService.instance.signUp(user).pipe(map(
             (response) => {
                 this.citizen = new Citizen(response.user);

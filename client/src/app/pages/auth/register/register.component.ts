@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NbRegisterComponent } from '@nebular/auth';
+import { Tokens } from '../../../models/class/auth';
 import { DataManagement } from '../../../models/class/data_management';
 import { AuthService } from '../../../services/auth.service';
 
@@ -15,10 +16,8 @@ export class RegisterComponent extends NbRegisterComponent {
     ngOnInit() {
         this.user.email = "antonelgabor@gmail.com";
         this.user.fcCode = "GBRNNL99A04Z129A"
-        this.user.birthplace = "Verona"
         this.user.password = "Password..99";
         this.user.confirmPassword = "Password..99";
-        this.user.birthday = new Date("Jan 1 1970");
 
         if (localStorage.getItem("accessToken"))
             location.href = "/pages/dashboard"
@@ -34,9 +33,9 @@ export class RegisterComponent extends NbRegisterComponent {
             return false;
     }
 
-    register() {
-        this.dataManagement.register(this.user).subscribe(
-            (response) => {
+    public register(): void {
+        this.dataManagement.registerApi(this.user).subscribe(
+            (response: Tokens) => {
                 this.authService.setAccessToken(response.accessToken);
                 this.authService.setRefreshToken(response.refreshToken);
                 localStorage.setItem("email", this.user.email);
@@ -65,7 +64,7 @@ export class RegisterComponent extends NbRegisterComponent {
     public showPassword = false;
     public showPasswordConfirm = false;
 
-    getInputType(buttonNumber: number) {
+    public getInputType(buttonNumber: number): string {
         if (buttonNumber == 1) {
             if (this.showPassword) {
                 return 'text';
@@ -81,7 +80,7 @@ export class RegisterComponent extends NbRegisterComponent {
 
     }
 
-    toggleShowPassword(buttonNumber: number) {
+    public toggleShowPassword(buttonNumber: number): void {
         if (buttonNumber == 1)
             this.showPassword = !this.showPassword;
         else if (buttonNumber == 2)

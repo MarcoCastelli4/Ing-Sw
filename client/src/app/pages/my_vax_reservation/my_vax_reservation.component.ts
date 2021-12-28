@@ -43,7 +43,7 @@ export class my_vax_reservationComponent {
       );
     }
   }
-  timeStampToDate(timestamp) {
+  public timeStampToDate(timestamp: Date): string {
     var date = new Date(timestamp);
     let month = date.getMonth() + 1;
     return date.getDate() + '/' + month + '/' + date.getFullYear();
