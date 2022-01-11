@@ -1,10 +1,7 @@
 import { ChangeDetectorRef, Component } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
 import { Router } from "@angular/router";
-import {
-  NbDialogService,
-  NbToastrService,
-} from "@nebular/theme";
+import { NbDialogService, NbToastrService } from "@nebular/theme";
 import { Campaign } from "../../models/class/campaign";
 import { DataManagement } from "../../models/class/data_management";
 import { AuthService } from "../../services/auth.service";
@@ -19,7 +16,8 @@ import { CreateCampaingComponent } from "../../widgets/create-campaign/create-ca
 export class DashboardComponent {
   public campaigns = [];
   public dataSource;
-  public userRole: string = this.dataManagement.userRole ?? localStorage.getItem("userRole");
+  public userRole: string =
+    this.dataManagement.userRole ?? localStorage.getItem("userRole");
   public displayedColumns: string[] = ["name", "type", "actions"];
   public citizen;
 
@@ -42,10 +40,7 @@ export class DashboardComponent {
             this.citizen = response;
             //TODO da verificare
             this.userRole = "Citizen";
-            this.toastrService.success(
-              "",
-              "Utente caricato correttamente!"
-            );
+            this.toastrService.success("", "Utente caricato correttamente!");
           },
           (error) => {
             console.log(error);
@@ -65,10 +60,7 @@ export class DashboardComponent {
       this.dataManagement.getCampaignsApi().subscribe(
         (response) => {
           this.dataSource = new MatTableDataSource(response);
-          this.toastrService.success(
-            "",
-            "Campagne caricate correttamente!"
-          );
+          this.toastrService.success("", "Campagne caricate correttamente!");
         },
         (error) => {
           console.log(error);
@@ -93,10 +85,7 @@ export class DashboardComponent {
       .onClose.subscribe((res) => {
         // se res è true (creazione andata a buon fine), aggiorna la tabella
         if (res) {
-          this.toastrService.success(
-            "",
-            "Campagna creata correttamente!"
-          );
+          this.toastrService.success("", "Campagna creata correttamente!");
           this.campaigns = this.dataManagement.campaigns;
           this.dataSource = new MatTableDataSource(this.campaigns);
         }
@@ -110,15 +99,13 @@ export class DashboardComponent {
       .open(CreateCampaingComponent, {
         context: {
           operation: "edit",
+          campaign: campaign,
         },
       })
       .onClose.subscribe((res) => {
         if (res) {
           //TODO Verificare la chiusura del modal di modifica
-          this.toastrService.success(
-            "",
-            "Campagna modificata correttamente!"
-          );
+          this.toastrService.success("", "Campagna modificata correttamente!");
           this.campaigns = this.dataManagement.campaigns;
           this.dataSource = new MatTableDataSource(this.campaigns);
         }
@@ -150,7 +137,7 @@ export class DashboardComponent {
                 "Si è verificato un errore:"
               );
             }
-          )
+          );
         }
       });
   }
@@ -160,9 +147,7 @@ export class DashboardComponent {
   }
 
   public checkType(row: Campaign): boolean {
-    if (Object.values(row.type).includes(this.citizen?.type))
-      return true;
-    else
-      return false;
+    if (Object.values(row.type).includes(this.citizen?.type)) return true;
+    else return false;
   }
 }

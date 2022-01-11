@@ -1,8 +1,10 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Inject, Input, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { NbDialogRef, NbToastrService } from "@nebular/theme";
+import { Campaign } from "../../models/class/campaign";
 import { DataManagement } from "../../models/class/data_management";
 import { CampaignEnum } from "../../models/enumerations/campaign";
+import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 
 @Component({
   selector: "ngx-create-campaing",
@@ -11,8 +13,8 @@ import { CampaignEnum } from "../../models/enumerations/campaign";
 })
 export class CreateCampaingComponent implements OnInit {
   @Input() operation: string;
+  @Input() campaign: Campaign;
 
-  campaign: any;
   public campaingForm: FormGroup;
   public enum = [];
 
@@ -21,27 +23,7 @@ export class CreateCampaingComponent implements OnInit {
     public ref: NbDialogRef<CreateCampaingComponent>,
     private toastrService: NbToastrService,
     private dataManagement: DataManagement
-  ) {
-    this.campaign = JSON.parse(localStorage.getItem("campaign"));
-    localStorage.removeItem("campaign");
-    if (!this.campaign && this.operation == "edit") {
-      this.toastrService.danger(
-        "Si è verificato un errore in fase di modifica, riprova",
-        "Siamo spiacenti:"
-      );
-      this.ref.close(false);
-    }
-    const res = this.campaign?.type.split(",\n");
-    this.enum = this.getEnum();
-    this.campaingForm = this.fb.group({
-      _id: [this.campaign?._id ? this.campaign?._id : ""],
-      name: [
-        this.campaign?.name ? this.campaign?.name : "",
-        Validators.required,
-      ],
-      type: [res ? res : [], Validators.required],
-    });
-  }
+  ) {}
 
   // Getter for the view to be able to see form's values
   get name() {
@@ -56,9 +38,23 @@ export class CreateCampaingComponent implements OnInit {
     return keys.slice(keys.length / 2);
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    if (!this.campaign && this.operation == "edit") {
+      this.toastrService.danger(
+        "Si è verificato un errore in fase di modifica, riprova",
+        "Siamo spiacenti:"
+      );
+      this.ref.close(false);
+    }
+    this.enum = this.getEnum();
+    this.campaingForm = this.fb.group({
+      _id: [this.campaign ? this.campaign.id : ""],
+      name: [this.campaign ? this.campaign.name : "", Validators.required],
+      type: [this.campaign ? this.campaign.type : [], Validators.required],
+    });
+  }
 
-  public submit(): void{
+  public submit(): void {
     if (this.operation == "create") {
       this.dataManagement.createCampaignApi(this.campaingForm.value).subscribe(
         () => {
@@ -71,7 +67,7 @@ export class CreateCampaingComponent implements OnInit {
             "Si è verificato un errore:"
           );
         }
-      )
+      );
     } else {
       this.dataManagement.editCampaignApi(this.campaingForm.value).subscribe(
         () => {
@@ -84,7 +80,7 @@ export class CreateCampaingComponent implements OnInit {
             "Si è verificato un errore:"
           );
         }
-      )
+      );
     }
   }
 }

@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule } from "@angular/core";
 import {
   NbActionsModule,
   NbButtonModule,
@@ -11,14 +11,15 @@ import {
   NbIconModule,
   NbTreeGridModule,
   NbInputModule,
-} from '@nebular/theme';
-import { NgxEchartsModule } from 'ngx-echarts';
+} from "@nebular/theme";
+import { NgxEchartsModule } from "ngx-echarts";
 
-import { ThemeModule } from '../../@theme/theme.module';
-import { DashboardComponent } from './dashboard.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatTableModule } from '@angular/material/table';
-import { CreateCampaingComponent } from '../../widgets/create-campaign/create-campaing.component';
+import { ThemeModule } from "../../@theme/theme.module";
+import { DashboardComponent } from "./dashboard.component";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { MatTableModule } from "@angular/material/table";
+import { CreateCampaingComponent } from "../../widgets/create-campaign/create-campaing.component";
+import { MatDialogModule, MAT_DIALOG_DATA } from "@angular/material/dialog";
 
 @NgModule({
   imports: [
@@ -39,11 +40,10 @@ import { CreateCampaingComponent } from '../../widgets/create-campaign/create-ca
     ReactiveFormsModule,
     NbInputModule,
     NbSelectModule,
-    MatTableModule
+    MatTableModule,
+    MatDialogModule,
   ],
-  declarations: [
-    DashboardComponent,
-    CreateCampaingComponent
-  ],
+  declarations: [DashboardComponent, CreateCampaingComponent],
+  providers: [{ provide: MAT_DIALOG_DATA, useValue: [] }],
 })
-export class DashboardModule { }
+export class DashboardModule {}
