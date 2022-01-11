@@ -86,7 +86,7 @@ export class ApiService {
   }
 
   //
-  //───────────────────────────────────────────────────── CAMPAIGN SLOTS ────────────────────────────────────────────
+  //───────────────────────────────────────────────────── SLOTS REQUESTS ────────────────────────────────────────────
   //
 
   public getSlots(hub_id: string): Observable<any> {
@@ -111,6 +111,16 @@ export class ApiService {
       authApi(true)
     );
   }
+
+  public notification(campaign_id: string, on: boolean): Observable<any> {
+    return this.http.post<any>(
+      getUrl("notification"),
+      { campaign_id: campaign_id, on: on },
+      authApi(true)
+    );
+
+  }
+
   //───────────────────────────────────────────────────── HUBS REQUESTS ────────────────────────────────────────────
   public getHubs(): Observable<any> {
     return this.http.get<any>(

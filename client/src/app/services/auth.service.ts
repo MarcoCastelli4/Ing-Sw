@@ -17,16 +17,13 @@ export class AuthService {
   public id: string = localStorage.getItem("id");
   public email: string = localStorage.getItem("email");
 
-  public getCitizen(): Citizen{
+  public get Citizen(): Citizen{
     return this.citizen;
   }
 
-  public getOperator(): Operator{
+  public get Operator(): Operator{
     return this.operator;
   }
-
-  //public setCitizen(): void{}
-  //public setOperator (): void{}
 
   /// MANAGE REFRESH TOKEN
   private refreshToken: string = localStorage.getItem("refreshToken");

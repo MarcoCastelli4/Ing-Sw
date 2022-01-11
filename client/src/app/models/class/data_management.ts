@@ -72,83 +72,70 @@ export class DataManagement {
     this._isDoneApi = value;
   }
 
-  //--------------------------------------------------CAMPAIGN APIS--------------------------------------------------//
+    /**
+     * Richiesta GET delle campagne
+     * @returns Array di campagne
+     */
+    public getCampaignsApi(): Observable<Campaign[]> {
+        console.log(this.citizen)
+        return ApiService.instance.getCampaigns().pipe(map((response) => {
+            for (let campaign of response.campaigns) {
+                // notify false => mostra campanella barrata => togliere la notifica
+                if(campaign.citizen_to_notify?.includes(localStorage.getItem("citizenEmail")))
+                    campaign.notify = false;
+                else
+                    campaign.notify = true;
+                this.campaigns.push(new Campaign(campaign));
+            }
+            this.userRole = response.role;
+            this.isDoneApi.campaigns = true;
+            return this.campaigns;
+        }), catchError((error) => {
+            return throwError(error);
+        }))
+    }
+    /**
+     * Richiesta post delle campagne
+     * @param campaign oggetto da passare al server per essere salvato nel DB
+     * @returns void
+     */
+    public createCampaignApi(campaign: Campaign): Observable<void> {
+        return ApiService.instance.postCampaign(campaign).pipe(map((response) => {
+            campaign._id = response;
+            this.campaigns.push(new Campaign(campaign));
+            return;
+        }), catchError((error) => {
+            return throwError(error);
+        }))
+    }
 
-  /**
-   * Richiesta GET delle campagne
-   * @returns Array di campagne
-   */
-  public getCampaignsApi(): Observable<Campaign[]> {
-    return ApiService.instance.getCampaigns().pipe(
-      map((response) => {
-        for (let campaign of response.campaigns) {
-          let obj = new Campaign(campaign);
-          this.campaigns.push(new Campaign(campaign));
-        }
-        this.userRole = response.role;
-        this.isDoneApi.campaigns = true;
-        return this.campaigns;
-      }),
-      catchError((error) => {
-        return throwError(error);
-      })
-    );
-  }
-  /**
-   * Richiesta post delle campagne
-   * @param campaign oggetto da passare al server per essere salvato nel DB
-   * @returns void
-   */
-  public createCampaignApi(campaign: Campaign): Observable<void> {
-    return ApiService.instance.postCampaign(campaign).pipe(
-      map((response) => {
-        campaign.id = response;
-        this.campaigns.push(campaign);
-        return;
-      }),
-      catchError((error) => {
-        return throwError(error);
-      })
-    );
-  }
+    public editCampaignApi(campaign: Campaign): Observable<void> {
+        return ApiService.instance.putCampaign(campaign).pipe(map(() => {
+            for (let campaign of this.campaigns) {
+                if (campaign._id === campaign._id) {
+                    let index = this.campaigns.indexOf(campaign);
+                    this.campaigns[index] = campaign;
+                }
+            }
+            return;
+        }), catchError((error) => {
+            return throwError(error);
+        })
+        )
+    }
 
-  public editCampaignApi(campaign: Campaign): Observable<void> {
-    return ApiService.instance.putCampaign(campaign).pipe(
-      map(() => {
-        for (let campaign of this.campaigns) {
-          if (campaign.id === campaign.id) {
-            let index = this.campaigns.indexOf(campaign);
-            this.campaigns[index] = campaign;
-          }
-        }
-        return;
-      }),
-      catchError((error) => {
-        return throwError(error);
-      })
-    );
-  }
+    public deleteCampaignApi(_id: string): Observable<void> {
+        return ApiService.instance.deleteCampaign(_id).pipe(map((response) => {
+            this.campaigns.forEach((x, i) => {
+                if (x._id === response) this.campaigns.splice(i, 1);
+            });
+            return;
+        }), catchError((error) => {
+            return throwError(error);
+        })
+        )
+    }
 
-  /**
-   * Richiesta DELETE della campagna
-   * Aggiorna anche le campagne
-   * @param _id della campagna da eliminare
-   * @returns void
-   */
-
-  public deleteCampaignApi(_id: string): Observable<void> {
-    return ApiService.instance.deleteCampaign(_id).pipe(
-      map((response) => {
-        this.campaigns.forEach((x, i) => {
-          if (x.id === response) this.campaigns.splice(i, 1);
-        });
-        return;
-      }),
-      catchError((error) => {
-        return throwError(error);
-      })
-    );
-  }
 
   //--------------------------------------------------END CAMPAIGN APIS--------------------------------------------------//
 
@@ -204,57 +191,71 @@ export class DataManagement {
     );
   }
 
-  /**
-   * Richiesta POST per gli slot degli hub
-   * @param slot oggetto da caricare nel database
-   * @returns id dell'oggetto inserito se l'operazione è andata a buon fine, errore altrimenti
-   */
+    public createSlotApi(slot: Slot): Observable<void> {
+        return ApiService.instance.postSlot(slot).pipe(map(
+            (response) => {
+                slot._id = response;
+                for (let hub of this.hubs) {
+                    if (hub._id == slot.hub_id) {
+                        this.hubs[this.hubs.indexOf(hub)].slots.push(new Slot(slot))
+                    }
+                }
+                return;
+            }), catchError((error) => {
+                return throwError(error);
+            })
+        )
+    }
+    /**
+     * 
+     * @param slot con i dati necessari per creare la prenotazione
+     * Aggiorna le strutture dati presenti dentro questa classe: 
+     * All'utente aggiunge l'id dello slot
+     * @returns 
+     */
+    public createReservationApi(slot: Slot): Observable<void> {
+        return ApiService.instance.postReservation(slot).pipe(map(
+            () => {
+                //this.citizen.reservations.push();
+            },
+        ), catchError((error) => {
+            return throwError(error);
+        })
+        )
+    }
 
-  public createSlotApi(slot: Slot): Observable<void> {
-    return ApiService.instance.postSlot(slot).pipe(
-      map((response) => {
-        console.log(response);
-        slot.id = response;
-        for (let hub of this.hubs) {
-          if (hub.id == slot.hub_id) {
-            hub.availableSlot.push(new Slot(slot));
-          }
-        }
-        return;
-      }),
-      catchError((error) => {
-        return throwError(error);
-      })
-    );
-  }
-  /**
-   *
-   * @param slot con i dati necessari per creare la prenotazione
-   * Aggiorna le strutture dati presenti dentro questa classe:
-   * All'utente aggiunge l'id dello slot
-   * @returns
-   */
-  public createReservationApi(slot: Slot): Observable<void> {
-    return ApiService.instance.postReservation(slot).pipe(
-      map((val) => {
-        //this.citizen.reservations.push();
-      }),
-      catchError((error) => {
-        return throwError(error);
-      })
-    );
-  }
+    public notification(campaign_id: string, on: boolean): Observable<void> {
+        return ApiService.instance.notification(campaign_id, on).pipe(map(
+            () => {
+                for (let campaign of this.campaigns) {
+                    if (campaign._id == campaign_id) {
+                        this.campaigns[this.campaigns.indexOf(campaign)].notify = !on;
+                    }
+                }
+                console.log(this.campaigns)
+                return;
+            }), catchError((error) => {
+                return throwError(error);
+            })
+        )
+    }
+
+    //--------------------------------------------------END SLOTS APIS--------------------------------------------------//
 
   //--------------------------------------------------END SLOTS APIS--------------------------------------------------//
 
-  //--------------------------------------------------AUTH APIS--------------------------------------------------//
+    public loginApi(obj: LoginRequest): Observable<Tokens> {
+        return ApiService.instance.login(obj).pipe(map(
+            (response) => {
+                if (response.user.role == "Citizen")
+                    this.citizen = new Citizen(response.user);
+                    
+                else
+                    this.operator = new Operator(response.user);
 
-  public loginApi(obj: LoginRequest): Observable<Tokens> {
-    return ApiService.instance.login(obj).pipe(
-      map((response) => {
-        if (response.user.role == "Citizen")
-          this.citizen = new Citizen(response.user);
-        else this.operator = new Operator(response.user);
+                this.userRole = response.user.role;
+                localStorage.setItem("userRole", response.user.role)
+                localStorage.setItem("citizenEmail", response.user.email)
 
         this.userRole = response.user.role;
         localStorage.setItem("userRole", response.user.role);

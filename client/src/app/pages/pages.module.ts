@@ -25,6 +25,7 @@ import { FlagComponent } from "./reservation/calendar-cell/flag.component";
 import { OperatorReservationComponent } from "./reservation/operator-reservation/operator-reservation.component";
 import { CitizenReservationComponent } from "./reservation/citizen-reservation/citizen-reservation.component";
 import { my_vax_reservationComponent } from "./my_vax_reservation/my_vax_reservation.component";
+import { ConfirmNotificationComponent } from "../widgets/confirm-notification/confirm-notification.component";
 
 @NgModule({
   imports: [
@@ -48,6 +49,7 @@ import { my_vax_reservationComponent } from "./my_vax_reservation/my_vax_reserva
   declarations: [
     PagesComponent,
     ConfirmComponent,
+    ConfirmNotificationComponent,
     HubsComponent,
     ReservationComponent,
     OperatorReservationComponent,

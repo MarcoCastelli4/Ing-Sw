@@ -1,0 +1,19 @@
+<nb-card>
+    <nb-card-header>
+        Notifica inserimento nuove prenotazioni
+    </nb-card-header>
+    <nb-card-body>
+        Se clicchi su conferma riceverai una mail <br>quando verranno inserite nuove disponibilità di vaccini per questa campagna, <br>
+        Vuoi procedere?
+    </nb-card-body>
+    <nb-card-footer>
+        <div class="row" >
+            <div class="col-6" style="display: flex; justify-content: center;">
+                <button nbButton (click)="this.ref.close(false)">No</button>
+            </div>
+            <div class="col-6" style="display: flex; justify-content: center;">
+                <button nbButton (click)="this.ref.close(true)">Si</button>
+            </div>
+        </div>
+    </nb-card-footer>
+</nb-card>

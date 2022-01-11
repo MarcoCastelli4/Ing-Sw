@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { Component, OnInit } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { NbDialogService, NbToastrService } from "@nebular/theme";
@@ -7,6 +8,17 @@ import { ApiService } from "../../services/api.service";
 import { DataService } from "../../services/data.service";
 import { CalendarCellComponent } from "./calendar-cell/calendar-cell.component";
 import { OperatorReservationComponent } from "./operator-reservation/operator-reservation.component";
+=======
+import { Component, OnInit } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { NbDialogService, NbToastrService } from '@nebular/theme';
+import { DataManagement } from '../../models/class/data_management';
+import { Hub } from '../../models/class/hub';
+import { Slot } from '../../models/class/slot';
+import { DataService } from '../../services/data.service';
+import { CalendarCellComponent } from './calendar-cell/calendar-cell.component';
+import { OperatorReservationComponent } from './operator-reservation/operator-reservation.component';
+>>>>>>> refactor
 
 @Component({
   selector: "ngx-reservation",
@@ -15,17 +27,22 @@ import { OperatorReservationComponent } from "./operator-reservation/operator-re
   entryComponents: [CalendarCellComponent],
 })
 export class ReservationComponent implements OnInit {
+<<<<<<< HEAD
   public reservationForm: FormGroup;
   public hubs;
+=======
+
+  public selectedSlots: Slot[];
+  public hubs: Hub[];
+>>>>>>> refactor
   public userRole: string;
-  public reservations;
+  public reservationForm: FormGroup;
   public calendarCellComponent = CalendarCellComponent;
   public data = new Date();
 
   public slots = [];
 
   constructor(
-    private apiService: ApiService,
     private dialogService: NbDialogService,
     private toastrService: NbToastrService,
     private dataService: DataService,
@@ -48,6 +65,7 @@ export class ReservationComponent implements OnInit {
         }
       );
     }
+
   }
 
   get campaign() {
@@ -81,6 +99,7 @@ export class ReservationComponent implements OnInit {
       });
   }
 
+<<<<<<< HEAD
   public getSlots(hub: Hub): void {
     this.slots = [];
     this.apiService.getSlots(hub.id).subscribe(
@@ -89,8 +108,26 @@ export class ReservationComponent implements OnInit {
         for (let x of this.reservations) {
           if (x.date > Date.now() && x.availableQty > 0) {
             this.slots.push(x);
+=======
+  /**
+   * Funzione che seleziona gli slot degli hub da mandare alle celle.
+   * @param _id id dell'hub degli slot che si vogliono visualizzare
+   */
+
+  public getSlots(_id: string): void {
+    if (this.userRole == 'Citizen') {
+      for (let hub of this.hubs) {
+        if (hub._id == _id) {
+          for (let slot of hub.slots) {
+            if (slot.date > Date.now() && slot.quantity > 0) {
+              this.selectedSlots.push(slot)
+            }
+>>>>>>> refactor
           }
+          console.log(this.selectedSlots);
+          this.dataService.sendSlots(this.selectedSlots)
         }
+<<<<<<< HEAD
         this.dataService.sendSlots(this.slots);
 
         this.toastrService.success(
@@ -106,5 +143,11 @@ export class ReservationComponent implements OnInit {
         console.log(err);
       }
     );
+=======
+      }
+    } else if (this.userRole == 'Operator') {
+      // TODO
+    }
+>>>>>>> refactor
   }
 }

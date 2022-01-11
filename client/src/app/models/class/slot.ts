@@ -1,5 +1,5 @@
 export class Slot {
-    private _id?: string;
+    private __id?: string;
     private _hub_id?: string;
     private _campaign_id?: string;
     private _date?: number;
@@ -8,7 +8,7 @@ export class Slot {
     private _quantity?: number;
 
     constructor(slot: Slot) {
-        this.id = slot.id;
+        this._id = slot._id;
         this.campaign_id = slot.campaign_id;
         this.hub_id = slot.hub_id;
         this.date = slot.date;
@@ -17,11 +17,11 @@ export class Slot {
         this.quantity = slot.quantity;
     }
 
-    public get id(): string {
-        return this._id;
+    public get _id(): string {
+        return this.__id;
     }
-    public set id(value: string) {
-        this._id = value;
+    public set _id(value: string) {
+        this.__id = value;
     }
     public get hub_id(): string {
         return this._hub_id;

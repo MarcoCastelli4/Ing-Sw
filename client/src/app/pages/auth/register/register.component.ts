@@ -41,23 +41,23 @@ export class RegisterComponent extends NbRegisterComponent {
                 localStorage.setItem("email", this.user.email);
                 localStorage.setItem("userRole", "Citizen")
                 this.showMessages.success = true;
-                this.messages.push("")
+                this.messages.push("");
                 //TODO open modal con categoria di appartenenza
-                location.href = "/pages/dashboard"
+                location.href = "/pages/dashboard";
             },
             (error) => {
                 console.log(error);
                 this.showMessages.error = true;
 
                 if (error.error.message == "BadRequestError: fcCode is not recorded in the DB")
-                    this.errors.push("Codice fiscale non presente nel sistema, contattaci ad assistenza@prenotazioni.gov.it")
+                    this.errors.push("Codice fiscale non presente nel sistema, contattaci ad assistenza@prenotazioni.gov.it");
                 else if (error.error.message == "BadRequestError: Email already in use")
                     this.errors.push("Email già utilizzata");
                 else if (error.error.message == "BadRequestError: Citizen already registered") {
                     this.errors.push("Registrazione già effettuata");
-                    location.href = "/auth/login"
+                    location.href = "/auth/login";
                 } else
-                    this.errors.push("Riprova più tardi")
+                    this.errors.push("Riprova più tardi");
             }
         );
     }
