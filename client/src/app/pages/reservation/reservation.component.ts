@@ -1,14 +1,3 @@
-<<<<<<< HEAD
-import { Component, OnInit } from "@angular/core";
-import { FormGroup } from "@angular/forms";
-import { NbDialogService, NbToastrService } from "@nebular/theme";
-import { DataManagement } from "../../models/class/data_management";
-import { Hub } from "../../models/class/hub";
-import { ApiService } from "../../services/api.service";
-import { DataService } from "../../services/data.service";
-import { CalendarCellComponent } from "./calendar-cell/calendar-cell.component";
-import { OperatorReservationComponent } from "./operator-reservation/operator-reservation.component";
-=======
 import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { NbDialogService, NbToastrService } from '@nebular/theme';
@@ -18,7 +7,6 @@ import { Slot } from '../../models/class/slot';
 import { DataService } from '../../services/data.service';
 import { CalendarCellComponent } from './calendar-cell/calendar-cell.component';
 import { OperatorReservationComponent } from './operator-reservation/operator-reservation.component';
->>>>>>> refactor
 
 @Component({
   selector: "ngx-reservation",
@@ -27,14 +15,9 @@ import { OperatorReservationComponent } from './operator-reservation/operator-re
   entryComponents: [CalendarCellComponent],
 })
 export class ReservationComponent implements OnInit {
-<<<<<<< HEAD
-  public reservationForm: FormGroup;
-  public hubs;
-=======
 
   public selectedSlots: Slot[];
   public hubs: Hub[];
->>>>>>> refactor
   public userRole: string;
   public reservationForm: FormGroup;
   public calendarCellComponent = CalendarCellComponent;
@@ -99,16 +82,6 @@ export class ReservationComponent implements OnInit {
       });
   }
 
-<<<<<<< HEAD
-  public getSlots(hub: Hub): void {
-    this.slots = [];
-    this.apiService.getSlots(hub.id).subscribe(
-      (res) => {
-        this.reservations = res;
-        for (let x of this.reservations) {
-          if (x.date > Date.now() && x.availableQty > 0) {
-            this.slots.push(x);
-=======
   /**
    * Funzione che seleziona gli slot degli hub da mandare alle celle.
    * @param _id id dell'hub degli slot che si vogliono visualizzare
@@ -122,32 +95,13 @@ export class ReservationComponent implements OnInit {
             if (slot.date > Date.now() && slot.quantity > 0) {
               this.selectedSlots.push(slot)
             }
->>>>>>> refactor
           }
           console.log(this.selectedSlots);
           this.dataService.sendSlots(this.selectedSlots)
         }
-<<<<<<< HEAD
-        this.dataService.sendSlots(this.slots);
-
-        this.toastrService.success(
-          "Ambulatori caricati correttamente",
-          "Operazione avvenuta con successo:"
-        );
-      },
-      (err) => {
-        this.toastrService.danger(
-          "Caricamento ambulatori fallito",
-          "Si è verificato un errore:"
-        );
-        console.log(err);
-      }
-    );
-=======
       }
     } else if (this.userRole == 'Operator') {
       // TODO
     }
->>>>>>> refactor
   }
 }

@@ -48,7 +48,7 @@ export class CreateCampaingComponent implements OnInit {
     }
     this.enum = this.getEnum();
     this.campaingForm = this.fb.group({
-      _id: [this.campaign ? this.campaign.id : ""],
+      _id: [this.campaign ? this.campaign._id : ""],
       name: [this.campaign ? this.campaign.name : "", Validators.required],
       type: [this.campaign ? this.campaign.type : [], Validators.required],
     });
