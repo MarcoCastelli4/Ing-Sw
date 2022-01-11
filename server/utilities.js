@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const uuid = require("uuid");
+const nodemailer = require("nodemailer");
 
 const slotSchema = {
   type: "object",
@@ -165,6 +166,7 @@ module.exports = {
   getRefreshToken,
   jwt,
   uuid,
+  nodemailer,
   hubSchema,
   campaignSchema,
   slotSchema

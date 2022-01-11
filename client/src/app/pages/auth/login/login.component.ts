@@ -26,7 +26,8 @@ export class LoginComponent extends NbLoginComponent {
     //TODO da togliere
     this.authService = AuthService.injector.get(AuthService);
 
-    if (localStorage.getItem("accessToken")) location.href = "/pages/dashboard";
+    if (localStorage.getItem("accessToken")) 
+      this.router.navigateByUrl("/pages/dashboard");
   }
 
   public login(): void {
@@ -39,7 +40,7 @@ export class LoginComponent extends NbLoginComponent {
           this.authService.setAccessToken(response.accessToken);
           this.authService.setRefreshToken(response.refreshToken);
           this.showMessages.success = true;
-          location.href = "/pages/dashboard";
+          this.router.navigateByUrl("/pages/dashboard");
         },
         (error) => {
           this.showMessages.error = true;

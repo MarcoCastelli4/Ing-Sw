@@ -2,25 +2,29 @@ import { CampaignEnum } from "../enumerations/campaign";
 import { Hub } from "./hub";
 
 export class Campaign {
-    private _id: string;
+    private __id: string;
     private _name: string;
     private _type: CampaignEnum[];
     private _hubs: Hub[];
-    private _deletalble: boolean;
+    private _deletable: boolean;
+    // false: si mostra il bottone per ricevere la notifica via mail
+    // true: si mostra il bottone per togliere la notifica via mail
+    private _notify: boolean;
 
     constructor(campaign: Campaign) {
-        this.id = campaign.id;
+        this._id = campaign._id;
         this.name = campaign.name;
         this.type = campaign.type;
         this.hubs = campaign.hubs;
-        this.deletalble = campaign.deletalble;
+        this.deletable = campaign.deletable ?? true;
+        this.notify = campaign.notify ?? false;
     }
 
-    public get id(): string {
-        return this._id;
+    public get _id(): string {
+        return this.__id;
     }
-    public set id(value: string) {
-        this._id = value;
+    public set _id(value: string) {
+        this.__id = value;
     }
     public get name(): string {
         return this._name;
@@ -40,10 +44,16 @@ export class Campaign {
     public set hubs(value: Hub[]) {
         this._hubs = value;
     }
-    public get deletalble(): boolean {
-        return this._deletalble;
+    public get deletable(): boolean {
+        return this._deletable;
     }
-    public set deletalble(value: boolean) {
-        this._deletalble = value;
+    public set deletable(value: boolean) {
+        this._deletable = value;
+    }
+    public get notify(): boolean {
+        return this._notify;
+    }
+    public set notify(value: boolean) {
+        this._notify = value;
     }
 }

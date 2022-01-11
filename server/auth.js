@@ -25,10 +25,7 @@ module.exports = fastifyPlugin(async (fastify, opts) => {
     // Verify the token and if is avaible set it
     try {
       const decoded = jwt.verify(token, process.env.SECRET_JWT);
-
-      // if(!(decoded.user.confirmed)){
-      //   throw "Verify mail"
-      // }
+      
       if (decoded && decoded.user) {
         request.data = decoded.user;
       } else {

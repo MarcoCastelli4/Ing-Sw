@@ -64,7 +64,8 @@ async function routes(fastify, options, next) {
                 let inputData = request.body;
                 inputData._id = uuid.v1();
                 inputData.deletable = true;
-
+                inputData.citizen_to_notify = [];
+                
                 let query = await dbCampaigns.insertOne(inputData);
 
                 if (query.insertedCount == 0)

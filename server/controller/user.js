@@ -81,7 +81,8 @@ async function routes(fastify, options, next) {
             // Set payload for jwt
             let payload = {
               _id: user._id,
-              role: role
+              role: role,
+              email: user.email
             };
 
             const accessToken = getAccessToken(payload);
@@ -138,18 +139,21 @@ async function routes(fastify, options, next) {
     handler: async (request, reply) => {
       try {
         const inputData = request.body;
-        let role = null;
 
         let user = await dbCitizens.findOne({ fcCode: inputData.fcCode })
+
         if (!user)
           throw fastify.httpErrors.badRequest("fcCode is not recorded in the DB");
+        else if(user.email)
+          throw fastify.httpErrors.badRequest("User already registered");
 
         let email = await dbCitizens.findOne({ email: inputData.email })
         if (!email) {
           // Set payload for jwt
           let payload = {
             _id: uuid.v1(),
-            role: "Citizen"
+            role: "Citizen",
+            email: inputData.email
           };
 
           const accessToken = getAccessToken(payload);
@@ -236,6 +240,7 @@ async function routes(fastify, options, next) {
             let payload = {
               _id: user._id,
               role: decoded.user.role,
+              email: user.email
             };
 
             // Return another refreshToken

@@ -1,7 +1,8 @@
 const {
     respF,
     uuid,
-    slotSchema
+    slotSchema,
+    nodemailer
 } = require("../utilities");
 var ObjectID = require("mongodb").ObjectID;
 
@@ -42,9 +43,13 @@ async function routes(fastify, options, next) {
         preValidation: [fastify.checkAuth],
         handler: async (request, reply) => {
             try {
-                let hubs = await dbHubs.findOne({ _id: ObjectID(request.query._id) });
+                let hub;
+                if (request.query._id)
+                    hub = await dbHubs.findOne({ _id: ObjectID(request.query._id) });
+                else
+                    throw new Error("ID required!");
 
-                return respF(reply, hubs.slots);
+                return respF(reply, hub?.slots);
             } catch (err) {
                 console.log(err);
                 throw fastify.httpErrors.internalServerError(err);
@@ -87,7 +92,6 @@ async function routes(fastify, options, next) {
                 let campaign = await dbCampaigns.findOne(
                     { _id: inputData.campaign_id }
                 );
-                console.log(campaign, "-", inputData.campaign_id)
 
                 if (campaign.deletable) {
                     await dbCampaigns.findOneAndUpdate(
@@ -95,6 +99,31 @@ async function routes(fastify, options, next) {
                         { $set: { deletable: false } }
                     );
                 }
+
+                // Send email
+                let config = {
+                    host: "smtp.gmail.com",
+                    port: 465,
+                    secure: true,
+                    auth: {
+                        user: "prenotazione.vaccini.univr",
+                        pass: "studentiunivr.2000"
+                    }
+                }
+
+                let transporter = nodemailer.createTransport(config);
+                let res;
+                for (let email of campaign.citizen_to_notify) {
+                     res = await transporter.sendMail({
+                        from: '"Sistema di prenotazione vaccini" <prenotazione.vaccini.univr@gmail.com>',
+                        to: email,
+                        subject: "Nuovi vaccini disponibili per " + campaign.name,
+                        text: "Sono state inserite nuove disponibilità per la campagna '" 
+                        + campaign.name 
+                        + "'; accedi subito per prenotarti! http://localhost:4200/pages/reservation?id=" + campaign._id +"'",
+                    });
+                }
+                console.log(res)
 
 
                 return respF(reply, inputData._id);
@@ -163,6 +192,53 @@ async function routes(fastify, options, next) {
                 return respF(reply, "Success");
             } catch (err) {
                 console.log(err)
+                throw fastify.httpErrors.internalServerError(err);
+            }
+        }
+    });
+    /**
+     * Funzione che serve per segnalare un utente che vuole o non vuole ricevere notifiche quando la campagna scelta riceve altri vaccini e dunque
+     * dispone di ulteriori slot
+     */
+    fastify.route({
+        url: "/notification",
+        method: "POST",
+        schema: {
+            body: {
+                campaign_id: "string",
+                on: "boolean"
+            },
+            response: {
+                201: {
+                    type: "string"
+                },
+            },
+        },
+        preValidation: [fastify.checkAuth],
+        handler: async (request, reply) => {
+            try {
+                let inputData = request.body;
+                let tokenData = request.data;
+                let query;
+
+                if (inputData.on) {
+                    query = await dbCampaigns.updateOne(
+                        { _id: inputData.campaign_id },
+                        { $push: { "citizen_to_notify": tokenData.email } }
+                    );
+                } else {
+                    query = await dbCampaigns.updateOne(
+                        { _id: inputData.campaign_id },
+                        { $pull: { "citizen_to_notify": tokenData.email } }
+                    );
+                }
+
+                if (!query || query.result.nModified == 0)
+                    throw fastify.httpErrors.internalServerError(query);
+
+                return respF(reply, "Success");
+            } catch (err) {
+                console.log(err);
                 throw fastify.httpErrors.internalServerError(err);
             }
         }

@@ -40,7 +40,7 @@ export class CitizenReservationComponent implements OnInit {
   public submit() {
     let campaign_id = location.href.split("=")[1];
     let request = {
-      id:"",
+      _id:"",
       campaign_id: campaign_id,
       hub_id: this.hub_id,
       date: this.date.getTime(),

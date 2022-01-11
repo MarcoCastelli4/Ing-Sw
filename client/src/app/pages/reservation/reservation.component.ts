@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { NbDialogService, NbToastrService } from '@nebular/theme';
 import { DataManagement } from '../../models/class/data_management';
-import { ApiService } from '../../services/api.service';
+import { Hub } from '../../models/class/hub';
+import { Slot } from '../../models/class/slot';
 import { DataService } from '../../services/data.service';
 import { CalendarCellComponent } from './calendar-cell/calendar-cell.component';
 import { OperatorReservationComponent } from './operator-reservation/operator-reservation.component';
@@ -15,17 +16,16 @@ import { OperatorReservationComponent } from './operator-reservation/operator-re
 })
 export class ReservationComponent implements OnInit {
 
-  public reservationForm: FormGroup;
-  public hubs;
+  public selectedSlots: Slot[];
+  public hubs: Hub[];
   public userRole: string;
-  public reservations;
+  public reservationForm: FormGroup;
   public calendarCellComponent = CalendarCellComponent;
   public data = new Date();
 
   public slots = [];
 
   constructor(
-    private apiService: ApiService,
     private dialogService: NbDialogService,
     private toastrService: NbToastrService,
     private dataService: DataService,
@@ -52,6 +52,7 @@ export class ReservationComponent implements OnInit {
         }
       )
     }
+
   }
 
   get campaign() { return this.reservationForm.get('campaign') }
@@ -73,24 +74,26 @@ export class ReservationComponent implements OnInit {
     })
   }
 
-  public getSlots(_id: string): void {
-    this.slots = [];
-    this.apiService.getSlots(_id).subscribe(
-      (res) => {
-        this.reservations = res;
-        for (let x of this.reservations) {
-          if (x.date > Date.now() && x.availableQty > 0) {
-            this.slots.push(x)
-          }
-        }
-        this.dataService.sendSlots(this.slots)
+  /**
+   * Funzione che seleziona gli slot degli hub da mandare alle celle.
+   * @param _id id dell'hub degli slot che si vogliono visualizzare
+   */
 
-        this.toastrService.success("Ambulatori caricati correttamente", "Operazione avvenuta con successo:");
-      },
-      (err) => {
-        this.toastrService.danger("Caricamento ambulatori fallito", "Si è verificato un errore:");
-        console.log(err)
+  public getSlots(_id: string): void {
+    if (this.userRole == 'Citizen') {
+      for (let hub of this.hubs) {
+        if (hub._id == _id) {
+          for (let slot of hub.slots) {
+            if (slot.date > Date.now() && slot.quantity > 0) {
+              this.selectedSlots.push(slot)
+            }
+          }
+          console.log(this.selectedSlots);
+          this.dataService.sendSlots(this.selectedSlots)
+        }
       }
-    )
+    } else if (this.userRole == 'Operator') {
+      // TODO
+    }
   }
 }

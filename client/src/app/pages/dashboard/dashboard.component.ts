@@ -5,9 +5,9 @@ import {
   NbDialogService,
   NbToastrService,
 } from "@nebular/theme";
-import { Campaign } from "../../models/class/campaign";
 import { DataManagement } from "../../models/class/data_management";
 import { AuthService } from "../../services/auth.service";
+import { ConfirmNotificationComponent } from "../../widgets/confirm-notification/confirm-notification.component";
 import { ConfirmComponent } from "../../widgets/confirm/confirm.component";
 import { CreateCampaingComponent } from "../../widgets/create-campaign/create-campaing.component";
 
@@ -22,7 +22,7 @@ export class DashboardComponent {
   public userRole: string = this.dataManagement.userRole ?? localStorage.getItem("userRole");
   public displayedColumns: string[] = ["name", "type", "actions"];
   public citizen;
-
+  
   constructor(
     private authService: AuthService,
     private toastrService: NbToastrService,
@@ -65,6 +65,8 @@ export class DashboardComponent {
       this.dataManagement.getCampaignsApi().subscribe(
         (response) => {
           this.dataSource = new MatTableDataSource(response);
+          this.campaigns = response;
+          changeDetector.detectChanges();
           this.toastrService.success(
             "",
             "Campagne caricate correttamente!"
@@ -81,6 +83,7 @@ export class DashboardComponent {
     } else {
       this.dataSource = new MatTableDataSource(this.campaigns);
     }
+    console.log(this.campaigns);
   }
 
   public create(): void {
@@ -159,10 +162,38 @@ export class DashboardComponent {
     this.router.navigate(["/pages/reservation"], { queryParams: { id: id } });
   }
 
-  public checkType(row: Campaign): boolean {
-    if (Object.values(row.type).includes(this.citizen?.type))
+  public checkType(row): boolean {
+    if (Object.values(row.type).includes(this.citizen?.type)) {
+      row.disable = true;
       return true;
-    else
+    }
+    else {
+      row.disable = false;
       return false;
+    }
+  }
+
+  public notify(_id: string, on: boolean): void {
+    this.dialogService.open(ConfirmNotificationComponent).onClose.subscribe((res) => {
+      
+      // ha cliccato su si
+      if (res) {
+        this.dataManagement.notification(_id, on).subscribe(
+          () => {
+            this.toastrService.success(
+              "",
+              "Ora sei nella mailing list di questa campagna!"
+            );
+          },
+          (error) => {
+            console.log(error);
+            this.toastrService.danger(
+              "Caricamento campagne non riuscito",
+              "Si è verificato un errore:"
+            );
+          }
+        );
+      }
+    });
   }
 }

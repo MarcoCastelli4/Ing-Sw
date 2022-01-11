@@ -1,4 +1,7 @@
+import { Slot } from "./slot";
+
 export class Hub {
+    private __id: string;
     private _name: string;
     private _city: string;
     private _address: string;
@@ -6,15 +9,23 @@ export class Hub {
     // TODO: Controllare se serve
     private _availableQty: number;
     // TODO: Controllare se serve
-    private _availableSlot: Date[];
+    private _slots: Slot[];
 
     constructor(hub: Hub) {
+        this._id = hub._id;
         this.name = hub.name;
         this.city = hub.city;
         this.address = hub.address;
         this.totQty = hub.totQty;
         this.availableQty = hub.availableQty;
-        this.availableSlot = hub.availableSlot;
+        this.slots = hub.slots;
+    }
+
+    public get _id(): string {
+        return this.__id;
+    }
+    public set _id(value: string) {
+        this.__id = value;
     }
 
     public get name(): string {
@@ -41,11 +52,11 @@ export class Hub {
     public set totQty(value: number) {
         this._totQty = value;
     }
-    public get availableSlot(): Date[] {
-        return this._availableSlot;
+    public get slots(): Slot[] {
+        return this._slots;
     }
-    public set availableSlot(value: Date[]) {
-        this._availableSlot = value;
+    public set slots(value: Slot[]) {
+        this._slots = value;
     }
     public get availableQty(): number {
         return this._availableQty;
