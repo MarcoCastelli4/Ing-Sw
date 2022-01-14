@@ -63,12 +63,17 @@ fastify.register(require("fastify-swagger"), {
       description: "testing the fastify swagger api",
       version: "0.1.0",
     },
+    externalDocs: {
+      url: "https://swagger.io",
+      description: "Find more info here",
+    },
     host: "localhost",
     schemes: ["http"],
     consumes: ["application/json"],
     produces: ["applicatin/json"],
   },
   exposeRoute: true,
+  routePrefix: "/documentation",
 });
 
 // ERROR HANDLING
@@ -150,7 +155,6 @@ fastify.register(require("./controller/campaign"));
 fastify.register(require("./controller/hub"));
 //ROUTES SLOTS
 fastify.register(require("./controller/slot"));
-
 
 //
 // ─── LOAD THE SERVER ────────────────────────────────────────────────────────────
