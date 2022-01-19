@@ -8,6 +8,7 @@
 /client/node_modules
 /server/node_modules
 /server/logs
+/test/node_modules
 
 # IDEs and editors
 /.idea
