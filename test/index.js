@@ -508,9 +508,9 @@ try {
   const res = request("POST", getUrl("reservation"), {
     headers: headers(true),
     json: {
-      campaign_id: campaigns[0]._id,
-      hub_id: hubs[0]._id,
-      slot: slotId,
+      _campaign_id: campaigns[0]._id,
+      _hub_id: hubs[0]._id,
+      __id: slotId,
     },
   });
   const body = JSON.parse(res.getBody("utf8"));
