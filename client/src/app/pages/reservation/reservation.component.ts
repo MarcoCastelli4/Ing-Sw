@@ -1,14 +1,14 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { MatPaginator } from '@angular/material/paginator';
+import { Component, OnInit, ViewChild } from "@angular/core";
+import { FormGroup } from "@angular/forms";
+import { MatPaginator } from "@angular/material/paginator";
 
-import { MatTableDataSource } from '@angular/material/table';
-import { NbDialogService, NbToastrService } from '@nebular/theme';
-import { DataManagement } from '../../models/class/data_management';
-import { Hub } from '../../models/class/hub';
-import { Slot } from '../../models/class/slot';
-import { CalendarCellComponent } from './calendar-cell/calendar-cell.component';
-import { OperatorReservationComponent } from './operator-reservation/operator-reservation.component';
+import { MatTableDataSource } from "@angular/material/table";
+import { NbDialogService, NbToastrService } from "@nebular/theme";
+import { DataManagement } from "../../models/class/data_management";
+import { Hub } from "../../models/class/hub";
+import { Slot } from "../../models/class/slot";
+import { CalendarCellComponent } from "./calendar-cell/calendar-cell.component";
+import { OperatorReservationComponent } from "./operator-reservation/operator-reservation.component";
 
 @Component({
   selector: "ngx-reservation",
@@ -17,7 +17,6 @@ import { OperatorReservationComponent } from './operator-reservation/operator-re
   entryComponents: [CalendarCellComponent],
 })
 export class ReservationComponent implements OnInit {
-
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   public selectedSlots = [];
@@ -45,16 +44,17 @@ export class ReservationComponent implements OnInit {
           this.toastrService.success("", "Ambulatori caricati correttamente!");
         },
         (error) => {
-          console.log(error);
           this.toastrService.danger(
             "Caricamento ambulatori non riuscito",
             "Si è verificato un errore:"
           );
         }
       );
+    } else {
+      this.userRole = this.dataManagement.userRole;
     }
   }
-  
+
   get campaign() {
     return this.reservationForm.get("campaign");
   }
@@ -71,7 +71,7 @@ export class ReservationComponent implements OnInit {
     return this.reservationForm.get("quantity");
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
   public createSlot(): void {
     this.dialogService
@@ -94,17 +94,23 @@ export class ReservationComponent implements OnInit {
   public getSlots(inHub: Hub): void {
     this.selectedHub = inHub._id;
     this.selectedSlots = [];
-    if (this.userRole == 'Citizen') {
+    console.info("her", this.userRole);
+    if (this.userRole == "Citizen") {
       for (let hub of this.hubs) {
         if (hub._id == inHub._id) {
           for (let slot of hub.slots) {
-            if (slot.date > Date.now() && slot.quantity > 0 && slot.campaign_id == this.campaign_id) {
-              this.selectedSlots?.push(slot)
+            if (
+              slot.date > Date.now() &&
+              slot.quantity > 0 &&
+              slot.campaign_id == this.campaign_id
+            ) {
+              this.selectedSlots?.push(slot);
             }
           }
           this.dataSource = new MatTableDataSource(this.selectedSlots);
           this.dataSource.paginator = this.paginator;
 
+          console.info(this.selectedSlots.length);
           if (this.selectedSlots.length == 0) {
             this.toastrService.warning(
               "Nessuno slot disponibile per questo hub",
@@ -114,29 +120,46 @@ export class ReservationComponent implements OnInit {
           // this.dataService.sendSlots(this.selectedSlots)
         }
       }
-    } else if (this.userRole == 'Operator') {
+    } else if (this.userRole == "Operator") {
       // TODO
     }
   }
 
   public reserve(slot: Slot): void {
     if (!this.campaign_id || !this.selectedHub) {
-      console.log("Campaign: ", this.campaign_id, ", SelectedHub: ", this.selectedHub)
-      location.href = "pages/dashboard"
+      console.log(
+        "Campaign: ",
+        this.campaign_id,
+        ", SelectedHub: ",
+        this.selectedHub
+      );
+      location.href = "pages/dashboard";
     } else {
       console.log(slot);
       this.dataManagement.createReservationApi(new Slot(slot)).subscribe(
         () => {
-          this.toastrService.success("", "Prenotazione effettuata correttamente!");
+          this.toastrService.success(
+            "",
+            "Prenotazione effettuata correttamente!"
+          );
         },
         (error) => {
-          console.log(error)
-          if (error.error.message == "BadRequestError: User already reserved a vaccine for this campaign")
-            this.toastrService.danger("Hai già prenotato un vaccino per questa campagna", "Si è verificato un errore:");
+          console.log(error);
+          if (
+            error.error.message ==
+            "BadRequestError: User already reserved a vaccine for this campaign"
+          )
+            this.toastrService.danger(
+              "Hai già prenotato un vaccino per questa campagna",
+              "Si è verificato un errore:"
+            );
           else
-            this.toastrService.danger("Prenotazione fallita", "Si è verificato un errore:");
+            this.toastrService.danger(
+              "Prenotazione fallita",
+              "Si è verificato un errore:"
+            );
         }
-      )
+      );
     }
   }
 }

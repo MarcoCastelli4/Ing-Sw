@@ -22,17 +22,15 @@ export class HubsComponent {
   ) {
     if (this.authService.getAccessToken == null) {
       this.authService.logout();
+      console.log("SONOQUi");
     }
     this.hubs = this.dataManagement.hubs;
-    console.log(this.hubs)
+    console.log(this.hubs);
     if (!this.dataManagement.isDoneApi.hubs) {
       this.dataManagement.getHubsApi().subscribe(
         (response) => {
           this.dataSource = new MatTableDataSource(response);
-          this.toastrService.success(
-            "",
-            "Ambulatori caricati correttamente!"
-          );
+          this.toastrService.success("", "Ambulatori caricati correttamente!");
         },
         (error) => {
           console.log(error);
@@ -41,8 +39,8 @@ export class HubsComponent {
             "Si è verificato un errore:"
           );
         }
-      )
-    }else{
+      );
+    } else {
       this.dataSource = new MatTableDataSource(this.hubs);
     }
   }
