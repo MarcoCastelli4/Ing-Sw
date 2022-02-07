@@ -6,7 +6,7 @@
       </nb-card-header>
       <nb-card-body>
         
-        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+        <table *ngIf="this.reservations && this.reservations.length != 0; else elseblock" mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
           <ng-container matColumnDef="campaign">
             <th mat-header-cell *matHeaderCellDef>Campagna</th>
@@ -31,7 +31,9 @@
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr> 
         </table>
-        
+        <ng-template #elseblock>
+          <p>Non sono presenti prenotazioni</p>
+        </ng-template>
       </nb-card-body>
     </nb-card>
   </div>
