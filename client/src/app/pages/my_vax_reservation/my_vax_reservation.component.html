@@ -20,7 +20,7 @@
       
           <ng-container matColumnDef="date">
             <th mat-header-cell *matHeaderCellDef>Data</th>
-            <td mat-cell *matCellDef="let element">{{timeStampToDate(element.reservations[0].date)}}</td> <!--TODO: Devo visualizzare la data del vaccino-->
+            <td mat-cell *matCellDef="let element">{{this.dataManagement.italianDate(element.reservations[0].date)}}</td> <!--TODO: Devo visualizzare la data del vaccino-->
           </ng-container>
 
           <ng-container matColumnDef="timeSlot">

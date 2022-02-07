@@ -26,6 +26,8 @@ import { OperatorReservationComponent } from "./reservation/operator-reservation
 import { CitizenReservationComponent } from "./reservation/citizen-reservation/citizen-reservation.component";
 import { my_vax_reservationComponent } from "./my_vax_reservation/my_vax_reservation.component";
 import { ConfirmNotificationComponent } from "../widgets/confirm-notification/confirm-notification.component";
+import { MatPaginatorIntl, MatPaginatorModule } from "@angular/material/paginator";
+import { CustomPaginator } from "../widgets/custom-paginator";
 
 @NgModule({
   imports: [
@@ -37,6 +39,7 @@ import { ConfirmNotificationComponent } from "../widgets/confirm-notification/co
     NbCardModule,
     NbButtonModule,
     MatTableModule,
+    MatPaginatorModule,
     NbDatepickerModule.forRoot(),
     NbInputModule,
     NbSelectModule,
@@ -58,5 +61,11 @@ import { ConfirmNotificationComponent } from "../widgets/confirm-notification/co
     CitizenReservationComponent,
     my_vax_reservationComponent,
   ],
+  providers: [
+    {
+      provide: MatPaginatorIntl,
+      useValue: CustomPaginator()
+    }
+  ]
 })
 export class PagesModule {}

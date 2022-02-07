@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { MatPaginator } from '@angular/material/paginator';
+
+import { MatTableDataSource } from '@angular/material/table';
 import { NbDialogService, NbToastrService } from '@nebular/theme';
 import { DataManagement } from '../../models/class/data_management';
 import { Hub } from '../../models/class/hub';
 import { Slot } from '../../models/class/slot';
-import { DataService } from '../../services/data.service';
 import { CalendarCellComponent } from './calendar-cell/calendar-cell.component';
 import { OperatorReservationComponent } from './operator-reservation/operator-reservation.component';
 
@@ -16,19 +18,22 @@ import { OperatorReservationComponent } from './operator-reservation/operator-re
 })
 export class ReservationComponent implements OnInit {
 
-  public selectedSlots: Slot[];
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
+  public selectedSlots = [];
   public hubs: Hub[];
   public userRole: string;
   public reservationForm: FormGroup;
   public calendarCellComponent = CalendarCellComponent;
   public data = new Date();
-
-  public slots = [];
+  public displayedColumns: string[] = ["day", "slot", "actions"];
+  public dataSource;
+  public campaign_id = location.href.split("=")[1];
+  public selectedHub = "";
 
   constructor(
     private dialogService: NbDialogService,
     private toastrService: NbToastrService,
-    private dataService: DataService,
     private dataManagement: DataManagement
   ) {
     this.hubs = this.dataManagement.hubs;
@@ -48,9 +53,8 @@ export class ReservationComponent implements OnInit {
         }
       );
     }
-
   }
-
+  
   get campaign() {
     return this.reservationForm.get("campaign");
   }
@@ -67,7 +71,7 @@ export class ReservationComponent implements OnInit {
     return this.reservationForm.get("quantity");
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   public createSlot(): void {
     this.dialogService
@@ -84,24 +88,55 @@ export class ReservationComponent implements OnInit {
 
   /**
    * Funzione che seleziona gli slot degli hub da mandare alle celle.
-   * @param _id id dell'hub degli slot che si vogliono visualizzare
+   * @param inHub hub dell'hub degli slot che si vogliono visualizzare
    */
 
-  public getSlots(_id: string): void {
+  public getSlots(inHub: Hub): void {
+    this.selectedHub = inHub._id;
+    this.selectedSlots = [];
     if (this.userRole == 'Citizen') {
       for (let hub of this.hubs) {
-        if (hub._id == _id) {
+        if (hub._id == inHub._id) {
           for (let slot of hub.slots) {
-            if (slot.date > Date.now() && slot.quantity > 0) {
-              this.selectedSlots.push(slot)
+            if (slot.date > Date.now() && slot.quantity > 0 && slot.campaign_id == this.campaign_id) {
+              this.selectedSlots?.push(slot)
             }
           }
-          console.log(this.selectedSlots);
-          this.dataService.sendSlots(this.selectedSlots)
+          this.dataSource = new MatTableDataSource(this.selectedSlots);
+          this.dataSource.paginator = this.paginator;
+
+          if (this.selectedSlots.length == 0) {
+            this.toastrService.warning(
+              "Nessuno slot disponibile per questo hub",
+              "Seleziona un altro hub o attendi che vengano inserite nuove disponibilità"
+            );
+          }
+          // this.dataService.sendSlots(this.selectedSlots)
         }
       }
     } else if (this.userRole == 'Operator') {
       // TODO
+    }
+  }
+
+  public reserve(slot: Slot): void {
+    if (!this.campaign_id || !this.selectedHub) {
+      console.log("Campaign: ", this.campaign_id, ", SelectedHub: ", this.selectedHub)
+      location.href = "pages/dashboard"
+    } else {
+      console.log(slot);
+      this.dataManagement.createReservationApi(new Slot(slot)).subscribe(
+        () => {
+          this.toastrService.success("", "Prenotazione effettuata correttamente!");
+        },
+        (error) => {
+          console.log(error)
+          if (error.error.message == "BadRequestError: User already reserved a vaccine for this campaign")
+            this.toastrService.danger("Hai già prenotato un vaccino per questa campagna", "Si è verificato un errore:");
+          else
+            this.toastrService.danger("Prenotazione fallita", "Si è verificato un errore:");
+        }
+      )
     }
   }
 }

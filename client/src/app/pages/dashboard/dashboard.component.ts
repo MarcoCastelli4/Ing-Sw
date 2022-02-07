@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from "@angular/core";
+import { ChangeDetectorRef, Component, ViewChild } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
 import { Router } from "@angular/router";
 import {
@@ -23,14 +23,14 @@ export class DashboardComponent {
     this.dataManagement.userRole ?? localStorage.getItem("userRole");
   public displayedColumns: string[] = ["name", "type", "actions"];
   public citizen;
-  
+
   constructor(
     private authService: AuthService,
     private toastrService: NbToastrService,
     public dialogService: NbDialogService,
     public changeDetector: ChangeDetectorRef,
     private router: Router,
-    private dataManagement: DataManagement
+    private dataManagement: DataManagement,
   ) {
     if (this.authService.getAccessToken == null) {
       this.authService.logout();
@@ -80,8 +80,8 @@ export class DashboardComponent {
       );
     } else {
       this.dataSource = new MatTableDataSource(this.campaigns);
+
     }
-    console.log(this.campaigns);
   }
 
   public create(): void {
@@ -156,7 +156,7 @@ export class DashboardComponent {
   }
 
   public checkType(row): boolean {
-    if (Object.values(row.type).includes(this.citizen?.type)) {
+    if (row.type?.includes(this.citizen?.type)) {
       row.disable = true;
       return true;
     }
@@ -168,7 +168,7 @@ export class DashboardComponent {
 
   public notify(_id: string, on: boolean): void {
     this.dialogService.open(ConfirmNotificationComponent).onClose.subscribe((res) => {
-      
+
       // ha cliccato su si
       if (res) {
         this.dataManagement.notification(_id, on).subscribe(

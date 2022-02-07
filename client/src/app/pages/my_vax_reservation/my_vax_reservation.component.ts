@@ -1,4 +1,5 @@
 import { Component } from "@angular/core";
+import { MatTableDataSource } from "@angular/material/table";
 import { NbToastrService } from "@nebular/theme";
 import { DataManagement } from "../../models/class/data_management";
 import { AuthService } from "../../services/auth.service";
@@ -16,7 +17,7 @@ export class my_vax_reservationComponent {
   constructor(
     private authService: AuthService,
     private toastrService: NbToastrService,
-    private dataManagement: DataManagement
+    private dataManagement: DataManagement,
 
   ) {
     if (this.authService.getAccessToken == null) {
@@ -28,6 +29,7 @@ export class my_vax_reservationComponent {
       this.dataManagement.getCitizenApi().subscribe(
         (response) => {
           this.citizen = response;
+          this.dataSource = new MatTableDataSource(this.citizen);
           this.toastrService.success(
             "",
             "Utente caricato correttamente!"
@@ -41,11 +43,8 @@ export class my_vax_reservationComponent {
           );
         }
       );
+    }else{
+      this.dataSource = new MatTableDataSource(this.citizen);
     }
   }
-  public timeStampToDate(timestamp: Date): string {
-    var date = new Date(timestamp);
-    let month = date.getMonth() + 1;
-    return date.getDate() + '/' + month + '/' + date.getFullYear();
-  };
 }

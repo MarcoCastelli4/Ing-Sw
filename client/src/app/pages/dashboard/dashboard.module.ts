@@ -41,7 +41,7 @@ import { MatDialogModule, MAT_DIALOG_DATA } from "@angular/material/dialog";
     NbInputModule,
     NbSelectModule,
     MatTableModule,
-    MatDialogModule,
+    MatDialogModule
   ],
   declarations: [DashboardComponent, CreateCampaingComponent],
   providers: [{ provide: MAT_DIALOG_DATA, useValue: [] }],

@@ -33,8 +33,7 @@ export class CitizenReservationComponent implements OnInit {
   get slot() { return this.reservationForm.get('slot') }
 
   ngOnInit(): void {
-    let month = this.date.getMonth() + 1;
-    this.showDate = this.date.getDate() + '/' + month + '/' + this.date.getFullYear();
+    this.showDate = this.dataManagement.italianDate(this.date);
   }
 
   public submit() {
