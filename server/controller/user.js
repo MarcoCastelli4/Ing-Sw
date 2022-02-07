@@ -422,10 +422,12 @@ async function routes(fastify, options, next) {
           delete reservation.hub_id;
 
           // Riporto le info sugli slot alla proprietà reservations (e non più hub)
-          for (let slot of hub.slots) {
-            let index = reservation.reservations.indexOf(slot._id);
-            if (reservation.reservations.indexOf(slot._id) != -1) {
-              reservation.reservations[index] = slot;
+          if (hub?.slots) {
+            for (let slot of hub?.slots) {
+              let index = reservation.reservations.indexOf(slot._id);
+              if (reservation.reservations.indexOf(slot._id) != -1) {
+                reservation.reservations[index] = slot;
+              }
             }
           }
 

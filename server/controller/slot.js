@@ -67,9 +67,9 @@ async function routes(fastify, options, next) {
       try {
         let inputData = request.body;
         let slots = inputData.slots;
-
+        let i = 0;
         for (let slot of slots) {
-          inputData._id = uuid.v1();
+          inputData._id = uuid.v4() + i;
           inputData.availableQty = inputData.quantity;
           inputData.user_ids = [];
           delete inputData.slots;
@@ -79,6 +79,8 @@ async function routes(fastify, options, next) {
             { _id: ObjectID(inputData.hub_id) },
             { $push: { slots: inputData } }
           );
+
+          i++;
         }
 
         let campaign = await dbCampaigns.findOne({
@@ -153,26 +155,32 @@ async function routes(fastify, options, next) {
         let inputData = request.body;
 
         let citizenReservation = {
-          campaign_id: inputData.campaign_id,
-          hub_id: inputData.hub_id,
-          reservations: [inputData.slot],
+          campaign_id: inputData._campaign_id,
+          hub_id: inputData._hub_id,
+          reservations: [inputData.__id],
         };
 
         let user = await dbCitizens.findOne({
           _id: ObjectID(request.data._id),
         });
-        let slot = await dbHubs.findOne({
-          _id: ObjectID(inputData.hub_id),
-          "slots._id": inputData.slot,
+        let hub = await dbHubs.findOne({
+          _id: ObjectID(inputData._hub_id),
+          "slots._id": inputData.__id,
         });
-
+        let slot;
+        for (slot of hub.slots) {
+          if (slot._id == inputData.__id)
+            break;
+        }
         for (let x of user?.reservations) {
-          if (x.campaign_id == inputData.campaign_id) {
+          if (x.campaign_id == inputData._campaign_id) {
             throw fastify.httpErrors.badRequest(
               "User already reserved a vaccine for this campaign"
             );
           }
         }
+
+        if (slot.availableQty < 1) throw "No available vaccine for this slot";
 
         let citizenQuery = await dbCitizens.updateOne(
           { _id: ObjectID(request.data._id) },
@@ -180,18 +188,17 @@ async function routes(fastify, options, next) {
           { upsert: true }
         );
 
-        if (slot.availableQty < 1) throw "No available vaccine for this slot";
-
         let hubQuery = await dbHubs.updateOne(
-          { _id: ObjectID(inputData.hub_id), "slots._id": inputData.slot },
+          { _id: ObjectID(inputData._hub_id), "slots._id": inputData.__id },
           {
             $push: { "slots.$.user_ids": request.data._id },
             $inc: { "slots.$.availableQty": -1 },
           }
         );
 
-        if (hubQuery?.modifiedCount == 0 || citizenQuery?.modifiedCount == 0)
+        if (hubQuery?.modifiedCount == 0 || citizenQuery?.modifiedCount == 0) {
           throw "DB query failed";
+        }
 
         return respF(reply, "Success");
       } catch (err) {
