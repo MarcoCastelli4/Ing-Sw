@@ -165,12 +165,12 @@ async function routes(fastify, options, next) {
         });
         let hub = await dbHubs.findOne({
           _id: ObjectID(inputData._hub_id),
-          "slots._id": inputData.__id,
         });
-        let slot;
+        let slot = hub.slots.find((val) => {
+          return val._id == inputData.__id;
+        });
         for (slot of hub.slots) {
-          if (slot._id == inputData.__id)
-            break;
+          if (slot._id == inputData.__id) break;
         }
         for (let x of user?.reservations) {
           if (x.campaign_id == inputData._campaign_id) {
