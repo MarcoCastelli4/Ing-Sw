@@ -12,7 +12,7 @@ import { AuthService } from "../../services/auth.service";
 export class my_vax_reservationComponent {
   public dataSource;
   public displayedColumns: string[] = ["campaign", "hub", "date", "timeSlot"];  //my reservation has name campaign, hub name, date and time slot
-  public citizen;
+  public reservations = [];
 
   constructor(
     private authService: AuthService,
@@ -24,12 +24,12 @@ export class my_vax_reservationComponent {
       this.authService.logout();
     }
     //ottengo il mio cittadino con le sue prenotazioni 
-    this.citizen = this.dataManagement.citizen;
+    this.reservations = this.dataManagement.reservations;
     if (!this.dataManagement.isDoneApi.citizen) {
       this.dataManagement.getCitizenApi().subscribe(
         (response) => {
-          this.citizen = response;
-          this.dataSource = new MatTableDataSource(this.citizen);
+          this.reservations = response.reservations;
+          this.dataSource = new MatTableDataSource(this.reservations);
           this.toastrService.success(
             "",
             "Utente caricato correttamente!"
@@ -44,7 +44,7 @@ export class my_vax_reservationComponent {
         }
       );
     }else{
-      this.dataSource = new MatTableDataSource(this.citizen);
+      this.dataSource = new MatTableDataSource(this.reservations);
     }
   }
 }

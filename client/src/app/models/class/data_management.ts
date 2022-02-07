@@ -20,6 +20,7 @@ export class DataManagement {
   private _hubs: Hub[] = [];
   private _operator: Operator;
   private _userRole: string;
+  private _reservations: [];
 
   /**
    * Oggetto usato per sapere se in questa istanza sono già state effettuate le varie richieste per ricevere i dati
@@ -70,6 +71,12 @@ export class DataManagement {
   }
   public set isDoneApi(value) {
     this._isDoneApi = value;
+  }
+  public get reservations(): [] {
+    return this._reservations;
+  }
+  public set reservations(value: []) {
+    this._reservations = value;
   }
 
   /**
@@ -139,12 +146,13 @@ export class DataManagement {
   //--------------------------------------------------END CAMPAIGN APIS--------------------------------------------------//
 
   //--------------------------------------------------CITIZEN APIS--------------------------------------------------//
-  public getCitizenApi(): Observable<Citizen> {
+  public getCitizenApi(): Observable<any> {
     return ApiService.instance.getCitizen().pipe(
       map((response) => {
         this.citizen = new Citizen(response);
+        this.reservations = response.reservations
         this.isDoneApi.citizen = true;
-        return this.citizen;
+        return {citizen: this.citizen, reservations: this.reservations};
       }),
       catchError((error) => {
         return throwError(error);
@@ -215,13 +223,24 @@ export class DataManagement {
   public createReservationApi(slot: Slot): Observable<void> {
     return ApiService.instance.postReservation(slot).pipe(map(
       () => {
-        //this.citizen.reservations.push(slot);
+        // this.citizen.reservations.push(slot);
       },
     ), catchError((error) => {
       return throwError(error);
     })
     )
   }
+
+  // public getMyReservationsApi(): Observable<any> {
+  //   return ApiService.instance.getCitizen().pipe(
+  //     map((response) => {
+  //       return response.reservations;
+  //     }),
+  //     catchError((error) => {
+  //       return throwError(error);
+  //     })
+  //   );
+  // }
 
   public notification(campaign_id: string, on: boolean): Observable<void> {
     return ApiService.instance.notification(campaign_id, on).pipe(map(
@@ -238,8 +257,6 @@ export class DataManagement {
       })
     )
   }
-
-  //--------------------------------------------------END SLOTS APIS--------------------------------------------------//
 
   //--------------------------------------------------END SLOTS APIS--------------------------------------------------//
 
@@ -292,6 +309,6 @@ export class DataManagement {
     var date = new Date(date);
     let month = date.getMonth() + 1;
     return date.getDate() + '/' + month + '/' + date.getFullYear()
-   }
+  }
 }
 
