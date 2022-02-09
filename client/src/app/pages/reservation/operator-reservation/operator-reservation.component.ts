@@ -51,7 +51,7 @@ export class OperatorReservationComponent implements OnInit {
       campaign_id: ["", Validators.required],
       hub_id: ["", Validators.required],
       date: [new Date(Date.now()), Validators.required],
-      slots: [[], Validators.required],
+      slot: [[], Validators.required],
       quantity: [0, Validators.required],
     })
   }
@@ -59,7 +59,7 @@ export class OperatorReservationComponent implements OnInit {
   get campaign_id() { return this.reservationForm.get('campaign_id') }
   get hub_id() { return this.reservationForm.get('hub_id') }
   get date() { return this.reservationForm.get('date') }
-  get slots() { return this.reservationForm.get('slots') }
+  get slot() { return this.reservationForm.get('slot') }
   get quantity() { return this.reservationForm.get('quantity') }
 
   ngOnInit(): void { }

@@ -1,6 +1,6 @@
 import { Injectable, Injector } from "@angular/core";
 import { Observable, throwError } from "rxjs";
-import { catchError, map } from "rxjs/operators";
+import { catchError, map, single } from "rxjs/operators";
 import { ApiService } from "../../services/api.service";
 import { LoginRequest, SignUpRequest, Tokens } from "./auth";
 import { Campaign } from "./campaign";
@@ -216,10 +216,18 @@ export class DataManagement {
   public createSlotApi(slot: Slot): Observable<void> {
     return ApiService.instance.postSlot(slot).pipe(
       map((response) => {
+        console.log(response)
         slot._id = response;
         for (let hub of this.hubs) {
           if (hub._id == slot.hub_id) {
-            this.hubs[this.hubs.indexOf(hub)].slots.push(new Slot(slot));
+            for(let idAndSlot of response){
+              let singleSlot = slot;
+              slot._id = idAndSlot.id;
+              slot.slot = idAndSlot.slot;
+              console.log(singleSlot)
+              this.hubs[this.hubs.indexOf(hub)].slots.push(new Slot(singleSlot));
+            }
+            // this.isDoneApi.hubs = false;
           }
         }
         return;

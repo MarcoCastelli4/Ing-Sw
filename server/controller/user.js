@@ -413,6 +413,7 @@ async function routes(fastify, options, next) {
         let userId = request.data._id;
 
         //Ottengo cittadino specificato dall'Id
+        // console.log(typeof userId);
         let user = await dbCitizens.findOne({ _id: ObjectID(userId) });
 
         //Ottengo per il cittadino un'array di prenotazioni che sono formate dall'hub, dalla campagna e dallo slot orario

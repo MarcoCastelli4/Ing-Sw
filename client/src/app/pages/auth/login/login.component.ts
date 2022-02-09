@@ -18,15 +18,21 @@ export class LoginComponent extends NbLoginComponent {
     password: string;
   } = {
       email: "antonelgabor@gmail.com",
-      password: "Password..99",
+      password: "Password..99"
     };
+  /**
+   * Utente alternativo per i test
+    email: "Mariorossi@libero.it",
+      password: "mariorossi"
+      email: "antonelgabor@gmail.com",
+      password: "Password..99"
+   */
 
   ngOnInit() {
     this.dataManagement = DataManagement.injector.get(DataManagement);
-    //TODO da togliere
     this.authService = AuthService.injector.get(AuthService);
 
-    if (localStorage.getItem("accessToken")) 
+    if (localStorage.getItem("accessToken"))
       this.router.navigateByUrl("/pages/dashboard");
   }
 
@@ -36,24 +42,24 @@ export class LoginComponent extends NbLoginComponent {
       password: this.user.password,
       opCode: !this.citizen ? this.user.email : "",
     }).subscribe(
-        (response) => {
-          this.authService.setAccessToken(response.accessToken);
-          this.authService.setRefreshToken(response.refreshToken);
-          this.showMessages.success = true;
-          this.router.navigateByUrl("/pages/dashboard");
-        },
-        (error) => {
-          this.showMessages.error = true;
-          console.log(error.error.message);
-          if (error.error.message == "BadRequestError: Wrong password")
-            this.errors.push("Password errata");
-          else if (error.error.message == "BadRequestErrorUser does not exist")
-            this.errors.push("L'utente non esiste");
-          else this.errors.push("Riprova più tardi");
+      (response) => {
+        this.authService.setAccessToken(response.accessToken);
+        this.authService.setRefreshToken(response.refreshToken);
+        this.showMessages.success = true;
+        this.router.navigateByUrl("/pages/dashboard");
+      },
+      (error) => {
+        this.showMessages.error = true;
+        console.log(error.error.message);
+        if (error.error.message == "BadRequestError: Wrong password")
+          this.errors.push("Password errata");
+        else if (error.error.message == "BadRequestErrorUser does not exist")
+          this.errors.push("L'utente non esiste");
+        else this.errors.push("Riprova più tardi");
 
-          console.log(error);
-        }
-      );
+        console.log(error);
+      }
+    );
   }
 
   public showPassword = false;

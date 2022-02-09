@@ -71,7 +71,7 @@ export class ReservationComponent implements OnInit {
     return this.reservationForm.get("quantity");
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   public createSlot(): void {
     this.dialogService
@@ -80,10 +80,6 @@ export class ReservationComponent implements OnInit {
           hubs: this.hubs,
         },
       })
-      .onClose.subscribe((res) => {
-        if (res) {
-        }
-      });
   }
 
   /**
@@ -94,34 +90,28 @@ export class ReservationComponent implements OnInit {
   public getSlots(inHub: Hub): void {
     this.selectedHub = inHub._id;
     this.selectedSlots = [];
-    console.info("her", this.userRole);
-    if (this.userRole == "Citizen") {
-      for (let hub of this.hubs) {
-        if (hub._id == inHub._id) {
-          for (let slot of hub.slots) {
-            if (
-              slot.date > Date.now() &&
-              slot.quantity > 0 &&
-              slot.campaign_id == this.campaign_id
-            ) {
-              this.selectedSlots?.push(slot);
-            }
+    for (let hub of this.hubs) {
+      if (hub._id == inHub._id) {
+        for (let slot of hub.slots) {
+          if (
+            slot.date > Date.now() &&
+            slot.quantity > 0 &&
+            slot.campaign_id == this.campaign_id
+          ) {
+            this.selectedSlots?.push(slot);
           }
-          this.dataSource = new MatTableDataSource(this.selectedSlots);
-          this.dataSource.paginator = this.paginator;
+        }
+        this.dataSource = new MatTableDataSource(this.selectedSlots);
+        this.dataSource.paginator = this.paginator;
 
-          console.info(this.selectedSlots.length);
-          if (this.selectedSlots.length == 0) {
-            this.toastrService.warning(
-              "Nessuno slot disponibile per questo hub",
-              "Seleziona un altro hub o attendi che vengano inserite nuove disponibilità"
-            );
-          }
-          // this.dataService.sendSlots(this.selectedSlots)
+        console.info(this.selectedSlots.length);
+        if (this.selectedSlots.length == 0) {
+          this.toastrService.warning(
+            "Nessuno slot disponibile per questo hub",
+            "Seleziona un altro hub o attendi che vengano inserite nuove disponibilità"
+          );
         }
       }
-    } else if (this.userRole == "Operator") {
-      // TODO
     }
   }
 

@@ -86,7 +86,7 @@ const citizenSchema = {
 const getAccessToken = (payload) => {
   // Sign the token
   return jwt.sign({ user: payload }, process.env.SECRET_JWT, {
-    expiresIn: "25min",
+    expiresIn: "10000000min",
   });
 };
 

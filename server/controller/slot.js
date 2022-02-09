@@ -66,14 +66,18 @@ async function routes(fastify, options, next) {
     handler: async (request, reply) => {
       try {
         let inputData = request.body;
-        let slots = inputData.slots;
+        console.log(inputData)
+        let slots = inputData.slot;
         let i = 0;
+        let resIds = [];
         for (let slot of slots) {
           inputData._id = uuid.v4() + i;
           inputData.availableQty = inputData.quantity;
           inputData.user_ids = [];
           delete inputData.slots;
           inputData.slot = slot;
+
+          resIds.push({id: inputData._id, slot: inputData.slot});
 
           await dbHubs.findOneAndUpdate(
             { _id: ObjectID(inputData.hub_id) },
@@ -123,7 +127,7 @@ async function routes(fastify, options, next) {
           }
         }
 
-        return respF(reply, inputData._id);
+        return respF(reply, resIds);
       } catch (err) {
         console.log(err);
         throw fastify.httpErrors.internalServerError(err);

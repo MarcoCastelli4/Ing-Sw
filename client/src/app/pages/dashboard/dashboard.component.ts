@@ -41,7 +41,6 @@ export class DashboardComponent {
         this.dataManagement.getCitizenApi().subscribe(
           (response) => {
             this.citizen = response.citizen;
-            //TODO da verificare
             this.userRole = "Citizen";
             this.toastrService.success("", "Utente caricato correttamente!");
           },

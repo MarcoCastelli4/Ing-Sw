@@ -32,8 +32,8 @@
 
     <div class="form-control-group">
         <label class="label" for="input-name">Nome:</label>
-        <input nbInput [(ngModel)]="user.name" #name="ngModel" required id="input-name"
-            name="name" placeholder="Nome" fullWidth fieldSize="large">
+        <input nbInput [(ngModel)]="user.name" #name="ngModel" required id="input-name" name="name" placeholder="Nome"
+            fullWidth fieldSize="large">
         <ng-container *ngIf="name.invalid && name.touched">
             <p class="caption status-danger" *ngIf="name.errors?.required">
                 Nome necessario per procedere
@@ -43,8 +43,8 @@
 
     <div class="form-control-group">
         <label class="label" for="input-surname">Cognome:</label>
-        <input nbInput [(ngModel)]="user.surname" #surname="ngModel" required id="input-surname"
-            name="surname" placeholder="Cognome" fullWidth fieldSize="large">
+        <input nbInput [(ngModel)]="user.surname" #surname="ngModel" required id="input-surname" name="surname"
+            placeholder="Cognome" fullWidth fieldSize="large">
         <ng-container *ngIf="surname.invalid && surname.touched">
             <p class="caption status-danger" *ngIf="surname.errors?.required">
                 Cognome necessario per procedere
@@ -69,12 +69,11 @@
     <div class="form-control-group">
         <label class="label" for="input-password">Password:</label>
         <div class="password-input">
-        <input nbInput [(ngModel)]="user.password" #password="ngModel" [type]="getInputType(1)" id="input-password"
-            name="password" placeholder="Password" fullWidth fieldSize="large">
+            <input nbInput [(ngModel)]="user.password" #password="ngModel" [type]="getInputType(1)" id="input-password"
+                name="password" placeholder="Password" fullWidth fieldSize="large">
             <button nbSuffix nbButton ghost (click)="toggleShowPassword(1)">
-                <nb-icon [icon]="showPassword ? 'eye-outline' : 'eye-off-2-outline'"
-                         pack="eva"
-                         [attr.aria-label]="showPassword ? 'hide password' : 'show password'">
+                <nb-icon [icon]="showPassword ? 'eye-outline' : 'eye-off-2-outline'" pack="eva"
+                    [attr.aria-label]="showPassword ? 'hide password' : 'show password'">
                 </nb-icon>
             </button>
         </div>
@@ -91,12 +90,11 @@
     <div class="form-control-group">
         <label class="label" for="input-re-password">Conferma password:</label>
         <div class="password-input">
-        <input nbInput [(ngModel)]="user.confirmPassword" #rePass="ngModel" [type]="getInputType(2)" id="input-re-password"
-            name="rePass" placeholder="Conferma password" fullWidth fieldSize="large">
+            <input nbInput [(ngModel)]="user.confirmPassword" #rePass="ngModel" [type]="getInputType(2)"
+                id="input-re-password" name="rePass" placeholder="Conferma password" fullWidth fieldSize="large">
             <button nbSuffix nbButton ghost (click)="toggleShowPassword(2)">
-                <nb-icon [icon]="showPassword ? 'eye-outline' : 'eye-off-2-outline'"
-                         pack="eva"
-                         [attr.aria-label]="showPassword ? 'hide password' : 'show password'">
+                <nb-icon [icon]="showPassword ? 'eye-outline' : 'eye-off-2-outline'" pack="eva"
+                    [attr.aria-label]="showPassword ? 'hide password' : 'show password'">
                 </nb-icon>
             </button>
         </div>
@@ -108,42 +106,14 @@
                 Le due password non corrispondono.
             </p>
         </ng-container>
-    
-    </div>
 
-    <!--
-        <div class="form-control-group accept-group">
-        <nb-checkbox name="terms">
-            Ho letto i <a target="_blank"><strong>Termini & Condizioni</strong></a>
-        </nb-checkbox>
     </div>
-    -->
 
     <button (click)="register()" nbButton fullWidth status="primary" size="large" [disabled]="submitted || !form.valid"
         [class.btn-pulse]="submitted">
-        Register
+        Registrati
     </button>
 </form>
-
-<!--
-    <section *ngIf="socialLinks && socialLinks.length > 0" class="links" aria-label="Social sign in">
-        or enter with:
-        <div class="socials">
-            <ng-container *ngFor="let socialLink of socialLinks">
-                <a *ngIf="socialLink.link" [routerLink]="socialLink.link" [attr.target]="socialLink.target"
-                    [attr.class]="socialLink.icon" [class.with-icon]="socialLink.icon">
-                    <nb-icon *ngIf="socialLink.icon; else title" [icon]="socialLink.icon"></nb-icon>
-                    <ng-template #title>{{ socialLink.title }}</ng-template>
-                </a>
-                <a *ngIf="socialLink.url" [attr.href]="socialLink.url" [attr.target]="socialLink.target"
-                    [attr.class]="socialLink.icon" [class.with-icon]="socialLink.icon">
-                    <nb-icon *ngIf="socialLink.icon; else title" [icon]="socialLink.icon"></nb-icon>
-                    <ng-template #title>{{ socialLink.title }}</ng-template>
-                </a>
-            </ng-container>
-        </div>
-    </section>
--->
 
 <section class="another-action" aria-label="Sign in">
     Hai già un account? <a class="text-link" routerLink="../login">Log in</a>

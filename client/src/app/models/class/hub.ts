@@ -6,9 +6,7 @@ export class Hub {
     private _city: string;
     private _address: string;
     private _totQty: number;
-    // TODO: Controllare se serve
     private _availableQty: number;
-    // TODO: Controllare se serve
     private _slots: Slot[];
 
     constructor(hub: Hub) {
