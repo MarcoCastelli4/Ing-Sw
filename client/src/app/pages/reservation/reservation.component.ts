@@ -25,7 +25,7 @@ export class ReservationComponent implements OnInit {
   public reservationForm: FormGroup;
   public calendarCellComponent = CalendarCellComponent;
   public data = new Date();
-  public displayedColumns: string[] = ["day", "slot", "actions"];
+  public displayedColumns: string[];
   public dataSource;
   public campaign_id = location.href.split("=")[1];
   public selectedHub = "";
@@ -41,6 +41,7 @@ export class ReservationComponent implements OnInit {
         (response) => {
           this.hubs = response;
           this.userRole = this.dataManagement.userRole;
+          this.displayedColumns = this.userRole == 'Operator' ? ["day", "slot", "quantity"] : ["day", "slot", "actions"]
           this.toastrService.success("", "Ambulatori caricati correttamente!");
         },
         (error) => {

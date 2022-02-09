@@ -36,7 +36,12 @@
                             <td mat-cell style="white-space: pre;" *matCellDef="let element">{{element.slot}} </td>
                         </ng-container>
 
-                        <ng-container style="width: 20%;" matColumnDef="actions">
+                        <ng-container *ngIf="this.userRole=='Operator'" matColumnDef="quantity">
+                            <th mat-header-cell *matHeaderCellDef>Quantità</th>
+                            <td mat-cell style="white-space: pre;" *matCellDef="let element">{{element.availableQty}} </td>
+                        </ng-container>
+
+                        <ng-container *ngIf="this.userRole=='Citizen'" style="width: 20%;" matColumnDef="actions">
                             <th mat-header-cell *matHeaderCellDef>Azioni</th>
                             <td mat-cell *matCellDef="let element">
                                 <div *ngIf="userRole=='Citizen'" class="actions-row container-button">
