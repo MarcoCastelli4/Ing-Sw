@@ -19,29 +19,7 @@
                 <p>
                     Seleziona l'ambulatorio per poter visualizzare le sue disponibilità in base al giorno.
                 </p>
-                <h4>Legenda: </h4>
-                <div *ngIf="userRole!='Operator'">
-                    <span class="info">
-                        <div class="flag" style="background-color: green;"></div> Giorni nei quali è possibile prenotare
-                        un vaccino
-                    </span>
-                    <span class="info">
-                        - In tutti gli altri giorni non è possibile prenotare un vaccino
-                    </span>
-                </div>
-                <div *ngIf="userRole=='Operator'">
-                    <span class="info">
-                        <div class="flag" style="background-color: red;"></div> Giorni nei quali sono già
-                        state inserite tutte le disponibilità
-                    </span>
-                    <span class="info">
-                        <div class="flag" style="background-color: green;"></div> Giorni nei quali sono
-                        state inserite disponibilità
-                    </span>
-                    <span class="info">
-                        - In tutti gli altri giorni è possibile insere una nuova disponibilità
-                    </span>
-                </div>
+                
             </div>
             <div class="col-6">
                 <div *ngIf="this.selectedSlots.length != 0; else noHubSelected">

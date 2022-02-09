@@ -142,6 +142,7 @@ export class ReservationComponent implements OnInit {
             "",
             "Prenotazione effettuata correttamente!"
           );
+          this.dataManagement.isDoneApi.citizen = false;
         },
         (error) => {
           console.log(error);
