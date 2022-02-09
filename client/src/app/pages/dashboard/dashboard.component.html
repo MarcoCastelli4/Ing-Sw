@@ -40,18 +40,22 @@
                 </button>
               </div>
               <div *ngIf="userRole=='Citizen'" class="actions-row container-button">
-                <button [disabled]="!checkType(element)" (click)="reserve(element._id)" title="Prenota" status="primary"
-                  class="action-button" nbButton style="margin: 2px 2px">
-                  <nb-icon icon="plus-outline"></nb-icon>
-                </button>
-                <button [disabled]="!element.disable" (click)="notify(element._id, element.notify)"
-                  title="Ricevi notifica" status="primary" class="action-button" nbButton style="margin: 2px 2px">
-                  <nb-icon *ngIf="element.notify; else off" icon="bell-outline"></nb-icon>
-                  <ng-template #off>
-                    <nb-icon icon="bell-off-outline"></nb-icon>
-                  </ng-template>
-
-                </button>
+                <ng-container *ngIf="!campaignAlreadyBooked(element._id)">
+                  <button [disabled]="!checkType(element)" (click)="reserve(element._id)" title="Prenota" status="primary"
+                    class="action-button" nbButton style="margin: 2px 2px">
+                    <nb-icon icon="plus-outline"></nb-icon>
+                  </button>
+                  <button [disabled]="!element.disable" (click)="notify(element._id, element.notify)"
+                    title="Ricevi notifica" status="primary" class="action-button" nbButton style="margin: 2px 2px">
+                    <nb-icon *ngIf="element.notify; else off" icon="bell-outline"></nb-icon>
+                    <ng-template #off>
+                      <nb-icon icon="bell-off-outline"></nb-icon>
+                    </ng-template>
+                  </button>
+                </ng-container>
+                <ng-container *ngIf="campaignAlreadyBooked(element._id)">
+                  <nb-icon icon="checkmark-outline" status="success"></nb-icon>
+                </ng-container>
               </div>
             </td>
           </ng-container>

@@ -165,9 +165,9 @@ export class DataManagement {
     return ApiService.instance.getCitizen().pipe(
       map((response) => {
         this.citizen = new Citizen(response);
-        this.reservations = response.reservations
+        this.reservations = response.reservations;
         this.isDoneApi.citizen = true;
-        return {citizen: this.citizen, reservations: this.reservations};
+        return { citizen: this.citizen, reservations: this.reservations };
       }),
       catchError((error) => {
         return throwError(error);
@@ -245,14 +245,14 @@ export class DataManagement {
    * @returns
    */
   public createReservationApi(slot: Slot): Observable<void> {
-    return ApiService.instance.postReservation(slot).pipe(map(
-      () => {
+    return ApiService.instance.postReservation(slot).pipe(
+      map(() => {
         // this.citizen.reservations.push(slot);
-      },
-    ), catchError((error) => {
-      return throwError(error);
-    })
-    )
+      }),
+      catchError((error) => {
+        return throwError(error);
+      })
+    );
   }
 
   // public getMyReservationsApi(): Observable<any> {
@@ -331,6 +331,6 @@ export class DataManagement {
   public italianDate(date: Date): string {
     var date = new Date(date);
     let month = date.getMonth() + 1;
-    return date.getDate() + '/' + month + '/' + date.getFullYear()
+    return date.getDate() + "/" + month + "/" + date.getFullYear();
   }
 }

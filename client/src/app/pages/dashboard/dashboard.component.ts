@@ -1,10 +1,7 @@
 import { ChangeDetectorRef, Component, ViewChild } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
 import { Router } from "@angular/router";
-import {
-  NbDialogService,
-  NbToastrService,
-} from "@nebular/theme";
+import { NbDialogService, NbToastrService } from "@nebular/theme";
 import { DataManagement } from "../../models/class/data_management";
 import { AuthService } from "../../services/auth.service";
 import { ConfirmNotificationComponent } from "../../widgets/confirm-notification/confirm-notification.component";
@@ -30,7 +27,7 @@ export class DashboardComponent {
     public dialogService: NbDialogService,
     public changeDetector: ChangeDetectorRef,
     private router: Router,
-    private dataManagement: DataManagement,
+    private dataManagement: DataManagement
   ) {
     if (this.authService.getAccessToken == null) {
       this.authService.logout();
@@ -64,10 +61,7 @@ export class DashboardComponent {
           this.dataSource = new MatTableDataSource(response);
           this.campaigns = response;
           changeDetector.detectChanges();
-          this.toastrService.success(
-            "",
-            "Campagne caricate correttamente!"
-          );
+          this.toastrService.success("", "Campagne caricate correttamente!");
         },
         (error) => {
           console.log(error);
@@ -79,7 +73,6 @@ export class DashboardComponent {
       );
     } else {
       this.dataSource = new MatTableDataSource(this.campaigns);
-
     }
   }
 
@@ -150,6 +143,20 @@ export class DashboardComponent {
       });
   }
 
+  public campaignAlreadyBooked(id: string): boolean {
+    const reservations: any = this.dataManagement.reservations;
+    for (let reservation of reservations) {
+      if (
+        reservation &&
+        reservation.campaign &&
+        reservation.campaign._id == id
+      ) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   public reserve(id: string): void {
     this.router.navigate(["/pages/reservation"], { queryParams: { id: id } });
   }
@@ -158,34 +165,34 @@ export class DashboardComponent {
     if (row.type?.includes(this.citizen?.type)) {
       row.disable = true;
       return true;
-    }
-    else {
+    } else {
       row.disable = false;
       return false;
     }
   }
 
   public notify(_id: string, on: boolean): void {
-    this.dialogService.open(ConfirmNotificationComponent).onClose.subscribe((res) => {
-
-      // ha cliccato su si
-      if (res) {
-        this.dataManagement.notification(_id, on).subscribe(
-          () => {
-            this.toastrService.success(
-              "",
-              "Ora sei nella mailing list di questa campagna!"
-            );
-          },
-          (error) => {
-            console.log(error);
-            this.toastrService.danger(
-              "Caricamento campagne non riuscito",
-              "Si è verificato un errore:"
-            );
-          }
-        );
-      }
-    });
+    this.dialogService
+      .open(ConfirmNotificationComponent)
+      .onClose.subscribe((res) => {
+        // ha cliccato su si
+        if (res) {
+          this.dataManagement.notification(_id, on).subscribe(
+            () => {
+              this.toastrService.success(
+                "",
+                "Ora sei nella mailing list di questa campagna!"
+              );
+            },
+            (error) => {
+              console.log(error);
+              this.toastrService.danger(
+                "Caricamento campagne non riuscito",
+                "Si è verificato un errore:"
+              );
+            }
+          );
+        }
+      });
   }
 }
