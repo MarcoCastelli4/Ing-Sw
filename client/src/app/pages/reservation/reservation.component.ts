@@ -163,4 +163,13 @@ export class ReservationComponent implements OnInit {
       );
     }
   }
+
+  public hasSlotHub(hub: Hub): string {
+    if (Array.isArray(hub.slots)) {
+      for (let slot of hub.slots) {
+        if (slot.campaign_id == this.campaign_id) return "Slot presenti";
+      }
+    }
+    return "Nessuno slot presente";
+  }
 }

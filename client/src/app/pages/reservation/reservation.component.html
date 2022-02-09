@@ -11,7 +11,7 @@
                     <label class="label" for="input-hub">Ambulatorio:</label>
                     <nb-select type="text" fullWidth name="hub" placeholder="Ambulatorio">
                         <nb-option (click)="getSlots(hub)" *ngFor="let hub of hubs" [value]="hub">
-                            {{ hub.name + ' - ' + hub.address }}
+                            {{hub.name + ' - ' + hub.address + " - "+ hasSlotHub(hub) }}
                         </nb-option>
                     </nb-select>
                 </div>
