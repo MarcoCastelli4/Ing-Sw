@@ -145,16 +145,18 @@ export class DashboardComponent {
 
   public campaignAlreadyBooked(id: string): boolean {
     const reservations: any = this.dataManagement.reservations;
-    for (let reservation of reservations) {
-      if (
-        reservation &&
-        reservation.campaign &&
-        reservation.campaign._id == id
-      ) {
-        return true;
+    if (reservations) {
+      for (let reservation of reservations) {
+        if (
+          reservation &&
+          reservation.campaign &&
+          reservation.campaign._id == id
+        ) {
+          return true;
+        }
       }
+      return false;
     }
-    return false;
   }
 
   public reserve(id: string): void {

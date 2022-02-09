@@ -34,6 +34,7 @@ export class RegisterComponent extends NbRegisterComponent {
     }
 
     public register(): void {
+        localStorage.clear();
         this.dataManagement.registerApi(this.user).subscribe(
             (response: Tokens) => {
                 this.authService.setAccessToken(response.accessToken);

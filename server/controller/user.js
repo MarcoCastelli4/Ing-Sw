@@ -147,10 +147,11 @@ async function routes(fastify, options, next) {
           throw fastify.httpErrors.badRequest("User already registered");
 
         let email = await dbCitizens.findOne({ email: inputData.email });
+        let id = user._id;
         if (!email) {
           // Set payload for jwt
           let payload = {
-            _id: uuid.v1(),
+            _id: id,
             role: "Citizen",
             email: inputData.email,
           };
@@ -413,8 +414,14 @@ async function routes(fastify, options, next) {
         let userId = request.data._id;
 
         //Ottengo cittadino specificato dall'Id
-        // console.log(typeof userId);
-        let user = await dbCitizens.findOne({ _id: ObjectID(userId) });
+        let user;
+        console.log(userId)
+        user = await dbCitizens.findOne({ _id: userId });
+        console.log("1", user)
+        if (!user) {
+          user = await dbCitizens.findOne({ _id: ObjectID(userId) });
+        }
+        console.log("2", user)
 
         //Ottengo per il cittadino un'array di prenotazioni che sono formate dall'hub, dalla campagna e dallo slot orario
         for (let reservation of user?.reservations) {

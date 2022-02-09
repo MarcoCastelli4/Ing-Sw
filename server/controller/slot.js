@@ -66,10 +66,11 @@ async function routes(fastify, options, next) {
     handler: async (request, reply) => {
       try {
         let inputData = request.body;
-        console.log(inputData)
         let slots = inputData.slot;
         let i = 0;
+        
         let resIds = [];
+
         for (let slot of slots) {
           inputData._id = uuid.v4() + i;
           inputData.availableQty = inputData.quantity;
