@@ -22,7 +22,6 @@ export class HubsComponent {
   ) {
     if (this.authService.getAccessToken == null) {
       this.authService.logout();
-      console.log("SONOQUi");
     }
     this.hubs = this.dataManagement.hubs;
     console.log(this.hubs);
